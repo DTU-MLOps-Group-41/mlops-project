@@ -3,34 +3,38 @@ name: Unit Tests
 # TODO: Uncomment when ready to enable tests
 # on:
 #   push:
-#     branches:
-#       - main
+#     branches: [main]
 #   pull_request:
-#     branches:
-#       - main
+#     branches: [main]
+#   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
-    runs-on: ${{ matrix.operating-system }}
+    name: ${{ matrix.os }} / Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false # Keep running other OS tests even if one fails
       matrix:
-        operating-system: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.12"] 
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v5
         with:
-          version: "0.9.22"
           enable-cache: true
-          cache-suffix: ${{ matrix.operating-system }}
+          python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: |
-          uv sync --locked --group dev
-          uv pip list
+        # We use --frozen to ensure the lockfile is respected exactly
+        run: uv sync --frozen --group dev
 
       - name: Run tests & coverage
         run: |
