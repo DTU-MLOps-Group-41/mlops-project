@@ -4,11 +4,12 @@ import typer
 import pandas as pd
 import kagglehub
 from transformers import DistilBertTokenizer
-from datasets import Dataset
+from datasets import Dataset, DatasetDict, ClassLabel
 
 # Define consistent paths
 RAW_DATA_DIR = Path("data/raw")
 PROCESSED_DATA_DIR = Path("data/preprocessed")
+SEED = 42
 
 
 class TicketData:
@@ -86,13 +87,35 @@ def process_single_dataset(dataset_type: str) -> None:
 
     tokenized_dataset = tokenized_dataset.remove_columns(cols_to_remove)
     tokenized_dataset.set_format("torch")
+    tokenized_dataset = tokenized_dataset.cast_column(
+        "labels", ClassLabel(num_classes=3, names=["low", "medium", "high"])
+    )
+    # Split into train/test sets (80/20)
+    split_dataset = tokenized_dataset.train_test_split(
+        test_size=0.2, seed=SEED, shuffle=True, stratify_by_column="labels"
+    )
+
+    # Splti test into validation/test sets (50/50 of the 20%)
+    test_valid = split_dataset["test"].train_test_split(
+        test_size=0.5, seed=SEED, shuffle=True, stratify_by_column="labels"
+    )
+
+    final_dataset = DatasetDict(
+        {
+            "train": split_dataset["train"],
+            "validation": test_valid["train"],
+            "test": test_valid["test"],
+        }
+    )
 
     PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
     processed_save_path = PROCESSED_DATA_DIR / dataset_type
 
-    tokenized_dataset.save_to_disk(processed_save_path)
-    print(f"Saved PROCESSED dataset to: {processed_save_path}")
-    print(f"Final Rows: {len(tokenized_dataset)}")
+    final_dataset.save_to_disk(processed_save_path)
+    print(f"Saved SPLIT dataset to: {processed_save_path}")
+    print(
+        f"Sizes: Train({len(final_dataset['train'])}), Val({len(final_dataset['validation'])}), Test({len(final_dataset['test'])})"
+    )
 
 
 def main() -> None:
