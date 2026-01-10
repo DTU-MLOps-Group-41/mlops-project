@@ -1,4 +1,17 @@
-# customer_support
+# Customer IT Support - Ticket classification
+
+[![Python](https://img.shields.io/badge/python-3.12-blue?logo=python&logoColor=white)](https://www.python.org)
+[![PyTorch](https://img.shields.io/badge/PyTorch-ee4c2c?logo=pytorch&logoColor=white)](https://pytorch.org)
+[![Hugging Face Transformers](https://img.shields.io/badge/%F0%9F%A4%97%20Transformers-yellow)](https://huggingface.co/transformers)
+[![Weights & Biases](https://img.shields.io/badge/W%26B-FFCC33?logo=weightsandbiases&logoColor=black)](https://wandb.ai/)
+[![DVC](https://img.shields.io/badge/DVC-945DD6?logo=dvc&logoColor=white)](https://dvc.org/)
+
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Linting](https://github.com/DTU-MLOps-Group-41/mlops-project/actions/workflows/linting.yaml/badge.svg)](https://github.com/DTU-MLOps-Group-41/mlops-project/actions/workflows/linting.yaml)
+[![Tests](https://github.com/DTU-MLOps-Group-41/mlops-project/actions/workflows/tests.yaml/badge.svg)](https://github.com/DTU-MLOps-Group-41/mlops-project/actions/workflows/tests.yaml)
+[![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+[![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com)
 
 ## Group 41 — DTU MLOps Course Project
 
@@ -8,65 +21,78 @@
 - **Mounika Maidamshetti** (s250148)
 
 
-This repository contains the project work carried out by group 41 in the MLOps course taught at DTU (course website). 
+This repository contains the project work carried out by group 41 in the MLOps course taught at DTU ([course website](https://skaftenicki.github.io/dtu_mlops/)). 
+
 ###  Overall goal of the project
+
 The goal of the project is to apply natural language processing (NLP) techniques to a supervised text classification problem, namely the automatic prediction of the priority level of customer support tickets and, optionally, the subject or department to which each ticket should be routed. The main goal of this project is developing and deploying the solution in a streamlined, reproducible, and efficient manner that reflects real-world machine learning workflows.
 
 ###  Frameworks used
-We are using the PyTorch and Hugging Face Transformers framework. Weights & Biases for experiment tracking and model registry, DVC for data versioning, FastAPI for serving; these frameworks are core components of the system and are fully integrated into the project lifecycle
+
+We are using the [PyTorch](https://pytorch.org) and [Hugging Face Transformers](https://huggingface.co/docs/transformers/en/index) framework. [Weights & Biases](https://wandb.ai/) for experiment tracking and model registry, [DVC](https://dvc.org/) for data versioning, FastAPI for serving; these frameworks are core components of the system and are fully integrated into the project lifecycle.
 
 ### Data
-We are using the Kaggle dataset Customer IT Support - Ticket Dataset. This dataset contains a total of 28,600 observations, each of which will have a topic assigned by the customer, a description of the customer's issue or inquiry, and a priority level (low, medium, or critical) assigned to the ticket. Additionally, each observation will have a department to which the email ticket is categorized. 
+
+We are using the [Kaggle](https://www.kaggle.com/) dataset [Customer IT Support - Ticket Dataset](https://www.kaggle.com/datasets/tobiasbueck/multilingual-customer-support-tickets). This dataset contains a total of 28,600 observations, each of which will have a topic assigned by the customer, a description of the customer's issue or inquiry, and a priority level (low, medium, or critical) assigned to the ticket. Additionally, each observation will have a department to which the email ticket is categorized. 
 
 ###  Models
-We intend to use a pre-trained natural language processing (NLP) model. To train the model and perform hyperparameter sweeping, we will initially use compressed versions of BERT, such as DistilBERT (DistilBERT) or ALBERT (ALBERT). These compressed versions allow for more efficient training and a greater focus on the MLOps aspect of the project.
 
+We intend to use a pre-trained natural language processing (NLP) model. To train the model and perform hyperparameter sweeping, we will initially use compressed versions of [BERT](https://huggingface.co/docs/transformers/en/model_doc/bert), such as [DistilBERT](https://huggingface.co/docs/transformers/en/model_doc/distilbert) or [ALBERT](https://huggingface.co/docs/transformers/en/model_doc/albert). These compressed versions allow for more efficient training and a greater focus on the MLOps aspect of the project.
 
 ## Project structure
 
 The directory structure of the project looks like this:
 ```txt
-├── .github/                  # Github actions and dependabot
-│   ├── dependabot.yaml
-│   └── workflows/
+.
+├── configs                   # Configuration files
+├── .devcontainer             # Development container configuration
+│   ├── devcontainer.json
+│   └── post_create.sh
+├── dockerfiles               # Dockerfiles
+│   ├── api.dockerfile
+│   └── train.dockerfile
+├── docs                      # Documentation
+│   ├── source
+│   │   └── index.md
+│   ├── mkdocs.yaml
+│   └── README.md
+├── .github                   # GitHub actions and automation
+│   ├── agents
+│   │   └── dtu_mlops_agent.md
+│   ├── prompts
+│   │   └── add_test.prompt.md
+│   └── workflows
+│       ├── linting.yaml
+│       ├── pre-commit-update.yaml
 │       └── tests.yaml
-├── configs/                  # Configuration files
-├── data/                     # Data directory
-│   ├── processed
-│   └── raw
-├── dockerfiles/              # Dockerfiles
-│   ├── api.Dockerfile
-│   └── train.Dockerfile
-├── docs/                     # Documentation
-│   ├── mkdocs.yml
-│   └── source/
-│       └── index.md
-├── models/                   # Trained models
-├── notebooks/                # Jupyter notebooks
-├── reports/                  # Reports
-│   └── figures/
-├── src/                      # Source code
-│   ├── project_name/
-│   │   ├── __init__.py
-│   │   ├── api.py
-│   │   ├── data.py
-│   │   ├── evaluate.py
-│   │   ├── models.py
-│   │   ├── train.py
-│   │   └── visualize.py
-└── tests/                    # Tests
+├── models                    # Trained models
+├── notebooks                 # Jupyter notebooks
+├── reports                   # Reports
+│   └── figures
+├── src                       # Source code
+│   └── customer_support
+│       ├── api.py
+│       ├── data.py
+│       ├── evaluate.py
+│       ├── __init__.py
+│       ├── model.py
+│       ├── train.py
+│       └── visualize.py
+├── tests                     # Tests
 │   ├── __init__.py
 │   ├── test_api.py
 │   ├── test_data.py
 │   └── test_model.py
+├── AGENTS.md
 ├── .gitignore
-├── .pre-commit-config.yaml
 ├── LICENSE
+├── .pre-commit-config.yaml
 ├── pyproject.toml            # Python project file
+├── .python-version
 ├── README.md                 # Project README
-├── requirements.txt          # Project requirements
-├── requirements_dev.txt      # Development requirements
-└── tasks.py                  # Project tasks
+├── renovate.json             # Renovate configuration
+├── tasks.py                  # Project tasks
+└── uv.lock                   # UV lock file
 ```
 
 
