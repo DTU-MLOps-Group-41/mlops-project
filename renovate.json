@@ -25,12 +25,6 @@
       "automerge": true
     },
     {
-      "minimumReleaseAge": "3 days",
-      "prCreation": "not-pending",
-      "internalChecksFilter": "strict",
-      "description": "Wait 3 days before creating PRs for stability"
-    },
-    {
       "matchManagers": ["pep621"],
       "rangeStrategy": "update-lockfile",
       "description": "Update uv.lock without changing version ranges in pyproject.toml"
