@@ -2,5 +2,46 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:best-practices"
+  ],
+  "vulnerabilityAlerts": { "enabled": true },
+  "lockFileMaintenance": { "enabled": true },
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchDepNames": ["python"],
+      "matchDatasources": ["python-version"],
+      "allowedVersions": "/^3\\.12\\.[0-9]+$/",
+      "description": "Track newest security-status Python (3.12.x) - bump to 3.13 around Oct 2025"
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true
+    },
+    {
+      "minimumReleaseAge": "3 days",
+      "prCreation": "not-pending",
+      "internalChecksFilter": "strict",
+      "description": "Wait 3 days before creating PRs for stability"
+    },
+    {
+      "matchManagers": ["pep621"],
+      "rangeStrategy": "update-lockfile",
+      "description": "Update uv.lock without changing version ranges in pyproject.toml"
+    },
+    {
+      "matchManagers": ["dockerfile", "docker-compose"],
+      "groupName": "Docker images",
+      "description": "Group Docker updates together"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "GitHub Actions",
+      "automerge": true,
+      "description": "Group and automerge GitHub Actions updates"
+    }
   ]
 }
