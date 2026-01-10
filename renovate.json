@@ -12,9 +12,9 @@
   "packageRules": [
     {
       "matchDepNames": ["python"],
-      "matchDatasources": ["python-version"],
-      "allowedVersions": "/^3\\.12\\.[0-9]+$/",
-      "description": "Track newest security-status Python (3.12.x) - bump to 3.13 around Oct 2025"
+      "matchDatasources": ["python-version", "docker"],
+      "allowedVersions": "/^3\\.12/",
+      "description": "Pin to Python 3.12 (that is currently latest-2)"
     },
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
