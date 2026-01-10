@@ -51,3 +51,18 @@ def build_docs(ctx: Context) -> None:
 def serve_docs(ctx: Context) -> None:
     """Serve documentation."""
     ctx.run("uv run mkdocs serve --config-file docs/mkdocs.yaml", echo=True, pty=not WINDOWS)
+
+
+@task
+def project_tree(ctx: Context, depth: int = 0) -> None:
+    """Generate project structure for README.
+
+    Args:
+        depth: Limit directory depth (0 = unlimited)
+    """
+    depth_flag = f"-L {depth}" if depth > 0 else ""
+    ctx.run(
+        f"tree -a {depth_flag} -I '.git|.venv|__pycache__|.ruff_cache|.pytest_cache|*.pyc|.gitkeep|.DS_Store' --dirsfirst",
+        echo=True,
+        pty=not WINDOWS,
+    )
