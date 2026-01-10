@@ -52,10 +52,11 @@ def serve_docs(ctx: Context) -> None:
     """Serve documentation."""
     ctx.run("uv run mkdocs serve --config-file docs/mkdocs.yaml", echo=True, pty=not WINDOWS)
 
+
 @task
 def project_tree(ctx: Context, depth: int = 0) -> None:
     """Generate project structure for README.
-    
+
     Args:
         depth: Limit directory depth (0 = unlimited)
     """
