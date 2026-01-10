@@ -44,19 +44,19 @@ We intend to use a pre-trained natural language processing (NLP) model. To train
 The directory structure of the project looks like this:
 ```txt
 .
-├── configs
-├── .devcontainer
+├── configs                   # Configuration files
+├── .devcontainer             # Development container configuration
 │   ├── devcontainer.json
 │   └── post_create.sh
-├── dockerfiles
+├── dockerfiles               # Dockerfiles
 │   ├── api.dockerfile
 │   └── train.dockerfile
-├── docs
+├── docs                      # Documentation
 │   ├── source
 │   │   └── index.md
 │   ├── mkdocs.yaml
 │   └── README.md
-├── .github
+├── .github                   # GitHub actions and automation
 │   ├── agents
 │   │   └── dtu_mlops_agent.md
 │   ├── prompts
@@ -65,11 +65,11 @@ The directory structure of the project looks like this:
 │       ├── linting.yaml
 │       ├── pre-commit-update.yaml
 │       └── tests.yaml
-├── models
-├── notebooks
-├── reports
+├── models                    # Trained models
+├── notebooks                 # Jupyter notebooks
+├── reports                   # Reports
 │   └── figures
-├── src
+├── src                       # Source code
 │   └── customer_support
 │       ├── api.py
 │       ├── data.py
@@ -78,7 +78,7 @@ The directory structure of the project looks like this:
 │       ├── model.py
 │       ├── train.py
 │       └── visualize.py
-├── tests
+├── tests                     # Tests
 │   ├── __init__.py
 │   ├── test_api.py
 │   ├── test_data.py
@@ -87,12 +87,12 @@ The directory structure of the project looks like this:
 ├── .gitignore
 ├── LICENSE
 ├── .pre-commit-config.yaml
-├── pyproject.toml
+├── pyproject.toml            # Python project file
 ├── .python-version
-├── README.md
-├── renovate.json
-├── tasks.py
-└── uv.lock
+├── README.md                 # Project README
+├── renovate.json             # Renovate configuration
+├── tasks.py                  # Project tasks
+└── uv.lock                   # UV lock file
 ```
 
 
