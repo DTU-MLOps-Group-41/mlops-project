@@ -11,7 +11,7 @@
   "internalChecksFilter": "strict",
   "packageRules": [
     {
-      "matchDepNames": ["python"],
+      "matchDepNames": ["python", "**/python"],
       "matchDatasources": ["python-version", "docker"],
       "allowedVersions": "/^3\\.12/",
       "description": "Pin to Python 3.12 (that is currently latest-2)"
