@@ -1,0 +1,4 @@
+[core]
+    remote = storage
+['remote "storage"']
+    url = ssh://transfer.gbar.dtu.dk/zhome/2f/e/214039/mlops-project
