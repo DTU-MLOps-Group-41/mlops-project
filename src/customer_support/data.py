@@ -6,7 +6,7 @@ import pandas as pd
 import torch
 import torch.utils.data
 import typer
-from datasets import Dataset, DatasetDict, load_from_disk
+from datasets import Dataset, DatasetDict
 from loguru import logger
 from transformers import DistilBertTokenizer
 
@@ -43,6 +43,7 @@ class TicketDataset(torch.utils.data.Dataset):
         split: Dataset split - "train", "validation", or "test" (default: "train")
         dataset_type: Dataset size - "small", "medium", or "full" (default: "small")
         download: If True, download and preprocess if not found (default: False)
+        force_preprocess: If True, force reprocessing even if data exists (default: False)
         transform: Optional transform applied on tokenized samples
         target_transform: Optional transform applied on labels
         model_name: Tokenizer model name (default: "distilbert-base-multilingual-cased")
@@ -57,6 +58,9 @@ class TicketDataset(torch.utils.data.Dataset):
         >>>
         >>> # Auto-preprocess if needed
         >>> train_data = TicketDataset(root="data", split="train", download=True)
+        >>>
+        >>> # Force reprocessing
+        >>> train_data = TicketDataset(root="data", split="train", force_preprocess=True)
         >>>
         >>> # Use with DataLoader
         >>> from torch.utils.data import DataLoader
@@ -73,6 +77,7 @@ class TicketDataset(torch.utils.data.Dataset):
         split: str = "train",
         dataset_type: str = "small",
         download: bool = False,
+        force_preprocess: bool = False,
         transform: Optional[Callable] = None,
         target_transform: Optional[Callable] = None,
         model_name: str = "distilbert-base-multilingual-cased",
@@ -92,15 +97,14 @@ class TicketDataset(torch.utils.data.Dataset):
         self.raw_dir = self.root / "raw"
         self.processed_dir = self.root / "preprocessed"
 
-        if not self._check_exists():
-            if download:
-                self._preprocess()
-            else:
-                raise RuntimeError(
-                    f"Dataset not found at {self.processed_dir / self.dataset_type}.\n\n"
-                    f"Set download=True to auto-download and preprocess:\n"
-                    f"  TicketDataset(root='{self.root}', split='{self.split}', download=True)"
-                )
+        if force_preprocess or (not self._check_exists() and download):
+            self._preprocess()
+        elif not self._check_exists():
+            raise RuntimeError(
+                f"Dataset not found at {self.processed_dir / self.dataset_type}.\n\n"
+                f"Set download=True to auto-download and preprocess:\n"
+                f"  TicketDataset(root='{self.root}', split='{self.split}', download=True)"
+            )
 
         self._dataset = self._load_data()
         logger.info(f"TicketDataset initialized: {len(self)} samples ({self.dataset_type}/{self.split})")
@@ -305,6 +309,12 @@ class TicketDataset(torch.utils.data.Dataset):
         """
         logger.info("Splitting dataset...")
 
+        # Cast labels to ClassLabel type for stratified splitting
+        from datasets import ClassLabel
+
+        num_classes = len(set(dataset["labels"]))
+        dataset = dataset.cast_column("labels", ClassLabel(num_classes=num_classes))
+
         try:
             split_dataset_train_test = dataset.train_test_split(
                 test_size=test_size, seed=seed, shuffle=True, stratify_by_column="labels"
@@ -340,19 +350,10 @@ class TicketDataset(torch.utils.data.Dataset):
         """Check if preprocessed data exists for current configuration.
 
         Returns:
-            True if both DatasetDict and specific split exist
+            True if Parquet file for the split exists
         """
-        dataset_path = self.processed_dir / self.dataset_type
-        split_path = dataset_path / self.split
-
-        has_dataset_dict = (dataset_path / "dataset_dict.json").exists()
-        has_split = split_path.exists() and (split_path / "dataset_info.json").exists()
-
-        if has_dataset_dict and not has_split:
-            logger.warning(f"DatasetDict exists but split '{self.split}' missing. Will trigger reprocessing.")
-            return False
-
-        return has_dataset_dict and has_split
+        parquet_file = self.processed_dir / f"{self.dataset_type}_{self.split}.parquet"
+        return parquet_file.exists()
 
     def _download_raw_data(self) -> Path:
         """Download raw CSV from Kaggle if not present.
@@ -399,11 +400,14 @@ class TicketDataset(torch.utils.data.Dataset):
         tokenized_dataset = self._tokenize_dataset(hf_dataset, self.model_name)
         dataset_dict = self._split_dataset(tokenized_dataset)
 
-        output_path = self.processed_dir / self.dataset_type
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        dataset_dict.save_to_disk(output_path)
+        # Save each split as a separate Parquet file
+        self.processed_dir.mkdir(parents=True, exist_ok=True)
+        for split_name in VALID_SPLITS:
+            output_file = self.processed_dir / f"{self.dataset_type}_{split_name}.parquet"
+            dataset_dict[split_name].to_parquet(output_file)
+            logger.info(f"Saved {split_name} split to: {output_file}")
 
-        logger.success(f"Preprocessed dataset saved to: {output_path}")
+        logger.success(f"Preprocessed dataset saved as Parquet files in: {self.processed_dir}")
 
     def _load_data(self) -> Dataset:
         """Load preprocessed split from disk into memory.
@@ -414,21 +418,17 @@ class TicketDataset(torch.utils.data.Dataset):
         Raises:
             FileNotFoundError: If split data not found
         """
-        dataset_path = self.processed_dir / self.dataset_type
+        parquet_file = self.processed_dir / f"{self.dataset_type}_{self.split}.parquet"
 
-        loaded = load_from_disk(str(dataset_path))
+        if not parquet_file.exists():
+            raise FileNotFoundError(
+                f"Parquet file not found: {parquet_file}\nAvailable files: {list(self.processed_dir.glob('*.parquet'))}"
+            )
 
-        if isinstance(loaded, DatasetDict):
-            if self.split not in loaded:
-                raise FileNotFoundError(f"Split '{self.split}' not found. Available: {list(loaded.keys())}")
-            dataset = loaded[self.split]
-        else:
-            split_path = dataset_path / self.split
-            if not split_path.exists():
-                raise FileNotFoundError(f"Split not found at {split_path}")
-            dataset = load_from_disk(str(split_path))
+        dataset = Dataset.from_parquet(str(parquet_file))
+        dataset.set_format("torch")
 
-        logger.info(f"Loaded {len(dataset)} samples from {dataset_path}/{self.split}")
+        logger.info(f"Loaded {len(dataset)} samples from {parquet_file}")
         return dataset
 
 
@@ -443,15 +443,17 @@ app = typer.Typer(help="Customer support ticket data pipeline")
 def download_command() -> None:
     """Download all dataset sizes from Kaggle to data/raw/.
 
-    This is a one-time operation. KaggleHub caches downloads.
-    Safe to run multiple times (idempotent).
+    Always downloads fresh copies from KaggleHub cache, overwriting existing files.
+    KaggleHub uses its own cache, but files are copied fresh to data/raw/.
 
     Example:
         uv run src/customer_support/data.py download
     """
     for dtype in VALID_DATASET_TYPES:
         try:
-            _ = TicketDataset(root="data", split="train", dataset_type=dtype, download=True)
+            logger.info(f"Downloading {dtype} dataset...")
+            kaggle_path = TicketDataset._download_kaggle_dataset()
+            TicketDataset._save_raw_csv(kaggle_path, dtype, RAW_DATA_DIR)
         except Exception as e:
             logger.error(f"Error downloading {dtype}: {e}")
 
@@ -463,6 +465,8 @@ def preprocess_command(
     model_name: str = typer.Option("distilbert-base-multilingual-cased", "--model", "-m", help="Tokenizer model name"),
 ) -> None:
     """Preprocess datasets: clean, tokenize, split, and save.
+
+    Always forces reprocessing, even if preprocessed data already exists.
 
     Examples:
         # Process single dataset
@@ -476,11 +480,15 @@ def preprocess_command(
     """
     if all_datasets:
         for dtype in VALID_DATASET_TYPES:
-            _ = TicketDataset(root="data", split="train", dataset_type=dtype, download=True, model_name=model_name)
+            _ = TicketDataset(
+                root="data", split="train", dataset_type=dtype, force_preprocess=True, model_name=model_name
+            )
     elif dataset_type:
         if dataset_type not in VALID_DATASET_TYPES:
             raise typer.BadParameter("dataset_type must be one of: small, medium, full")
-        _ = TicketDataset(root="data", split="train", dataset_type=dataset_type, download=True, model_name=model_name)
+        _ = TicketDataset(
+            root="data", split="train", dataset_type=dataset_type, force_preprocess=True, model_name=model_name
+        )
     else:
         raise typer.BadParameter("Must specify either --dataset-type or --all")
 
