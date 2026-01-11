@@ -7,8 +7,6 @@
   "lockFileMaintenance": { "enabled": true },
   "labels": ["dependencies"],
   "minimumReleaseAge": "3 days",
-  "prCreation": "not-pending",
-  "internalChecksFilter": "strict",
   "packageRules": [
     {
       "matchDepNames": ["python", "**/python"],
