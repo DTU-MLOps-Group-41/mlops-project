@@ -9,9 +9,24 @@ PYTHON_VERSION = "3.12"
 
 # Project commands
 @task
-def preprocess_data(ctx: Context) -> None:
-    """Preprocess data."""
-    ctx.run(f"uv run src/{PROJECT_NAME}/data.py", echo=True, pty=not WINDOWS)
+def download_data(ctx: Context) -> None:
+    """Download raw data from Kaggle."""
+    ctx.run(f"uv run src/{PROJECT_NAME}/data.py download", echo=True, pty=not WINDOWS)
+
+
+@task
+def preprocess_data(ctx: Context, dataset_type: str = "") -> None:
+    """Preprocess data.
+
+    Args:
+        dataset_type: One of 'small', 'medium', 'full'. If empty, processes all.
+    """
+    if dataset_type:
+        cmd = f"uv run src/{PROJECT_NAME}/data.py preprocess -d {dataset_type}"
+    else:
+        cmd = f"uv run src/{PROJECT_NAME}/data.py preprocess --all"
+
+    ctx.run(cmd, echo=True, pty=not WINDOWS)
 
 
 @task
