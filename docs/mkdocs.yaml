@@ -21,3 +21,4 @@ plugins:
 
 nav:
   - Home: index.md
+  - Data Versioning: dvc.md
