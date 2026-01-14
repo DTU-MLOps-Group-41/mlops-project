@@ -65,3 +65,4 @@ line-length = 120
 
 [tool.coverage.run]
 omit = ["tests/*"]
+source = ["customer_support"]
