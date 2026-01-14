@@ -18,8 +18,17 @@ classifiers = [
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "datasets>=4.4.2",
+    "dvc>=3.65.0",
+    "dvc-ssh>=4.2.2",
     "fastapi==0.128.0",
+    "kagglehub>=0.4.0",
+    "loguru>=0.7.3",
+    "nbconvert>=7.16.6",
+    "numpy>=2.4.1",
+    "pandas>=2.3.3",
     "torch==2.9.1",
+    "transformers>=4.57.3",
     "typer==0.21.1",
     "uvicorn==0.40.0",
 ]
@@ -34,6 +43,7 @@ dev = [
     "pytest==9.0.2",
     "ruff==0.14.11",
     "mkdocstrings-python==2.0.1",
+    "ipykernel>=7.1.0",
 ]
 
 
@@ -55,3 +65,4 @@ line-length = 120
 
 [tool.coverage.run]
 omit = ["tests/*"]
+source = ["customer_support"]
