@@ -40,7 +40,10 @@ jobs:
       - name: Run tests & coverage
         run: |
           uv run coverage run -m pytest tests/
-          uv run coverage report -m
-      - uses: codecov/codecov-action@v5
+          uv run coverage xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
         with:
           use_oidc: true
+          files: ./coverage.xml
