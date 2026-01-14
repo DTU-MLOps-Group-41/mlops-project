@@ -1,6 +1,88 @@
 outs:
-- md5: cdd0023f17e22a4d29dd64b5f7092f07.dir
-  size: 60383604
-  nfiles: 12
-  hash: md5
+- hash: md5
   path: data
+  files:
+  - relpath: preprocessed/full_test.parquet
+    md5: 0c0479ab9556abaa9c26966f87490187
+    size: 439051
+    cloud:
+      remote_storage:
+        etag: 08e199aaf2808b92031001
+        version_id: '1768392894352609'
+  - relpath: preprocessed/full_train.parquet
+    md5: 2730b6e174df36aa492a83452876e82c
+    size: 3449468
+    cloud:
+      remote_storage:
+        etag: 0896e2bff2808b92031001
+        version_id: '1768392894705942'
+  - relpath: preprocessed/full_validation.parquet
+    md5: 7b51487695136a3357014d7d3e8476cd
+    size: 438046
+    cloud:
+      remote_storage:
+        etag: 088eebf3f1808b92031001
+        version_id: '1768392893461902'
+  - relpath: preprocessed/medium_test.parquet
+    md5: 5567973b06b0bb9f8c91bb08a55a5b41
+    size: 330126
+    cloud:
+      remote_storage:
+        etag: 08a7a5a4f2808b92031001
+        version_id: '1768392894255783'
+  - relpath: preprocessed/medium_train.parquet
+    md5: fb225aa78f5f1e8e4491d727edf06c8f
+    size: 2451115
+    cloud:
+      remote_storage:
+        etag: 08f384baf2808b92031001
+        version_id: '1768392894612083'
+  - relpath: preprocessed/medium_validation.parquet
+    md5: f1a222bddd2b87ca7e71ea5fd926dc21
+    size: 328419
+    cloud:
+      remote_storage:
+        etag: 08a890a3f2808b92031001
+        version_id: '1768392894236712'
+  - relpath: preprocessed/small_test.parquet
+    md5: e9216b314a4271d48cbb87c22750c29d
+    size: 143869
+    cloud:
+      remote_storage:
+        etag: 08ef8d9bf2808b92031001
+        version_id: '1768392894105327'
+  - relpath: preprocessed/small_train.parquet
+    md5: d14e486b959eff56e3a6596245af7a39
+    size: 1023076
+    cloud:
+      remote_storage:
+        etag: 08d3d0b2f2808b92031001
+        version_id: '1768392894490707'
+  - relpath: preprocessed/small_validation.parquet
+    md5: 64824c3c0dcc36c52616c3ed5abc7e69
+    size: 143319
+    cloud:
+      remote_storage:
+        etag: 08fcfa9af2808b92031001
+        version_id: '1768392894102908'
+  - relpath: raw/full.csv
+    md5: 2625fbf557f24cb4304b9d0614e33353
+    size: 25967766
+    cloud:
+      remote_storage:
+        etag: 0896d6f0f2808b92031001
+        version_id: '1768392895507222'
+  - relpath: raw/medium.csv
+    md5: b412b2d24f35d368e40fbd5d30526ea4
+    size: 18799808
+    cloud:
+      remote_storage:
+        etag: 08cf80ecf2808b92031001
+        version_id: '1768392895430735'
+  - relpath: raw/small.csv
+    md5: 794808a9b3d4b5750b8591f4e9becb65
+    size: 6869541
+    cloud:
+      remote_storage:
+        etag: 08a2ecdff2808b92031001
+        version_id: '1768392895231522'
