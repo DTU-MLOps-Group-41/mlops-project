@@ -11,7 +11,9 @@ from customer_support.data import TicketDataset
 from customer_support.model import get_model
 
 
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+# DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+model = get_model()
+DEVICE = model.device
 
 
 def train(
@@ -46,9 +48,6 @@ def train(
     torch.manual_seed(seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
-
-    model = get_model()
-    model.device
 
     logger.info(f"{'=' * 60}")
     logger.info("Training Configuration:")
