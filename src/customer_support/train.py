@@ -26,13 +26,12 @@ def train():
     print(f"Validation dataset: {len(val_dataset)} samples")
     print(f"Model: {model}")
 
-
     for epoch in range(3):
         model.train()
         train_loss = 0.0
         for batch in train_loader:
             input_ids = batch["input_ids"].to(DEVICE)
-            attention_mask = batch["attention_mask"].to(DEVICE)
+            # attention_mask = batch["attention_mask"].to(DEVICE)
             labels = batch["labels"].to(DEVICE)
             optimizer.zero_grad()
             outputs = model(input_ids, labels=labels)
@@ -53,9 +52,6 @@ def train():
                 outputs = model(input_ids, labels=labels)
                 loss = outputs.loss
                 val_loss += loss.item()
-
-
-
 
 
 if __name__ == "__main__":
