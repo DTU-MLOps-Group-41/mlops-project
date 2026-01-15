@@ -3,32 +3,68 @@ outs:
   path: data
   files:
   - relpath: preprocessed/full_test.parquet
-    md5: eaba4d66c7edfc30d11475d8fe0b2a9b
-    size: 989505
+    md5: 2ec9dffa6155d897940d2502cd3bede3
+    size: 989504
+    cloud:
+      remote_storage:
+        etag: 089ae28df3898e92031001
+        version_id: '1768498391118106'
   - relpath: preprocessed/full_train.parquet
-    md5: d569f7d591fe9700a1e153ae63e9f94a
-    size: 3770447
+    md5: 8487397c4982ea62336868503e0db706
+    size: 3770440
+    cloud:
+      remote_storage:
+        etag: 0898b69df3898e92031001
+        version_id: '1768498391374616'
   - relpath: preprocessed/full_validation.parquet
-    md5: 5325f8e2fe321a4768480fd8a911641e
+    md5: 9947f6123c4b7b8375159d7aff2cd38c
     size: 1006418
+    cloud:
+      remote_storage:
+        etag: 08c9b8d3f2898e92031001
+        version_id: '1768498390162505'
   - relpath: preprocessed/medium_test.parquet
-    md5: 91036815b2675028e9a9261a7aa65efb
+    md5: 9fb249cbefab118c702fcdfc461cacb6
     size: 706659
+    cloud:
+      remote_storage:
+        etag: 0890fba2f3898e92031001
+        version_id: '1768498391465360'
   - relpath: preprocessed/medium_train.parquet
-    md5: 73efe50bb06425562fd730d6a4890c89
+    md5: d4fe7913221731c8ed39a6aee067036a
     size: 2681916
+    cloud:
+      remote_storage:
+        etag: 08c9fa9af3898e92031001
+        version_id: '1768498391334217'
   - relpath: preprocessed/medium_validation.parquet
-    md5: d8637431e871d2968001c6dc444265c7
-    size: 694933
+    md5: a86f98326e8c0ca8ae6f81f6b3647480
+    size: 694926
+    cloud:
+      remote_storage:
+        etag: 08fbaa8cf3898e92031001
+        version_id: '1768498391094651'
   - relpath: preprocessed/small_test.parquet
-    md5: d406decd325b878309210a2f1b6ed009
-    size: 223904
+    md5: 361803dbccf6d135ab5a30d3824a8886
+    size: 223897
+    cloud:
+      remote_storage:
+        etag: 08b8879cf3898e92031001
+        version_id: '1768498391352248'
   - relpath: preprocessed/small_train.parquet
-    md5: c27876e9e5be97351090c8240a543acc
+    md5: fb798d551028d860b4f78f5d02e89398
     size: 1038825
+    cloud:
+      remote_storage:
+        etag: 08d5ee92f3898e92031001
+        version_id: '1768498391201621'
   - relpath: preprocessed/small_validation.parquet
-    md5: 87592c0ff5ec1f19198e417e66b78ccf
-    size: 220660
+    md5: cfd4c544a92febaa1d3be4f899ce3c92
+    size: 220653
+    cloud:
+      remote_storage:
+        etag: 08acd580f3898e92031001
+        version_id: '1768498390903468'
   - relpath: raw/full.csv
     md5: 2625fbf557f24cb4304b9d0614e33353
     size: 25967766
