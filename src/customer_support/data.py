@@ -25,6 +25,7 @@ DATASET_FILES = {
 }
 VALID_SPLITS = ["train", "validation", "test"]
 VALID_DATASET_TYPES = ["small", "medium", "full"]
+VALID_LENGTH_HANDLING = ["trim", "drop"]
 
 
 # ============================================================================
@@ -47,10 +48,14 @@ class TicketDataset(torch.utils.data.Dataset):
         transform: Optional transform applied on tokenized samples
         target_transform: Optional transform applied on labels
         model_name: Tokenizer model name (default: "distilbert-base-multilingual-cased")
+        length_percentile: Percentile threshold for sequence length (e.g., 0.9 for P90).
+                          If None, no length filtering is applied.
+        length_handling: How to handle sequences exceeding the percentile threshold:
+                        "trim" truncates to threshold, "drop" removes the sample.
 
     Raises:
         RuntimeError: If data not found and download=False
-        ValueError: If split or dataset_type is invalid
+        ValueError: If split, dataset_type, or length_handling is invalid
 
     Example:
         >>> # Load preprocessed training data (most common)
@@ -61,6 +66,10 @@ class TicketDataset(torch.utils.data.Dataset):
         >>>
         >>> # Force reprocessing
         >>> train_data = TicketDataset(root="data", split="train", force_preprocess=True)
+        >>>
+        >>> # Preprocess with P90 length threshold (trim long sequences)
+        >>> train_data = TicketDataset(root="data", split="train", force_preprocess=True,
+        ...                            length_percentile=0.9, length_handling="trim")
         >>>
         >>> # Use with DataLoader
         >>> from torch.utils.data import DataLoader
@@ -81,12 +90,16 @@ class TicketDataset(torch.utils.data.Dataset):
         transform: Optional[Callable] = None,
         target_transform: Optional[Callable] = None,
         model_name: str = "distilbert-base-multilingual-cased",
+        length_percentile: float | None = None,
+        length_handling: str = "trim",
     ) -> None:
         """Initialize TicketDataset."""
         if split not in VALID_SPLITS:
             raise ValueError(f"split must be one of {VALID_SPLITS}, got: {split}")
         if dataset_type not in VALID_DATASET_TYPES:
             raise ValueError(f"dataset_type must be one of {VALID_DATASET_TYPES}, got: {dataset_type}")
+        if length_handling not in VALID_LENGTH_HANDLING:
+            raise ValueError(f"length_handling must be one of {VALID_LENGTH_HANDLING}, got: {length_handling}")
 
         self.root = Path(root)
         self.split = split
@@ -94,6 +107,8 @@ class TicketDataset(torch.utils.data.Dataset):
         self.transform = transform
         self.target_transform = target_transform
         self.model_name = model_name
+        self.length_percentile = length_percentile
+        self.length_handling = length_handling
         self.raw_dir = self.root / "raw"
         self.processed_dir = self.root / "preprocessed"
 
@@ -254,21 +269,32 @@ class TicketDataset(torch.utils.data.Dataset):
         return data
 
     @staticmethod
-    def _tokenize_dataset(dataset: Dataset, model_name: str = "distilbert-base-multilingual-cased") -> Dataset:
-        """Tokenize text data using DistilBERT tokenizer.
+    def _tokenize_dataset(
+        dataset: Dataset,
+        model_name: str = "distilbert-base-multilingual-cased",
+        length_percentile: float | None = None,
+        length_handling: str = "trim",
+    ) -> Dataset:
+        """Tokenize text data using DistilBERT tokenizer with optional length filtering and padding.
 
         Args:
             dataset: HuggingFace Dataset with 'body' column
             model_name: Tokenizer model name
+            length_percentile: Percentile threshold for sequence length (e.g., 0.9 for P90).
+                              If None, no length filtering is applied.
+            length_handling: How to handle sequences exceeding the percentile threshold:
+                            "trim" truncates to threshold, "drop" removes the sample.
 
         Returns:
-            Tokenized dataset with input_ids, attention_mask
+            Tokenized dataset with input_ids, attention_mask, all padded to uniform length.
 
         Notes:
             Removes 'body' column after tokenization
             Removes '__index_level_0__' if present
             Sets format to 'torch'
         """
+        import numpy as np
+
         logger.info(f"Tokenizing with {model_name}...")
         tokenizer = DistilBertTokenizer.from_pretrained(model_name)
 
@@ -282,9 +308,44 @@ class TicketDataset(torch.utils.data.Dataset):
             cols_to_remove.append("__index_level_0__")
 
         tokenized_dataset = tokenized_dataset.remove_columns(cols_to_remove)
+
+        lengths = [len(ids) for ids in tokenized_dataset["input_ids"]]
+        original_count = len(tokenized_dataset)
+        logger.info(f"Sequence length stats: min={min(lengths)}, max={max(lengths)}, mean={np.mean(lengths):.1f}")
+
+        if length_percentile is not None:
+            threshold = int(np.percentile(lengths, length_percentile * 100))
+            logger.info(f"Length threshold at P{int(length_percentile * 100)}: {threshold} tokens")
+
+            if length_handling == "drop":
+                tokenized_dataset = tokenized_dataset.filter(lambda x: len(x["input_ids"]) <= threshold)
+                dropped_count = original_count - len(tokenized_dataset)
+                logger.info(f"Dropped {dropped_count} samples exceeding {threshold} tokens")
+                pad_length = threshold
+            else:
+                pad_length = threshold
+        else:
+            pad_length = max(lengths)
+
+        def pad_sequence(example):
+            input_ids = example["input_ids"]
+            attention_mask = example["attention_mask"]
+            current_len = len(input_ids)
+
+            if current_len > pad_length:
+                input_ids = input_ids[:pad_length]
+                attention_mask = attention_mask[:pad_length]
+            elif current_len < pad_length:
+                padding_len = pad_length - current_len
+                input_ids = input_ids + [tokenizer.pad_token_id] * padding_len
+                attention_mask = attention_mask + [0] * padding_len
+
+            return {"input_ids": input_ids, "attention_mask": attention_mask, "labels": example["labels"]}
+
+        tokenized_dataset = tokenized_dataset.map(pad_sequence)
         tokenized_dataset.set_format("torch")
 
-        logger.info(f"Tokenization complete. Columns: {tokenized_dataset.column_names}")
+        logger.info(f"Tokenization complete. Final count: {len(tokenized_dataset)}, padded to length: {pad_length}")
         return tokenized_dataset
 
     @staticmethod
@@ -397,7 +458,12 @@ class TicketDataset(torch.utils.data.Dataset):
         df = self._encode_labels(df)
 
         hf_dataset = Dataset.from_pandas(df[["body", "labels"]])
-        tokenized_dataset = self._tokenize_dataset(hf_dataset, self.model_name)
+        tokenized_dataset = self._tokenize_dataset(
+            hf_dataset,
+            self.model_name,
+            length_percentile=self.length_percentile,
+            length_handling=self.length_handling,
+        )
         dataset_dict = self._split_dataset(tokenized_dataset)
 
         # Save each split as a separate Parquet file
@@ -463,6 +529,12 @@ def preprocess_command(
     dataset_type: str = typer.Option(None, "--dataset-type", "-d", help="Dataset size: small, medium, or full"),
     all_datasets: bool = typer.Option(False, "--all", "-a", help="Process all dataset sizes"),
     model_name: str = typer.Option("distilbert-base-multilingual-cased", "--model", "-m", help="Tokenizer model name"),
+    length_percentile: float = typer.Option(
+        None, "--length-percentile", "-p", help="Percentile threshold for sequence length (e.g., 0.9 for P90)"
+    ),
+    length_handling: str = typer.Option(
+        "trim", "--length-handling", "-l", help="How to handle long sequences: 'trim' or 'drop'"
+    ),
 ) -> None:
     """Preprocess datasets: clean, tokenize, split, and save.
 
@@ -477,17 +549,35 @@ def preprocess_command(
 
         # Use custom tokenizer
         uv run src/customer_support/data.py preprocess -d medium -m bert-base-multilingual-cased
+
+        # Process with P90 length threshold (trim long sequences)
+        uv run src/customer_support/data.py preprocess -d small -p 0.9 --length-handling trim
     """
+    if length_handling not in VALID_LENGTH_HANDLING:
+        raise typer.BadParameter(f"length_handling must be one of: {', '.join(VALID_LENGTH_HANDLING)}")
+
     if all_datasets:
         for dtype in VALID_DATASET_TYPES:
             _ = TicketDataset(
-                root="data", split="train", dataset_type=dtype, force_preprocess=True, model_name=model_name
+                root="data",
+                split="train",
+                dataset_type=dtype,
+                force_preprocess=True,
+                model_name=model_name,
+                length_percentile=length_percentile,
+                length_handling=length_handling,
             )
     elif dataset_type:
         if dataset_type not in VALID_DATASET_TYPES:
             raise typer.BadParameter("dataset_type must be one of: small, medium, full")
         _ = TicketDataset(
-            root="data", split="train", dataset_type=dataset_type, force_preprocess=True, model_name=model_name
+            root="data",
+            split="train",
+            dataset_type=dataset_type,
+            force_preprocess=True,
+            model_name=model_name,
+            length_percentile=length_percentile,
+            length_handling=length_handling,
         )
     else:
         raise typer.BadParameter("Must specify either --dataset-type or --all")

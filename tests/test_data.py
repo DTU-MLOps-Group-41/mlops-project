@@ -339,3 +339,102 @@ def test_load_real_preprocessed_data() -> None:
     assert all(key in sample for key in ["input_ids", "attention_mask", "labels"]), (
         "Real dataset sample missing required keys"
     )
+
+
+# ============================================================================
+# LENGTH FILTERING AND PADDING TESTS
+# ============================================================================
+
+
+def test_tokenize_dataset_with_percentile_trim() -> None:
+    """Test tokenization with percentile filtering using trim mode."""
+    df = pd.DataFrame(
+        {
+            "body": [
+                "Short",
+                "Medium length text here",
+                "This is a much longer text that should be trimmed to the percentile threshold",
+                "Another very long text that exceeds the threshold and needs trimming to fit",
+            ],
+            "labels": [0, 1, 2, 3],
+        }
+    )
+    dataset = Dataset.from_pandas(df)
+
+    result = TicketDataset._tokenize_dataset(dataset, length_percentile=0.5, length_handling="trim")
+
+    assert len(result) == 4, "Trim mode should preserve all samples"
+    lengths = [len(result[i]["input_ids"]) for i in range(len(result))]
+    assert len(set(lengths)) == 1, "All sequences should have the same length after padding"
+
+
+def test_tokenize_dataset_with_percentile_drop() -> None:
+    """Test tokenization with percentile filtering using drop mode."""
+    df = pd.DataFrame(
+        {
+            "body": [
+                "Short",
+                "Medium length text here",
+                "This is a much longer text that should be dropped when exceeding percentile threshold",
+                "Another very long text that also exceeds the threshold and should be removed",
+            ],
+            "labels": [0, 1, 2, 3],
+        }
+    )
+    dataset = Dataset.from_pandas(df)
+
+    result = TicketDataset._tokenize_dataset(dataset, length_percentile=0.5, length_handling="drop")
+
+    assert len(result) <= 4, "Drop mode may remove samples"
+    lengths = [len(result[i]["input_ids"]) for i in range(len(result))]
+    assert len(set(lengths)) == 1, "All sequences should have the same length after padding"
+
+
+def test_tokenize_dataset_applies_uniform_padding() -> None:
+    """Test that tokenization applies uniform padding to all sequences."""
+    df = pd.DataFrame(
+        {
+            "body": ["Short", "Medium text", "Longer text here with more words"],
+            "labels": [0, 1, 2],
+        }
+    )
+    dataset = Dataset.from_pandas(df)
+
+    result = TicketDataset._tokenize_dataset(dataset)
+
+    lengths = [len(result[i]["input_ids"]) for i in range(len(result))]
+    assert len(set(lengths)) == 1, f"Expected all sequences to have same length, got {set(lengths)}"
+
+    attention_lengths = [len(result[i]["attention_mask"]) for i in range(len(result))]
+    assert len(set(attention_lengths)) == 1, "Attention masks should have uniform length"
+    assert lengths[0] == attention_lengths[0], "Input IDs and attention mask should have same length"
+
+
+def test_tokenize_dataset_no_percentile_backwards_compatible() -> None:
+    """Test tokenization without percentile maintains backwards compatibility."""
+    df = pd.DataFrame(
+        {
+            "body": ["Test ticket 1", "Test ticket 2"],
+            "labels": [0, 1],
+        }
+    )
+    dataset = Dataset.from_pandas(df)
+
+    result = TicketDataset._tokenize_dataset(dataset)
+
+    assert "input_ids" in result.column_names, "Should contain input_ids"
+    assert "attention_mask" in result.column_names, "Should contain attention_mask"
+    assert "labels" in result.column_names, "Should contain labels"
+    assert len(result) == 2, "Should preserve all samples"
+
+
+def test_invalid_length_handling() -> None:
+    """Test that invalid length_handling raises ValueError."""
+    with pytest.raises(ValueError, match="length_handling must be one of"):
+        TicketDataset.__new__(TicketDataset)
+        TicketDataset(
+            root="data",
+            split="train",
+            dataset_type="small",
+            length_handling="invalid",
+        )
