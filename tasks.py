@@ -18,14 +18,14 @@ def download_data(ctx: Context) -> None:
 def preprocess_data(
     ctx: Context,
     dataset_type: str = "",
-    length_percentile: float = 0.0,
+    length_percentile: int = 0,
     length_handling: str = "trim",
 ) -> None:
     """Preprocess data.
 
     Args:
         dataset_type: One of 'small', 'medium', 'full'. If empty, processes all.
-        length_percentile: Percentile threshold for sequence length (e.g., 0.9 for P90). 0 = no filtering.
+        length_percentile: Percentile threshold for sequence length (e.g., 90 for P90). 0 = no filtering.
         length_handling: How to handle long sequences: 'trim' or 'drop'.
     """
     if dataset_type:

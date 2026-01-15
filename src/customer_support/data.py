@@ -48,7 +48,7 @@ class TicketDataset(torch.utils.data.Dataset):
         transform: Optional transform applied on tokenized samples
         target_transform: Optional transform applied on labels
         model_name: Tokenizer model name (default: "distilbert-base-multilingual-cased")
-        length_percentile: Percentile threshold for sequence length (e.g., 0.9 for P90).
+        length_percentile: Percentile threshold for sequence length (e.g., 90 for P90).
                           If None, no length filtering is applied.
         length_handling: How to handle sequences exceeding the percentile threshold:
                         "trim" truncates to threshold, "drop" removes the sample.
@@ -69,7 +69,7 @@ class TicketDataset(torch.utils.data.Dataset):
         >>>
         >>> # Preprocess with P90 length threshold (trim long sequences)
         >>> train_data = TicketDataset(root="data", split="train", force_preprocess=True,
-        ...                            length_percentile=0.9, length_handling="trim")
+        ...                            length_percentile=90, length_handling="trim")
         >>>
         >>> # Use with DataLoader
         >>> from torch.utils.data import DataLoader
@@ -90,7 +90,7 @@ class TicketDataset(torch.utils.data.Dataset):
         transform: Optional[Callable] = None,
         target_transform: Optional[Callable] = None,
         model_name: str = "distilbert-base-multilingual-cased",
-        length_percentile: float | None = None,
+        length_percentile: int | None = None,
         length_handling: str = "trim",
     ) -> None:
         """Initialize TicketDataset."""
@@ -272,7 +272,7 @@ class TicketDataset(torch.utils.data.Dataset):
     def _tokenize_dataset(
         dataset: Dataset,
         model_name: str = "distilbert-base-multilingual-cased",
-        length_percentile: float | None = None,
+        length_percentile: int | None = None,
         length_handling: str = "trim",
     ) -> Dataset:
         """Tokenize text data using DistilBERT tokenizer with optional length filtering and padding.
@@ -280,7 +280,7 @@ class TicketDataset(torch.utils.data.Dataset):
         Args:
             dataset: HuggingFace Dataset with 'body' column
             model_name: Tokenizer model name
-            length_percentile: Percentile threshold for sequence length (e.g., 0.9 for P90).
+            length_percentile: Percentile threshold for sequence length (e.g., 90 for P90).
                               If None, no length filtering is applied.
             length_handling: How to handle sequences exceeding the percentile threshold:
                             "trim" truncates to threshold, "drop" removes the sample.
@@ -314,8 +314,8 @@ class TicketDataset(torch.utils.data.Dataset):
         logger.info(f"Sequence length stats: min={min(lengths)}, max={max(lengths)}, mean={np.mean(lengths):.1f}")
 
         if length_percentile is not None:
-            threshold = int(np.percentile(lengths, length_percentile * 100))
-            logger.info(f"Length threshold at P{int(length_percentile * 100)}: {threshold} tokens")
+            threshold = np.percentile(lengths, length_percentile)
+            logger.info(f"Length threshold at P{length_percentile}: {threshold} tokens")
 
             if length_handling == "drop":
                 tokenized_dataset = tokenized_dataset.filter(lambda x: len(x["input_ids"]) <= threshold)
@@ -529,8 +529,8 @@ def preprocess_command(
     dataset_type: str = typer.Option(None, "--dataset-type", "-d", help="Dataset size: small, medium, or full"),
     all_datasets: bool = typer.Option(False, "--all", "-a", help="Process all dataset sizes"),
     model_name: str = typer.Option("distilbert-base-multilingual-cased", "--model", "-m", help="Tokenizer model name"),
-    length_percentile: float = typer.Option(
-        None, "--length-percentile", "-p", help="Percentile threshold for sequence length (e.g., 0.9 for P90)"
+    length_percentile: int = typer.Option(
+        None, "--length-percentile", "-p", help="Percentile threshold for sequence length (e.g., 90 for P90)"
     ),
     length_handling: str = typer.Option(
         "trim", "--length-handling", "-l", help="How to handle long sequences: 'trim' or 'drop'"
