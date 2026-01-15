@@ -5,7 +5,7 @@ build-backend = "uv_build"
 [project]
 name = "customer_support"
 version = "0.0.1"
-description = "DTU MLOps course project."
+description = "DTU MLOps pcourse project."
 authors = [
   { name = "Group 41", email = "your@email.com" },
 ]
@@ -21,13 +21,14 @@ dependencies = [
     "datasets>=4.4.2",
     "dvc>=3.65.0",
     "dvc-gs>=3.0.2",
+    "dvc-ssh>=4.2.2",
     "fastapi==0.128.0",
     "kagglehub>=0.4.0",
     "loguru>=0.7.3",
     "nbconvert>=7.16.6",
     "numpy>=2.4.1",
     "pandas>=2.3.3",
-    "torch==2.9.1",
+    # "torch==2.9.1",
     "transformers>=4.57.3",
     "typer==0.21.1",
     "uvicorn==0.40.0",
@@ -44,26 +45,30 @@ dev = [
     "ruff==0.14.11",
     "mkdocstrings-python==2.0.1",
     "ipykernel>=7.1.0",
-    "matplotlib>=3.10.8",
 ]
-cpu = ["torch", "torchvision"]
-cu128 = ["torch", "torchvision"]
 
 [project.optional-dependencies]
-dvc-ssh = ["dvc-ssh>=4.2.2"]
+cpu = [
+    "torch==2.9.1+cpu; sys_platform != 'darwin'",
+    "torch==2.9.1; sys_platform == 'darwin'",
+    "torchvision==0.24.1+cpu; sys_platform != 'darwin'",
+    "torchvision==0.24.1; sys_platform == 'darwin'"
+]
+cu128 = ["torch==2.9.1+cu128", "torchvision==0.24.1"]
 
 [tool.uv]
-default-groups = ["cpu"]
-conflicts = [[{ group = "cpu" }, { group = "cu128" }]]
+conflicts = [
+    [ { extra = "cpu" }, { extra = "cu128" } ]
+]
 
 [tool.uv.sources]
 torch = [
-  { index = "pytorch-cpu", group = "cpu", marker = "sys_platform != 'darwin'" },
-  { index = "pytorch-cu128", group = "cu128" },
+  { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
+  { index = "pytorch-cu128", extra = "cu128" },
 ]
 torchvision = [
-  { index = "pytorch-cpu", group = "cpu", marker = "sys_platform != 'darwin'" },
-  { index = "pytorch-cu128", group = "cu128" },
+  { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
+  { index = "pytorch-cu128", extra = "cu128" },
 ]
 
 [[tool.uv.index]]
