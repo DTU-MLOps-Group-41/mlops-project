@@ -1,11 +1,12 @@
-from transformers import DistilBertForSequenceClassification
+import torch
+from transformers import DistilBertForSequenceClassification, Union
 from data import LABEL_MAP
 
 
-def get_model():
+def get_model(device_map: str | dict[str, Union[int, str, torch.device]] | int | torch.device = "auto"):
     return DistilBertForSequenceClassification.from_pretrained(
-        "distilbert-base-multilingual-cased", 
-        num_labels=len(set(LABEL_MAP.values())) # Ensure unique label count
+        "distilbert-base-multilingual-cased",
+        num_labels=len(set(LABEL_MAP.values())),  # Ensure unique label count
     )
 
 

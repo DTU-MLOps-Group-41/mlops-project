@@ -47,6 +47,9 @@ def train(
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
 
+    model = get_model()
+    model.device
+
     logger.info(f"{'=' * 60}")
     logger.info("Training Configuration:")
     logger.info(f"  Device: {DEVICE}")
@@ -68,7 +71,6 @@ def train(
     logger.info(f"Train dataset: {len(train_dataset)} samples")
     logger.info(f"Validation dataset: {len(val_dataset)} samples")
 
-    model = get_model().to(DEVICE)
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
     best_val_loss = float("inf")
@@ -105,7 +107,9 @@ def train(
             train_correct += (predictions == labels).sum().item()
             train_total += labels.size(0)
 
-            train_pbar.set_postfix(loss=f"{train_loss / (train_pbar.n + 1):.4f}", acc=f"{train_correct / train_total:.4f}")
+            train_pbar.set_postfix(
+                loss=f"{train_loss / (train_pbar.n + 1):.4f}", acc=f"{train_correct / train_total:.4f}"
+            )
 
         avg_train_loss = train_loss / len(train_loader)
         train_accuracy = train_correct / train_total
