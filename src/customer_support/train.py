@@ -111,7 +111,9 @@ def train(
         train_correct = 0
         train_total = 0
 
-        for batch in train_loader:
+        logger.debug(f"Starting epoch {epoch + 1}/{num_epochs}")
+        logger.debug(f"Number of batches: {len(train_loader)}")
+        for i, batch in enumerate(train_loader):
             input_ids = batch["input_ids"].to(DEVICE)
             attention_mask = batch["attention_mask"].to(DEVICE)
             labels = batch["labels"].to(DEVICE)
@@ -126,6 +128,7 @@ def train(
             predictions = outputs.logits.argmax(dim=-1)
             train_correct += (predictions == labels).sum().item()
             train_total += labels.size(0)
+            logger.debug(f"  Epoch {epoch + 1}, Batch {i + 1}/{len(train_loader)} - Loss: {loss.item():.4f}")
 
         avg_train_loss = train_loss / len(train_loader)
         train_accuracy = train_correct / train_total
