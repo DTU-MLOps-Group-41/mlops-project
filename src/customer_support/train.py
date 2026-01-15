@@ -11,11 +11,6 @@ from customer_support.data import TicketDataset
 from customer_support.model import get_model
 
 
-# DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
-model = get_model()
-DEVICE = model.device
-
-
 def train(
     data_root: str | Path = "data",
     dataset_type: str = "small",
@@ -49,9 +44,11 @@ def train(
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
 
+    model = get_model() # devoice_map="auto"
+
     logger.info(f"{'=' * 60}")
     logger.info("Training Configuration:")
-    logger.info(f"  Device: {DEVICE}")
+    logger.info(f"  Device: {model.device}")
     logger.info(f"  Dataset: {dataset_type} (root: {data_root})")
     logger.info(f"  Batch size: {batch_size}")
     logger.info(f"  Learning rate: {learning_rate}")
@@ -91,9 +88,9 @@ def train(
 
         train_pbar = tqdm(train_loader, desc=f"Epoch {epoch + 1}/{num_epochs} [Train]", leave=True)
         for batch in train_pbar:
-            input_ids = batch["input_ids"].to(DEVICE)
-            attention_mask = batch["attention_mask"].to(DEVICE)
-            labels = batch["labels"].to(DEVICE)
+            input_ids = batch["input_ids"].to(model.device)
+            attention_mask = batch["attention_mask"].to(model.device)
+            labels = batch["labels"].to(model.device)
 
             optimizer.zero_grad()
             outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
@@ -121,9 +118,9 @@ def train(
         with torch.no_grad():
             val_pbar = tqdm(val_loader, desc=f"Epoch {epoch + 1}/{num_epochs} [Val]", leave=False)
             for batch in val_pbar:
-                input_ids = batch["input_ids"].to(DEVICE)
-                attention_mask = batch["attention_mask"].to(DEVICE)
-                labels = batch["labels"].to(DEVICE)
+                input_ids = batch["input_ids"].to(model.device)
+                attention_mask = batch["attention_mask"].to(model.device)
+                labels = batch["labels"].to(model.device)
 
                 outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
                 val_loss += outputs.loss.item()
