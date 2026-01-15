@@ -1,5 +1,8 @@
 [core]
-    remote = storage
+    remote = remote_storage
     autostage = true
 ['remote "storage"']
     url = ssh://transfer.gbar.dtu.dk/zhome/2f/e/214039/mlops-project
+['remote "remote_storage"']
+    url = gs://my_mlops_data_bucket3/
+    version_aware = true
