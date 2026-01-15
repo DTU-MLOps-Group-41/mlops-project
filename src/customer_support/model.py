@@ -1,5 +1,6 @@
+from typing import Union
 import torch
-from transformers import DistilBertForSequenceClassification, Union
+from transformers import DistilBertForSequenceClassification
 from data import LABEL_MAP
 
 
