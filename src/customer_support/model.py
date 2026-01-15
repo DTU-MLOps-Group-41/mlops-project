@@ -4,7 +4,8 @@ from data import LABEL_MAP
 
 def get_model():
     return DistilBertForSequenceClassification.from_pretrained(
-        "distilbert-base-multilingual-cased", num_labels=len(LABEL_MAP)
+        "distilbert-base-multilingual-cased", 
+        num_labels=len(set(LABEL_MAP.values())) # Ensure unique label count
     )
 
 
