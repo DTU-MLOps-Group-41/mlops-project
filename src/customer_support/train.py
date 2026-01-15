@@ -5,6 +5,7 @@ import torch.optim as optim
 import typer
 from loguru import logger
 from torch.utils.data import DataLoader
+from tqdm import tqdm
 
 from customer_support.data import TicketDataset
 from customer_support.model import get_model
@@ -87,9 +88,8 @@ def train(
         train_correct = 0
         train_total = 0
 
-        logger.debug(f"Starting epoch {epoch + 1}/{num_epochs}")
-        logger.debug(f"Number of batches: {len(train_loader)}")
-        for i, batch in enumerate(train_loader):
+        train_pbar = tqdm(train_loader, desc=f"Epoch {epoch + 1}/{num_epochs} [Train]", leave=True)
+        for batch in train_pbar:
             input_ids = batch["input_ids"].to(DEVICE)
             attention_mask = batch["attention_mask"].to(DEVICE)
             labels = batch["labels"].to(DEVICE)
@@ -104,7 +104,8 @@ def train(
             predictions = outputs.logits.argmax(dim=-1)
             train_correct += (predictions == labels).sum().item()
             train_total += labels.size(0)
-            logger.debug(f"  Epoch {epoch + 1}, Batch {i + 1}/{len(train_loader)} - Loss: {loss.item():.4f}")
+
+            train_pbar.set_postfix(loss=f"{train_loss / (train_pbar.n + 1):.4f}", acc=f"{train_correct / train_total:.4f}")
 
         avg_train_loss = train_loss / len(train_loader)
         train_accuracy = train_correct / train_total
@@ -115,7 +116,8 @@ def train(
         val_total = 0
 
         with torch.no_grad():
-            for batch in val_loader:
+            val_pbar = tqdm(val_loader, desc=f"Epoch {epoch + 1}/{num_epochs} [Val]", leave=False)
+            for batch in val_pbar:
                 input_ids = batch["input_ids"].to(DEVICE)
                 attention_mask = batch["attention_mask"].to(DEVICE)
                 labels = batch["labels"].to(DEVICE)

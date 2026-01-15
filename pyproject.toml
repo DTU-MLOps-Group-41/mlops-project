@@ -30,6 +30,7 @@ dependencies = [
     "pandas>=2.3.3",
     # "torch==2.9.1",
     "transformers>=4.57.3",
+    "tqdm>=4.66.0",
     "typer==0.21.1",
     "uvicorn==0.40.0",
 ]
