@@ -15,16 +15,27 @@ def download_data(ctx: Context) -> None:
 
 
 @task
-def preprocess_data(ctx: Context, dataset_type: str = "") -> None:
+def preprocess_data(
+    ctx: Context,
+    dataset_type: str = "",
+    length_percentile: int = 0,
+    length_handling: str = "trim",
+) -> None:
     """Preprocess data.
 
     Args:
         dataset_type: One of 'small', 'medium', 'full'. If empty, processes all.
+        length_percentile: Percentile threshold for sequence length (e.g., 90 for P90). 0 = no filtering.
+        length_handling: How to handle long sequences: 'trim' or 'drop'.
     """
     if dataset_type:
         cmd = f"uv run src/{PROJECT_NAME}/data.py preprocess -d {dataset_type}"
     else:
         cmd = f"uv run src/{PROJECT_NAME}/data.py preprocess --all"
+
+    if length_percentile > 0:
+        cmd += f" -p {length_percentile}"
+    cmd += f" --length-handling {length_handling}"
 
     ctx.run(cmd, echo=True, pty=not WINDOWS)
 
