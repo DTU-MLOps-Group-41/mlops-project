@@ -314,7 +314,7 @@ class TicketDataset(torch.utils.data.Dataset):
         logger.info(f"Sequence length stats: min={min(lengths)}, max={max(lengths)}, mean={np.mean(lengths):.1f}")
 
         if length_percentile is not None:
-            threshold = np.percentile(lengths, length_percentile)
+            threshold = int(np.percentile(lengths, length_percentile))
             logger.info(f"Length threshold at P{length_percentile}: {threshold} tokens")
 
             if length_handling == "drop":
