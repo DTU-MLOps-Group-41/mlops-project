@@ -35,7 +35,7 @@ jobs:
 
       - name: Install dependencies
         # We use --frozen to ensure the lockfile is respected exactly
-        run: uv sync --frozen --group dev
+        run: uv sync --frozen --group dev --extra cpu
 
       - name: Run tests & coverage
         run: |

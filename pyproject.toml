@@ -28,7 +28,7 @@ dependencies = [
     "nbconvert>=7.16.6",
     "numpy>=2.4.1",
     "pandas>=2.3.3",
-    "torch==2.9.1",
+    # "torch==2.9.1",
     "transformers>=4.57.3",
     "typer==0.21.1",
     "uvicorn==0.40.0",
@@ -47,19 +47,24 @@ dev = [
     "ipykernel>=7.1.0",
 ]
 
+[project.optional-dependencies]
+cpu = ["torch==2.9.1+cpu", "torchvision==0.24.1+cpu"]
+cu128 = ["torch==2.9.1+cu128", "torchvision==0.24.1"]
+
+[tool.uv]
+conflicts = [
+    [ { extra = "cpu" }, { extra = "cu128" } ]
+]
 
 [tool.uv.sources]
 torch = [
-    { index = "pytorch-cpu" },
+  { index = "pytorch-cpu", extra = "cpu" },
+  { index = "pytorch-cu128", extra = "cu128" },
 ]
 torchvision = [
-    { index = "pytorch-cpu" },
+  { index = "pytorch-cpu", extra = "cpu" },
+  { index = "pytorch-cu128", extra = "cu128" },
 ]
-
-[[tool.uv.index]]
-name = "pytorch-cpu"
-url = "https://download.pytorch.org/whl/cpu"
-explicit = true
 
 [tool.ruff]
 line-length = 120
