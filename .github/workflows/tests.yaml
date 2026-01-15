@@ -34,8 +34,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        # We use --frozen to ensure the lockfile is respected exactly
-        run: uv sync --frozen --group dev --extra cpu
+        run: uv sync --frozen --dev
 
       - name: Run tests & coverage
         run: |
