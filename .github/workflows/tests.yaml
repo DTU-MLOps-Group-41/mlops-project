@@ -20,6 +20,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.12"] 
+    permissions:
+      id-token: write
 
     steps:
       - name: Checkout code
@@ -38,4 +40,10 @@ jobs:
       - name: Run tests & coverage
         run: |
           uv run coverage run -m pytest tests/
-          uv run coverage report -m
+          uv run coverage xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          use_oidc: true
+          files: ./coverage.xml

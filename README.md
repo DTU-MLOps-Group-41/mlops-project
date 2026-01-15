@@ -1,17 +1,18 @@
-# Customer IT Support - Ticket classification
+# Customer IT Support - Ticket Classification
 
-[![Python](https://img.shields.io/badge/python-3.12-blue?logo=python&logoColor=white)](https://www.python.org)
-[![PyTorch](https://img.shields.io/badge/PyTorch-ee4c2c?logo=pytorch&logoColor=white)](https://pytorch.org)
-[![Hugging Face Transformers](https://img.shields.io/badge/%F0%9F%A4%97%20Transformers-yellow)](https://huggingface.co/transformers)
-[![Weights & Biases](https://img.shields.io/badge/W%26B-FFCC33?logo=weightsandbiases&logoColor=black)](https://wandb.ai/)
-[![DVC](https://img.shields.io/badge/DVC-945DD6?logo=dvc&logoColor=white)](https://dvc.org/)
+![Python](https://img.shields.io/badge/python-3.12-blue?logo=python&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-ee4c2c?logo=pytorch&logoColor=white)
+![Transformers](https://img.shields.io/badge/%F0%9F%A4%97%20Transformers-yellow)
+![W&B](https://img.shields.io/badge/W%26B-FFCC33?logo=weightsandbiases&logoColor=black)
+![DVC](https://img.shields.io/badge/DVC-945DD6?logo=dvc&logoColor=white)
 
+[![Tests](https://github.com/DTU-MLOps-Group-41/mlops-project/actions/workflows/tests.yaml/badge.svg)](https://github.com/DTU-MLOps-Group-41/mlops-project/actions/workflows/tests.yaml)
+[![Codecov](https://codecov.io/github/DTU-MLOps-Group-41/mlops-project/graph/badge.svg?token=2896K468ZM)](https://codecov.io/github/DTU-MLOps-Group-41/mlops-project)
+[![Linting](https://github.com/DTU-MLOps-Group-41/mlops-project/actions/workflows/linting.yaml/badge.svg)](https://github.com/DTU-MLOps-Group-41/mlops-project/actions/workflows/linting.yaml)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Linting](https://github.com/DTU-MLOps-Group-41/mlops-project/actions/workflows/linting.yaml/badge.svg)](https://github.com/DTU-MLOps-Group-41/mlops-project/actions/workflows/linting.yaml)
-[![Tests](https://github.com/DTU-MLOps-Group-41/mlops-project/actions/workflows/tests.yaml/badge.svg)](https://github.com/DTU-MLOps-Group-41/mlops-project/actions/workflows/tests.yaml)
-[![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
-[![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com)
+![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)
+![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)
 
 ## Group 41 — DTU MLOps Course Project
 
