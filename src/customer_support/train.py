@@ -4,10 +4,35 @@ import torch
 import torch.optim as optim
 import typer
 from loguru import logger
+from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import DataLoader
 
 from customer_support.data import TicketDataset
 from customer_support.model import get_model
+
+
+def collate_fn(batch: list[dict[str, torch.Tensor]]) -> dict[str, torch.Tensor]:
+    """Collate function to pad sequences in a batch to the same length.
+
+    Args:
+        batch: List of samples, each with 'input_ids', 'attention_mask', and 'labels'.
+
+    Returns:
+        Batched tensors with padding applied to input_ids and attention_mask.
+    """
+    input_ids = [sample["input_ids"] for sample in batch]
+    attention_masks = [sample["attention_mask"] for sample in batch]
+    labels = torch.stack([sample["labels"] for sample in batch])
+
+    input_ids_padded = pad_sequence(input_ids, batch_first=True, padding_value=0)
+    attention_masks_padded = pad_sequence(attention_masks, batch_first=True, padding_value=0)
+
+    return {
+        "input_ids": input_ids_padded,
+        "attention_mask": attention_masks_padded,
+        "labels": labels,
+    }
+
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
@@ -60,8 +85,8 @@ def train(
     train_dataset = TicketDataset(root=data_root, split="train", dataset_type=dataset_type)
     val_dataset = TicketDataset(root=data_root, split="validation", dataset_type=dataset_type)
 
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, collate_fn=collate_fn)
 
     logger.info(f"Train dataset: {len(train_dataset)} samples")
     logger.info(f"Validation dataset: {len(val_dataset)} samples")
