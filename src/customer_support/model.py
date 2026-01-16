@@ -101,10 +101,10 @@ class TicketClassificationModule(pl.LightningModule):
         logits = outputs.logits
         predictions = torch.argmax(logits, dim=-1)
 
-        # Update and log metrics
+        # Update and log metrics (sync_dist=True for distributed training)
         self.train_accuracy(predictions, batch["labels"])
-        self.log("train_loss", loss, on_step=True, on_epoch=True, prog_bar=True)
-        self.log("train_accuracy", self.train_accuracy, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("train_loss", loss, on_step=True, on_epoch=True, prog_bar=True, sync_dist=True)
+        self.log("train_accuracy", self.train_accuracy, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
 
         return loss
 
@@ -125,10 +125,10 @@ class TicketClassificationModule(pl.LightningModule):
         logits = outputs.logits
         predictions = torch.argmax(logits, dim=-1)
 
-        # Update and log metrics
+        # Update and log metrics (sync_dist=True for distributed training)
         self.val_accuracy(predictions, batch["labels"])
-        self.log("val_loss", loss, on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val_accuracy", self.val_accuracy, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("val_loss", loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+        self.log("val_accuracy", self.val_accuracy, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
 
     def test_step(self, batch: dict[str, torch.Tensor], batch_idx: int) -> None:
         """Test step - compute accuracy.
@@ -147,10 +147,10 @@ class TicketClassificationModule(pl.LightningModule):
         logits = outputs.logits
         predictions = torch.argmax(logits, dim=-1)
 
-        # Update and log metrics
+        # Update and log metrics (sync_dist=True for distributed training)
         self.test_accuracy(predictions, batch["labels"])
-        self.log("test_loss", loss, on_step=False, on_epoch=True, prog_bar=True)
-        self.log("test_accuracy", self.test_accuracy, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("test_loss", loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+        self.log("test_accuracy", self.test_accuracy, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
 
     def configure_optimizers(self):
         """Configure AdamW optimizer with weight decay.
