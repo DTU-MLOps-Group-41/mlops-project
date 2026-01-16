@@ -118,8 +118,10 @@ def test_encode_labels(sample_clean_dataframe) -> None:
     result = TicketDataset._encode_labels(sample_clean_dataframe, LABEL_MAP)
 
     assert "labels" in result.columns, "Encoded dataframe must contain 'labels' column"
-    assert result["labels"].tolist() == [0, 1, 2, 3, 4], (
-        f"Expected labels [0, 1, 2, 3, 4], got {result['labels'].tolist()}"
+    priorities = ["very_low", "low", "medium", "high", "critical"]
+    expected_labels = [LABEL_MAP[p] for p in priorities]
+    assert result["labels"].tolist() == expected_labels, (
+        f"Expected labels {expected_labels}, got {result['labels'].tolist()}"
     )
     assert result["labels"].dtype == int, f"Labels should be int type, got {result['labels'].dtype}"
 
@@ -136,7 +138,9 @@ def test_encode_labels_handles_unknown() -> None:
     result = TicketDataset._encode_labels(df)
 
     assert len(result) == 1, f"Expected 1 row after dropping unknown labels, got {len(result)}"
-    assert result["labels"].tolist() == [1], f"Expected label [1] for 'low' priority, got {result['labels'].tolist()}"
+    assert result["labels"].tolist() == [LABEL_MAP["low"]], (
+        f"Expected label [{LABEL_MAP['low']}] for 'low' priority, got {result['labels'].tolist()}"
+    )
 
 
 def test_tokenize_dataset() -> None:
@@ -278,10 +282,10 @@ class TestTicketDataset:
         """Test class method returns label mapping."""
         label_map = TicketDataset.get_label_map()
         assert isinstance(label_map, dict), f"get_label_map should return dict, got {type(label_map)}"
-        assert label_map == {"very_low": 0, "low": 1, "medium": 2, "high": 3, "critical": 4}, (
-            f"Label map mismatch: {label_map}"
+        assert label_map == LABEL_MAP, f"Label map mismatch: {label_map}"
+        assert len(label_map) == len(LABEL_MAP), (
+            f"Label map should have {len(LABEL_MAP)} priority levels, got {len(label_map)}"
         )
-        assert len(label_map) == 5, f"Label map should have 5 priority levels, got {len(label_map)}"
 
     def test_len(self, mock_preprocessed_dataset) -> None:
         """Test __len__ returns correct size."""
