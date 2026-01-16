@@ -1,19 +1,26 @@
-from torch import nn
+from typing import Union
 import torch
+from transformers import DistilBertForSequenceClassification
+from data import LABEL_MAP
 
 
-class Model(nn.Module):
-    """Just a dummy model to show how to structure your code"""
-
-    def __init__(self):
-        super().__init__()
-        self.layer = nn.Linear(1, 1)
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.layer(x)
+def get_model(
+    device_map: str | dict[str, Union[int, str, torch.device]] | int | torch.device = "auto",
+    dtype: str | torch.dtype | None = None,
+):
+    return DistilBertForSequenceClassification.from_pretrained(
+        "distilbert-base-multilingual-cased",
+        num_labels=len(set(LABEL_MAP.values())),  # Ensure unique label count
+        device_map=device_map,
+        torch_dtype=dtype,
+    )
 
 
 if __name__ == "__main__":
-    model = Model()
-    x = torch.rand(1)
-    print(f"Output shape of model: {model(x).shape}")
+    model = get_model()
+    print(model)
+    for name, param in model.named_parameters():
+        print(f"{name}: {param.size()}")
+
+    total_params = sum(p.numel() for p in model.parameters())
+    print(f"Total number of parameters: {total_params}")
