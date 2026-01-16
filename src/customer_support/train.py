@@ -44,7 +44,7 @@ def train(
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
 
-    model = get_model() # devoice_map="auto"
+    model = get_model()  # devoice_map="auto"
 
     logger.info(f"{'=' * 60}")
     logger.info("Training Configuration:")

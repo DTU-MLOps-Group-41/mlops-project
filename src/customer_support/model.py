@@ -4,8 +4,10 @@ from transformers import DistilBertForSequenceClassification
 from data import LABEL_MAP
 
 
-def get_model(device_map: str | dict[str, Union[int, str, torch.device]] | int | torch.device = "auto",
-              dtype: str | torch.dtype | None = None):
+def get_model(
+    device_map: str | dict[str, Union[int, str, torch.device]] | int | torch.device = "auto",
+    dtype: str | torch.dtype | None = None,
+):
     return DistilBertForSequenceClassification.from_pretrained(
         "distilbert-base-multilingual-cased",
         num_labels=len(set(LABEL_MAP.values())),  # Ensure unique label count
