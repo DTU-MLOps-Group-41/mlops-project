@@ -139,3 +139,20 @@ class TestTicketClassificationModule:
         assert module.train_accuracy is not None
         assert module.val_accuracy is not None
         assert module.test_accuracy is not None
+
+    def test_predict_step_returns_predictions_and_labels(self) -> None:
+        """Test that predict_step returns dict with predictions and labels."""
+        module = TicketClassificationModule()
+
+        batch = {
+            "input_ids": torch.randint(0, 1000, (2, 10)),
+            "attention_mask": torch.ones(2, 10, dtype=torch.long),
+            "labels": torch.tensor([0, 1]),
+        }
+
+        result = module.predict_step(batch, batch_idx=0)
+
+        assert "predictions" in result
+        assert "labels" in result
+        assert result["predictions"].shape == (2,)
+        assert result["labels"].shape == (2,)

@@ -109,6 +109,7 @@ def evaluate_command(
     ),
     dataset_type: str = typer.Option("small", "-d", "--dataset-type", help="Dataset size: small, medium, or full"),
     batch_size: int = typer.Option(32, "-b", "--batch-size", help="Evaluation batch size"),
+    data_root: str = typer.Option("data", "--data-root", help="Root directory for dataset files"),
     accelerator: str = typer.Option("auto", "--accelerator", help="Lightning accelerator (auto, cpu, gpu, tpu)"),
     devices: str = typer.Option("auto", "--devices", help="Number of devices or 'auto'"),
     num_workers: int = typer.Option(0, "--num-workers", help="DataLoader workers"),
@@ -130,7 +131,7 @@ def evaluate_command(
 
     evaluate(
         checkpoint_path=checkpoint,
-        data_root="data",
+        data_root=data_root,
         dataset_type=dataset_type,
         batch_size=batch_size,
         accelerator=accelerator,

@@ -113,6 +113,15 @@ class TicketDataModule(pl.LightningDataModule):
                 model_name=self.model_name,
             )
 
+        if stage == "predict":
+            self.test_dataset = TicketDataset(
+                root=self.root,
+                split="test",
+                dataset_type=self.dataset_type,
+                download=False,
+                model_name=self.model_name,
+            )
+
     def train_dataloader(self) -> DataLoader:
         """Return training DataLoader."""
         return DataLoader(
@@ -133,6 +142,15 @@ class TicketDataModule(pl.LightningDataModule):
 
     def test_dataloader(self) -> DataLoader:
         """Return test DataLoader."""
+        return DataLoader(
+            self.test_dataset,
+            batch_size=self.batch_size,
+            shuffle=False,
+            num_workers=self.num_workers,
+        )
+
+    def predict_dataloader(self) -> DataLoader:
+        """Return predict DataLoader (uses test dataset)."""
         return DataLoader(
             self.test_dataset,
             batch_size=self.batch_size,

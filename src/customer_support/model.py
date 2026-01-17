@@ -152,6 +152,23 @@ class TicketClassificationModule(pl.LightningModule):
         self.log("test_loss", loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
         self.log("test_accuracy", self.test_accuracy, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
 
+    def predict_step(self, batch: dict[str, torch.Tensor], batch_idx: int) -> dict[str, torch.Tensor]:
+        """Predict step - return predictions and labels for visualization.
+
+        Args:
+            batch: Dictionary with input_ids, attention_mask, labels
+            batch_idx: Index of the current batch
+
+        Returns:
+            Dictionary with predictions and labels tensors
+        """
+        outputs = self(
+            input_ids=batch["input_ids"],
+            attention_mask=batch["attention_mask"],
+        )
+        predictions = torch.argmax(outputs.logits, dim=-1)
+        return {"predictions": predictions, "labels": batch["labels"]}
+
     def configure_optimizers(self):
         """Configure AdamW optimizer with weight decay.
 

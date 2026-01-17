@@ -2,17 +2,17 @@
 
 from pathlib import Path
 
+import lightning.pytorch as pl
+import matplotlib.pyplot as plt
+import numpy as np
 import torch
 import typer
 from loguru import logger
-import matplotlib.pyplot as plt
-import numpy as np
 from sklearn.metrics import confusion_matrix
 
-
+from customer_support.data import LABEL_MAP
 from customer_support.datamodule import TicketDataModule
 from customer_support.model import TicketClassificationModule
-from customer_support.data import LABEL_MAP
 
 
 # Reverse label map for display
@@ -67,7 +67,6 @@ def visualize(
     # Load model and datamodule
     logger.info(f"Loading checkpoint from: {checkpoint_file}")
     model = TicketClassificationModule.load_from_checkpoint(checkpoint_file)
-    model.eval()
 
     datamodule = TicketDataModule(
         root=data_root,
@@ -77,25 +76,20 @@ def visualize(
         download=False,
     )
 
-    # Collect predictions on test set
+    # Use Lightning Trainer for inference
+    trainer = pl.Trainer(
+        accelerator=accelerator,
+        devices=devices,
+        logger=False,
+        enable_progress_bar=True,
+    )
+
     logger.info("Collecting predictions on test dataset...")
-    datamodule.setup(stage="test")
-    test_loader = datamodule.test_dataloader()
+    predictions_output = trainer.predict(model=model, datamodule=datamodule)
 
-    all_predictions = []
-    all_labels = []
-
-    with torch.no_grad():
-        for batch in test_loader:
-            outputs = model(
-                input_ids=batch["input_ids"],
-                attention_mask=batch["attention_mask"],
-            )
-            logits = outputs.logits
-            predictions = torch.argmax(logits, dim=-1)
-
-            all_predictions.extend(predictions.cpu().numpy())
-            all_labels.extend(batch["labels"].cpu().numpy())
+    # Collect predictions and labels from batches
+    all_predictions = torch.cat([batch["predictions"] for batch in predictions_output]).numpy()
+    all_labels = torch.cat([batch["labels"] for batch in predictions_output]).numpy()
 
     # Compute confusion matrix
     logger.info("Computing confusion matrix...")
@@ -161,6 +155,7 @@ def visualize_command(
     dataset_type: str = typer.Option("small", "-d", "--dataset-type", help="Dataset size: small, medium, or full"),
     batch_size: int = typer.Option(32, "-b", "--batch-size", help="Evaluation batch size"),
     output_dir: str = typer.Option("reports/figures", "-o", "--output-dir", help="Output directory for visualizations"),
+    data_root: str = typer.Option("data", "--data-root", help="Root directory for dataset files"),
     accelerator: str = typer.Option("auto", "--accelerator", help="Lightning accelerator (auto, cpu, gpu)"),
     devices: str = typer.Option("auto", "--devices", help="Number of devices or 'auto'"),
     num_workers: int = typer.Option(0, "--num-workers", help="DataLoader workers"),
@@ -182,7 +177,7 @@ def visualize_command(
 
     visualize(
         checkpoint_path=checkpoint,
-        data_root="data",
+        data_root=data_root,
         dataset_type=dataset_type,
         batch_size=batch_size,
         output_dir=output_dir,
