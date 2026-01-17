@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics import confusion_matrix
 
-import lightning.pytorch as pl
 
 from customer_support.datamodule import TicketDataModule
 from customer_support.model import TicketClassificationModule

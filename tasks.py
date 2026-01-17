@@ -55,6 +55,7 @@ def evaluate(ctx: Context, checkpoint: str) -> None:
     """
     ctx.run(f"uv run src/{PROJECT_NAME}/evaluate.py {checkpoint}", echo=True, pty=not WINDOWS)
 
+
 @task
 def visualize(ctx: Context, checkpoint: str) -> None:
     """Visualize model results.
