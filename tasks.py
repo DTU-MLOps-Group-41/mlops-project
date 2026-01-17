@@ -47,6 +47,26 @@ def train(ctx: Context) -> None:
 
 
 @task
+def evaluate(ctx: Context, checkpoint: str) -> None:
+    """Evaluate model.
+
+    Args:
+        checkpoint: Path to model checkpoint file.
+    """
+    ctx.run(f"uv run src/{PROJECT_NAME}/evaluate.py {checkpoint}", echo=True, pty=not WINDOWS)
+
+
+@task
+def visualize(ctx: Context, checkpoint: str) -> None:
+    """Visualize model results.
+
+    Args:
+        checkpoint: Path to model checkpoint file.
+    """
+    ctx.run(f"uv run src/{PROJECT_NAME}/visualize.py {checkpoint}", echo=True, pty=not WINDOWS)
+
+
+@task
 def test(ctx: Context) -> None:
     """Run tests."""
     ctx.run("uv run coverage run -m pytest tests/", echo=True, pty=not WINDOWS)
