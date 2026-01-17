@@ -1,7 +1,8 @@
 """Tests for TicketDataModule and training pipeline."""
 
-import pytest
 from pathlib import Path
+
+import pytest
 from torch.utils.data import DataLoader
 
 from customer_support.datamodule import TicketDataModule

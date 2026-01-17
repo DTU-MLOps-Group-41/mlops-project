@@ -1,9 +1,9 @@
 """PyTorch Lightning Module for customer support ticket classification."""
 
-import torch
 import lightning.pytorch as pl
-from transformers import DistilBertForSequenceClassification
+import torch
 from torchmetrics.classification import MulticlassAccuracy
+from transformers import DistilBertForSequenceClassification
 
 from customer_support.data import LABEL_MAP
 

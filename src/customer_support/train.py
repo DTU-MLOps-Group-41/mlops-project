@@ -2,13 +2,12 @@
 
 from pathlib import Path
 
+import lightning.pytorch as pl
 import torch
 import typer
-from loguru import logger
-
-import lightning.pytorch as pl
 from lightning.pytorch.callbacks import EarlyStopping, ModelCheckpoint
 from lightning.pytorch.loggers import CSVLogger
+from loguru import logger
 
 from customer_support.datamodule import TicketDataModule
 from customer_support.model import TicketClassificationModule

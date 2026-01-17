@@ -90,7 +90,7 @@ class TicketDataset(torch.utils.data.Dataset):
         transform: Optional[Callable] = None,
         target_transform: Optional[Callable] = None,
         model_name: str = "distilbert-base-multilingual-cased",
-        length_percentile: int | None = None,
+        length_percentile: float | None = None,
         length_handling: str = "trim",
     ) -> None:
         """Initialize TicketDataset."""
@@ -272,7 +272,7 @@ class TicketDataset(torch.utils.data.Dataset):
     def _tokenize_dataset(
         dataset: Dataset,
         model_name: str = "distilbert-base-multilingual-cased",
-        length_percentile: int | None = None,
+        length_percentile: float | None = None,
         length_handling: str = "trim",
     ) -> Dataset:
         """Tokenize text data using DistilBERT tokenizer with optional length filtering and padding.
