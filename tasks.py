@@ -87,8 +87,9 @@ def project_tree(ctx: Context, depth: int = 0) -> None:
         depth: Limit directory depth (0 = unlimited)
     """
     depth_flag = f"-L {depth}" if depth > 0 else ""
+    ignore_pattern = ".git|.venv|__pycache__|.ruff_cache|.pytest_cache|*.pyc|.gitkeep|.DS_Store"
     ctx.run(
-        f"tree -a {depth_flag} -I '.git|.venv|__pycache__|.ruff_cache|.pytest_cache|*.pyc|.gitkeep|.DS_Store' --dirsfirst",
+        f"tree -a {depth_flag} -I '{ignore_pattern}' --dirsfirst",
         echo=True,
         pty=not WINDOWS,
     )
