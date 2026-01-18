@@ -1,17 +1,21 @@
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm@sha256:2260761e85882bf515f79c99ac967dcff56dd4ef0905476ef77920d7a42ec636
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
+ARG DEVICE="cpu"
 WORKDIR /app
 
 COPY uv.lock uv.lock
 COPY pyproject.toml pyproject.toml
-
-RUN uv sync --frozen --no-install-project
 
 COPY README.md README.md
 COPY LICENSE LICENSE
 COPY src src/
 COPY data/ data/
 
-RUN uv sync --frozen
+# Set UV link mode to copy to avoid symlink issues with cache mounts
+ENV UV_LINK_MODE=copy
+RUN --mount=type=cache,target=/root/.cache/uv uv sync --no-dev --extra $DEVICE --locked --no-install-project
 
-ENTRYPOINT ["uv", "run","python", "src/customer_support/train.py"]
+# Install project (2-step for better cacheability)
+RUN uv pip install --no-deps -e .
+
+ENTRYPOINT ["uv", "run", "--no-sync", "src/customer_support/train.py" ]
