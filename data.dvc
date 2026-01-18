@@ -3,68 +3,32 @@ outs:
   path: data
   files:
   - relpath: preprocessed/full_test.parquet
-    md5: 2ec9dffa6155d897940d2502cd3bede3
-    size: 989504
-    cloud:
-      remote_storage:
-        etag: 089ae28df3898e92031001
-        version_id: '1768498391118106'
+    md5: 599cbf984ca5e74859b90c36065ef8a5
+    size: 1005306
   - relpath: preprocessed/full_train.parquet
-    md5: 8487397c4982ea62336868503e0db706
-    size: 3770440
-    cloud:
-      remote_storage:
-        etag: 0898b69df3898e92031001
-        version_id: '1768498391374616'
+    md5: aec1b09be930c70e12c7df390831c3e5
+    size: 3853433
   - relpath: preprocessed/full_validation.parquet
-    md5: 9947f6123c4b7b8375159d7aff2cd38c
-    size: 1006418
-    cloud:
-      remote_storage:
-        etag: 08c9b8d3f2898e92031001
-        version_id: '1768498390162505'
+    md5: 7ba6276c578e2eb81e2961e01d4738b7
+    size: 1008212
   - relpath: preprocessed/medium_test.parquet
-    md5: 9fb249cbefab118c702fcdfc461cacb6
-    size: 706659
-    cloud:
-      remote_storage:
-        etag: 0890fba2f3898e92031001
-        version_id: '1768498391465360'
+    md5: b385bfc59e61b65536248d4ac4762a5e
+    size: 702869
   - relpath: preprocessed/medium_train.parquet
-    md5: d4fe7913221731c8ed39a6aee067036a
-    size: 2681916
-    cloud:
-      remote_storage:
-        etag: 08c9fa9af3898e92031001
-        version_id: '1768498391334217'
+    md5: c9217fc01ee6ede5162d446999ce4de7
+    size: 2770273
   - relpath: preprocessed/medium_validation.parquet
-    md5: a86f98326e8c0ca8ae6f81f6b3647480
-    size: 694926
-    cloud:
-      remote_storage:
-        etag: 08fbaa8cf3898e92031001
-        version_id: '1768498391094651'
+    md5: 61462ce1b5f6ad5fb53c1667c28ad86f
+    size: 719559
   - relpath: preprocessed/small_test.parquet
-    md5: 361803dbccf6d135ab5a30d3824a8886
-    size: 223897
-    cloud:
-      remote_storage:
-        etag: 08b8879cf3898e92031001
-        version_id: '1768498391352248'
+    md5: 131f2d03701e6accde6c76f7bb3924b2
+    size: 226639
   - relpath: preprocessed/small_train.parquet
-    md5: fb798d551028d860b4f78f5d02e89398
-    size: 1038825
-    cloud:
-      remote_storage:
-        etag: 08d5ee92f3898e92031001
-        version_id: '1768498391201621'
+    md5: 8efb021d3c026734901f4a76fc68acd1
+    size: 1077503
   - relpath: preprocessed/small_validation.parquet
-    md5: cfd4c544a92febaa1d3be4f899ce3c92
-    size: 220653
-    cloud:
-      remote_storage:
-        etag: 08acd580f3898e92031001
-        version_id: '1768498390903468'
+    md5: fd728d8adf11712ea467e664f1b2f623
+    size: 223132
   - relpath: raw/full.csv
     md5: 2625fbf557f24cb4304b9d0614e33353
     size: 25967766
