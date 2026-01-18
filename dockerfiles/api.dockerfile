@@ -1,22 +1,36 @@
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
+# 1. Environment variables
+ENV UV_LINK_MODE=copy \
+    UV_COMPILE_BYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PATH="/app/.venv/bin:$PATH"
+
 ARG DEVICE="cpu"
 WORKDIR /app
 
-COPY uv.lock uv.lock
-COPY pyproject.toml pyproject.toml
-COPY README.md README.md
-COPY LICENSE LICENSE
-COPY src/ src/
-COPY data/ data/
+# 2. Install dependencies ONLY (Best for Caching)
+# We only copy the files needed to resolve dependencies.
+COPY uv.lock pyproject.toml ./
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev --no-install-project --extra $DEVICE
 
-# Set UV link mode to copy to avoid symlink issues with cache mounts
-ENV UV_LINK_MODE=copy
-RUN --mount=type=cache,target=/root/.cache/uv uv sync --no-dev --extra $DEVICE --locked --no-install-project
+# 3. Copy the rest of the project
+# Now, changes to src/ won't trigger the heavy dependency sync above.
+COPY README.md LICENSE ./
+COPY src/ ./src/
+COPY data/ ./data/
 
-# Install project (2-step for better cacheability)
-RUN uv pip install --no-deps -e .
+# 4. Install the project itself
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev --extra $DEVICE
+
+# 5. Security: Run as non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+USER appuser
 
 EXPOSE 8080
 
-ENTRYPOINT ["uv", "run", "--no-sync", "uvicorn", "src.customer_support.api:app", "--host", "0.0.0.0", "--port", "8080"]
+# 6. Entrypoint (Simplified since .venv/bin is in PATH)
+ENTRYPOINT ["uvicorn", "customer_support.api:app", "--host", "0.0.0.0", "--port", "8080"]

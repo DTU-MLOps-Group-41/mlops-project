@@ -1,21 +1,27 @@
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
+# 1. Standardize the environment
+ENV UV_LINK_MODE=copy \
+    UV_COMPILE_BYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/app/.venv/bin:$PATH"
+
 ARG DEVICE="cpu"
 WORKDIR /app
 
-COPY uv.lock uv.lock
-COPY pyproject.toml pyproject.toml
+# 2. Cache Dependencies (The "Structured" way)
+COPY uv.lock pyproject.toml ./
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev --no-install-project --extra $DEVICE
 
-COPY README.md README.md
-COPY LICENSE LICENSE
-COPY src src/
-COPY data/ data/
+# 3. Copy source code last
+COPY src/ ./src/
+COPY data/ ./data/
+# TODO: Consider mounting data instead.
 
-# Set UV link mode to copy to avoid symlink issues with cache mounts
-ENV UV_LINK_MODE=copy
-RUN --mount=type=cache,target=/root/.cache/uv uv sync --no-dev --extra $DEVICE --locked --no-install-project
+# 4. Final Sync/Install
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev --extra $DEVICE
 
-# Install project (2-step for better cacheability)
-RUN uv pip install --no-deps -e .
-
-ENTRYPOINT ["uv", "run", "--no-sync", "src/customer_support/train.py" ]
+# No 'uv run' needed because .venv/bin is in PATH
+ENTRYPOINT ["python", "src/customer_support/train.py"]
