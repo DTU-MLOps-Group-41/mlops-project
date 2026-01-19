@@ -229,7 +229,6 @@ def train_command(
             parsed_devices = devices
 
     train(
-        data_root="data",
         dataset_type=dataset_type,
         batch_size=batch_size,
         learning_rate=learning_rate,
