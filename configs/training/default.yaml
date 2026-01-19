@@ -5,7 +5,7 @@ learning_rate: 5e-5
 weight_decay: 0.01
 patience: 2
 save_best_only: true
-precision: medium
+precision: 32-true
 # log_interval: 100  # Log every N batches
 
 # Training metadata

@@ -15,12 +15,12 @@ from customer_support.datamodule import TicketDataModule
 from customer_support.model import TicketClassificationModule
 
 import hydra
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 
 
 @hydra.main(
     version_base=None,
-    config_path="configs",          # directory containing config.yaml
+    config_path="../../configs",          # directory containing config.yaml
     config_name="config.yaml",      # main config (defaults list lives here)
 )
 def train(cfg: DictConfig) -> None:
@@ -30,27 +30,28 @@ def train(cfg: DictConfig) -> None:
     torch.manual_seed(seed)
     pl.seed_everything(seed, workers=True)
 
-    data_root: Path = Path(cfg.data.root)
-    dataset_type: str = cfg.data.dataset_type
-    batch_size: int = cfg.data.batch_size
-    num_workers: int = cfg.data.num_workers
+    data_root: Path = Path(cfg.paths.data_root)
+    dataset_type: str = cfg.dataset.name
+    batch_size: int = cfg.training.batch_size
+    num_workers: int = cfg.num_workers
 
-    learning_rate: float = cfg.model.learning_rate
-    weight_decay: float = cfg.model.weight_decay
+    learning_rate: float = cfg.training.learning_rate
+    weight_decay: float = cfg.training.weight_decay
+
+    num_epochs: int = cfg.training.num_epochs
+    accelerator = cfg.accelerator
+    devices = cfg.devices
+    precision = cfg.training.precision
+
+    # deterministic = cfg.training.deterministic
+    # log_every_n_steps = cfg.training.log_every_n_steps
+
+    patience: int = cfg.training.patience
 
 
-    max_epochs: int = cfg.trainer.max_epochs
-    accelerator = cfg.trainer.accelerator
-    devices = cfg.trainer.devices
-    precision = cfg.trainer.precision
-    deterministic = cfg.trainer.deterministic
-    log_every_n_steps = cfg.trainer.log_every_n_steps
-
-    patience: int = cfg.callbacks.patience
-
-    log_dir: Path = Path(cfg.logging.log_dir)
-    output_dir: Path = Path(cfg.logging.output_dir)
-    save_model: bool = cfg.logging.save_model
+    output_dir: Path = Path(cfg.paths.model_dir)
+    log_dir: Path = Path(cfg.paths.output_dir)
+    save_model: bool = cfg.training.save_best_only
 
     """Train the customer support ticket classifier using PyTorch Lightning.
 
@@ -242,3 +243,4 @@ def train_command(
 
 if __name__ == "__main__":
     app()
+"""
