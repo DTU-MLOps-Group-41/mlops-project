@@ -21,13 +21,14 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 COPY README.md LICENSE ./
 COPY src/ ./src/
 COPY data/ ./data/
+COPY models/ ./models/
 
 # 4. Install the project itself
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --extra $DEVICE
 
 # 5. Security: Run as non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser
+RUN groupadd -r appuser && useradd -r -m -g appuser appuser
 USER appuser
 
 EXPOSE 8080
