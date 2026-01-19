@@ -17,7 +17,7 @@ from transformers import DistilBertTokenizer
 RAW_DATA_DIR = Path("data/raw")
 PROCESSED_DATA_DIR = Path("data/preprocessed")
 SEED = 42
-LABEL_MAP = {"very_low": 0, "low": 0, "medium": 1, "high": 2, "critical": 2}
+LABEL_MAP = {"very_low": 0, "low": 0, "medium": 1, "high": 2, "critical": 3}
 DATASET_FILES = {
     "full": "aa_dataset-tickets-multi-lang-5-2-50-version.csv",
     "medium": "dataset-tickets-multi-lang-4-20k.csv",

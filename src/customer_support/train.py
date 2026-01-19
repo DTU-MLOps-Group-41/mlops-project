@@ -3,6 +3,8 @@ import logging
 
 import torch
 import hydra
+from hydra.utils import to_absolute_path
+
 from omegaconf import DictConfig, OmegaConf
 
 import lightning.pytorch as pl
@@ -17,7 +19,7 @@ from customer_support.model import TicketClassificationModule
 log = logging.getLogger(__name__)
 
 
-@hydra.main(version_base=None, config_path="conf", config_name="config")
+@hydra.main(version_base=None, config_path="../../configs", config_name="config.yaml")
 def train(cfg: DictConfig) -> None:
     # ---- sanity ----
     log.info("Configuration:\n%s", OmegaConf.to_yaml(cfg))
@@ -28,7 +30,7 @@ def train(cfg: DictConfig) -> None:
 
     # ---- data ----
     datamodule = TicketDataModule(
-        root=cfg.data.root,
+        root=to_absolute_path(cfg.data.root),
         dataset_type=cfg.data.dataset_type,
         batch_size=cfg.data.batch_size,
         num_workers=cfg.data.num_workers,
@@ -51,9 +53,9 @@ def train(cfg: DictConfig) -> None:
     ]
 
     if cfg.logging.save_model:
-        output_dir = Path(cfg.logging.output_dir)
+        output_dir = Path(to_absolute_path(cfg.logging.output_dir))
         output_dir.mkdir(parents=True, exist_ok=True)
-        callbacks: list[Callback] = []
+
 
 
         callbacks.append(
@@ -68,7 +70,7 @@ def train(cfg: DictConfig) -> None:
 
     # ---- logger ----
     logger = CSVLogger(
-        save_dir=cfg.logging.log_dir,
+        save_dir=to_absolute_path(cfg.logging.log_dir),
         name="customer_support",
     )
 

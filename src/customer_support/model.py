@@ -52,7 +52,7 @@ class TicketClassificationModule(pl.LightningModule):
             num_labels=num_classes,
         )
         # Set to train mode to avoid Lightning warning about modules in eval mode
-        self.model.train()
+        # self.model.train()
 
         # Initialize metrics using torchmetrics (separate instances for train/val/test)
         self.train_accuracy = MulticlassAccuracy(num_classes=num_classes)
