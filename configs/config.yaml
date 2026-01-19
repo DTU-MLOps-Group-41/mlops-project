@@ -1,30 +1,32 @@
 defaults:
+  # - model: cnn_small
+  - training: default
+  - optimizer: adam
+  - dataset: small
   - _self_
 
+# Global settings
 seed: 42
+devices: auto  # auto, 1, 2, ...
+accelerator: auto  # auto, gpu, cpu, tpu, ...
+num_workers: 0  # DataLoader num_workers
 
-data:
-  root: data
-  dataset_type: small
-  batch_size: 32
-  num_workers: 4
+# Paths
+paths:
+  data_root: data
+  model_dir: models
+  output_dir: ${hydra:runtime.output_dir}
 
-model:
-  learning_rate: 5e-5
-  weight_decay: 0.01
+# Wandb configuration (TODO)
+# wandb:
+#   entity: XXX
+#   project: XXX
+#   mode: online  # online, offline, disabled
+#   log_model: true
 
-trainer:
-  max_epochs: 3
-  accelerator: auto
-  devices: auto
-  precision: null
-  deterministic: true
-  log_every_n_steps: 10
-
-callbacks:
-  patience: 2
-
-logging:
-  log_dir: logs
-  save_model: true
-  output_dir: models
+# Hydra specific
+hydra:
+  run:
+    dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  job:
+    chdir: false  # Don't change working directory

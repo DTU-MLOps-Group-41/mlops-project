@@ -18,29 +18,27 @@ import hydra
 from omegaconf import DictConfig
 
 
-hydra.main(version_base=None, config_path="configs", config_name="default_config.yaml")
+@hydra.main(
+    version_base=None,
+    config_path="configs",          # directory containing config.yaml
+    config_name="config.yaml",      # main config (defaults list lives here)
+)
 def train(cfg: DictConfig) -> None:
-    # ------------------
-    # Reproducibility
-    # ------------------
-    torch.manual_seed(cfg.seed)
+    logger.info("Resolved Hydra config:\n" + OmegaConf.to_yaml(cfg))
 
-    # ------------------
-    # Data
-    # ------------------
+    seed: int = cfg.seed
+    torch.manual_seed(seed)
+    pl.seed_everything(seed, workers=True)
+
+    data_root: Path = Path(cfg.data.root)
     dataset_type: str = cfg.data.dataset_type
     batch_size: int = cfg.data.batch_size
     num_workers: int = cfg.data.num_workers
 
-    # ------------------
-    # Model / Optimizer
-    # ------------------
     learning_rate: float = cfg.model.learning_rate
     weight_decay: float = cfg.model.weight_decay
 
-    # ------------------
-    # Trainer
-    # ------------------
+
     max_epochs: int = cfg.trainer.max_epochs
     accelerator = cfg.trainer.accelerator
     devices = cfg.trainer.devices
@@ -48,14 +46,8 @@ def train(cfg: DictConfig) -> None:
     deterministic = cfg.trainer.deterministic
     log_every_n_steps = cfg.trainer.log_every_n_steps
 
-    # ------------------
-    # Callbacks
-    # ------------------
     patience: int = cfg.callbacks.patience
 
-    # ------------------
-    # Logging / Outputs
-    # ------------------
     log_dir: Path = Path(cfg.logging.log_dir)
     output_dir: Path = Path(cfg.logging.output_dir)
     save_model: bool = cfg.logging.save_model
@@ -82,8 +74,6 @@ def train(cfg: DictConfig) -> None:
     Returns:
         Dictionary with final training metrics (train_loss, val_loss, train_accuracy, val_accuracy).
     """
-    # Set seed for reproducibility
-    pl.seed_everything(seed, workers=True)
 
     # Set matmul precision for better performance on supported hardware
     torch.set_float32_matmul_precision("medium")
@@ -188,10 +178,14 @@ def train(cfg: DictConfig) -> None:
     return final_metrics
 
 
+if __name__ == "__main__":
+    train()
+
+
 # TODO: Add Hydra config support for hyperparameter management
 # TODO: Add Weights & Biases logger integration
 
-
+"""
 app = typer.Typer(help="Customer support model training")
 
 
@@ -212,14 +206,14 @@ def train_command(
     precision: str | None = typer.Option(None, "--precision", help="Training precision (16-mixed, bf16-mixed, 32)"),
     num_workers: int = typer.Option(0, "--num-workers", help="DataLoader workers"),
 ) -> None:
-    """Train the customer support ticket priority classifier with PyTorch Lightning.
+    "Train the customer support ticket priority classifier with PyTorch Lightning.
 
     Examples:
         uv run src/customer_support/train.py train
         uv run src/customer_support/train.py train -d small -b 16 --lr 3e-5 -e 5
         uv run src/customer_support/train.py train --dataset-type medium --epochs 10
         uv run src/customer_support/train.py train --accelerator gpu --precision 16-mixed
-    """
+
     # Parse devices if it's a string number
     parsed_devices: str | int = devices
     if devices != "auto":

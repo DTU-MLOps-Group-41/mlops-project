@@ -1,0 +1,13 @@
+# Default training configuration
+num_epochs: 5
+batch_size: 32
+learning_rate: 5e-5
+weight_decay: 0.01
+patience: 2
+save_best_only: true
+precision: medium
+# log_interval: 100  # Log every N batches
+
+# Training metadata
+name: default
+description: "Default training configuration for quick experiments"
