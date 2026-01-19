@@ -6,6 +6,7 @@ import torch
 import typer
 from loguru import logger
 
+
 import lightning.pytorch as pl
 from lightning.pytorch.callbacks import EarlyStopping, ModelCheckpoint
 from lightning.pytorch.loggers import CSVLogger
@@ -13,24 +14,53 @@ from lightning.pytorch.loggers import CSVLogger
 from customer_support.datamodule import TicketDataModule
 from customer_support.model import TicketClassificationModule
 
+import hydra
+from omegaconf import DictConfig
 
-def train(
-    data_root: str | Path = "data",
-    dataset_type: str = "small",
-    batch_size: int = 32,
-    learning_rate: float = 5e-5,
-    num_epochs: int = 3,
-    weight_decay: float = 0.01,
-    patience: int = 2,
-    output_dir: str | Path = "models",
-    log_dir: str | Path = "logs",
-    save_model: bool = True,
-    seed: int = 42,
-    accelerator: str = "auto",
-    devices: str | int = "auto",
-    precision: str | None = None,
-    num_workers: int = 0,
-) -> dict[str, float]:
+
+hydra.main(version_base=None, config_path="configs", config_name="default_config.yaml")
+def train(cfg: DictConfig) -> None:
+    # ------------------
+    # Reproducibility
+    # ------------------
+    torch.manual_seed(cfg.seed)
+
+    # ------------------
+    # Data
+    # ------------------
+    data_root: Path = Path(cfg.data.root)
+    dataset_type: str = cfg.data.dataset_type
+    batch_size: int = cfg.data.batch_size
+    num_workers: int = cfg.data.num_workers
+
+    # ------------------
+    # Model / Optimizer
+    # ------------------
+    learning_rate: float = cfg.model.learning_rate
+    weight_decay: float = cfg.model.weight_decay
+
+    # ------------------
+    # Trainer
+    # ------------------
+    max_epochs: int = cfg.trainer.max_epochs
+    accelerator = cfg.trainer.accelerator
+    devices = cfg.trainer.devices
+    precision = cfg.trainer.precision
+    deterministic = cfg.trainer.deterministic
+    log_every_n_steps = cfg.trainer.log_every_n_steps
+
+    # ------------------
+    # Callbacks
+    # ------------------
+    patience: int = cfg.callbacks.patience
+
+    # ------------------
+    # Logging / Outputs
+    # ------------------
+    log_dir: Path = Path(cfg.logging.log_dir)
+    output_dir: Path = Path(cfg.logging.output_dir)
+    save_model: bool = cfg.logging.save_model
+
     """Train the customer support ticket classifier using PyTorch Lightning.
 
     Args:
