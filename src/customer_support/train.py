@@ -28,7 +28,6 @@ def train(cfg: DictConfig) -> None:
     # ------------------
     # Data
     # ------------------
-    data_root: Path = Path(cfg.data.root)
     dataset_type: str = cfg.data.dataset_type
     batch_size: int = cfg.data.batch_size
     num_workers: int = cfg.data.num_workers
