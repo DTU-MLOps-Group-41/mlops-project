@@ -17,7 +17,7 @@ from transformers import DistilBertTokenizer
 RAW_DATA_DIR = Path("data/raw")
 PROCESSED_DATA_DIR = Path("data/preprocessed")
 SEED = 42
-LABEL_MAP = {"very_low": 0, "low": 0, "medium": 1, "high": 2, "critical": 3}
+LABEL_MAP = {"very_low": 0, "low": 0, "medium": 1, "high": 2, "very_high": 2}
 DATASET_FILES = {
     "full": "aa_dataset-tickets-multi-lang-5-2-50-version.csv",
     "medium": "dataset-tickets-multi-lang-4-20k.csv",
@@ -240,22 +240,12 @@ class TicketDataset(torch.utils.data.Dataset):
         return data
 
     @staticmethod
-    def _encode_labels(df: pd.DataFrame, label_map: dict[str, int] = LABEL_MAP) -> pd.DataFrame:
-        """Encode priority labels as integers.
-
-        Args:
-            df: Dataframe with 'priority' column
-            label_map: Mapping from priority string to integer
-
-        Returns:
-            Dataframe with additional 'labels' column (int)
-
-        Notes:
-            Converts priority to lowercase before mapping
-            Drops rows where label mapping failed
-        """
+    def _encode_labels(df: pd.DataFrame) -> pd.DataFrame:
         data = df.copy()
-        data["labels"] = data["priority"].str.lower().map(label_map)
+
+        # Map priorities to 3 classes: 0=low, 1=medium, 2=high
+        LABEL_MAP_FIXED = {"very_low": 0, "low": 0, "medium": 1, "high": 2, "very_high": 2}
+        data["labels"] = data["priority"].str.lower().map(LABEL_MAP_FIXED)
 
         rows_before = len(data)
         data = data.dropna(subset=["labels"])
@@ -267,6 +257,7 @@ class TicketDataset(torch.utils.data.Dataset):
         data["labels"] = data["labels"].astype(int)
         logger.info(f"Encoded labels: {data['labels'].value_counts().to_dict()}")
         return data
+
 
     @staticmethod
     def _tokenize_dataset(
