@@ -1,11 +1,5 @@
-# Corrupt MNIST dataset configuration
 name: small
 train_path: preprocessed/small_train.parquet
 test_path: preprocessed/small_test.parquet
 val_path: preprocessed/small_validation.parquet
-# num_classes: 10
-# input_shape: [1, 28, 28]
-
-# Data augmentation (for future use)
-augmentation:
-  enabled: false
+num_classes: 3

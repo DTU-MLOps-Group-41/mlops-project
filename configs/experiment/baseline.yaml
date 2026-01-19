@@ -1,0 +1,14 @@
+# Baseline experiment - uses defaults
+defaults:
+  - override /training: default
+  - override /dataset: small
+  - _self_
+
+# Global settings
+
+seed: 42
+
+# Experiment metadata
+experiment:
+  name: baseline
+  description: "Baseline experiment with default hyperparameters"

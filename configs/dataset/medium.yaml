@@ -1,11 +1,5 @@
-# Corrupt MNIST dataset configuration
 name: medium
 train_path: preprocessed/medium_train.parquet
 test_path: preprocessed/medium_test.parquet
 val_path: preprocessed/medium_validation.parquet
-# num_classes: 10
-# input_shape: [1, 28, 28]
-
-# Data augmentation (for future use)
-augmentation:
-  enabled: false
+num_classes: 3

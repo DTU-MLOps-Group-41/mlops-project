@@ -1,13 +1,12 @@
-# Default training configuration
-num_epochs: 5
-batch_size: 32
-learning_rate: 5e-5
+batch_size: 64
+learning_rate: 1e-3
 weight_decay: 0.01
-patience: 2
-save_best_only: true
-precision: 32-true
-# log_interval: 100  # Log every N batches
+num_epochs: 3
+precision: 16-mixed
+deterministic: false
+log_every_n_steps: 10
+patience: 3
 
 # Training metadata
-name: default
-description: "Default training configuration for quick experiments"
+name: baseline
+description: "Default baseline training configuration for quick experiments"

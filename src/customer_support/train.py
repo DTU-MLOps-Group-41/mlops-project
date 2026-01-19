@@ -1,15 +1,15 @@
 """Training script for customer support ticket classifier using PyTorch Lightning."""
 
 from pathlib import Path
+from typing import Literal, Optional
 
 import torch
-import typer
 from loguru import logger
-
 
 import lightning.pytorch as pl
 from lightning.pytorch.callbacks import EarlyStopping, ModelCheckpoint
 from lightning.pytorch.loggers import CSVLogger
+from lightning.fabric.plugins.precision.precision import _PRECISION_INPUT
 
 from customer_support.datamodule import TicketDataModule
 from customer_support.model import TicketClassificationModule
@@ -17,42 +17,10 @@ from customer_support.model import TicketClassificationModule
 import hydra
 from omegaconf import DictConfig, OmegaConf
 
+ACCELERATOR_TY = Literal["auto", "cpu", "gpu", "tpu"]
 
-@hydra.main(
-    version_base=None,
-    config_path="../../configs",          # directory containing config.yaml
-    config_name="config.yaml",      # main config (defaults list lives here)
-)
+@hydra.main(version_base=None, config_path="../../configs", config_name="config.yaml")
 def train(cfg: DictConfig) -> None:
-    logger.info("Resolved Hydra config:\n" + OmegaConf.to_yaml(cfg))
-
-    seed: int = cfg.seed
-    torch.manual_seed(seed)
-    pl.seed_everything(seed, workers=True)
-
-    data_root: Path = Path(cfg.paths.data_root)
-    dataset_type: str = cfg.dataset.name
-    batch_size: int = cfg.training.batch_size
-    num_workers: int = cfg.num_workers
-
-    learning_rate: float = cfg.training.learning_rate
-    weight_decay: float = cfg.training.weight_decay
-
-    num_epochs: int = cfg.training.num_epochs
-    accelerator = cfg.accelerator
-    devices = cfg.devices
-    precision = cfg.training.precision
-
-    # deterministic = cfg.training.deterministic
-    # log_every_n_steps = cfg.training.log_every_n_steps
-
-    patience: int = cfg.training.patience
-
-
-    output_dir: Path = Path(cfg.paths.model_dir)
-    log_dir: Path = Path(cfg.paths.output_dir)
-    save_model: bool = cfg.training.save_best_only
-
     """Train the customer support ticket classifier using PyTorch Lightning.
 
     Args:
@@ -75,6 +43,34 @@ def train(cfg: DictConfig) -> None:
     Returns:
         Dictionary with final training metrics (train_loss, val_loss, train_accuracy, val_accuracy).
     """
+    logger.info("Resolved Hydra config:\n" + OmegaConf.to_yaml(cfg))
+
+    seed: int = cfg.seed
+    torch.manual_seed(seed)
+    pl.seed_everything(seed, workers=True)
+
+    data_root: Path = Path(cfg.paths.data_root)
+    log_dir: Path = Path(cfg.paths.output_dir)
+    output_dir: Path = Path(cfg.paths.model_dir)
+
+    model_name: str = cfg.model_name
+
+    dataset_type: str = cfg.dataset.name
+    num_classes: int = cfg.dataset.num_classes
+
+    accelerator: ACCELERATOR_TY = cfg.accelerator
+    devices: list[int] | str | int = cfg.devices
+    num_workers: int = cfg.num_workers
+    save_model: bool = cfg.training.save_best_only
+
+    batch_size: int = cfg.training.batch_size
+    deterministic: bool = cfg.training.deterministic
+    learning_rate: float = cfg.training.learning_rate
+    log_every_n_steps: int = cfg.training.log_every_n_steps
+    num_epochs: int = cfg.training.num_epochs
+    patience: int = cfg.training.patience
+    precision: Optional[_PRECISION_INPUT] = cfg.training.precision
+    weight_decay: float = cfg.training.weight_decay
 
     # Set matmul precision for better performance on supported hardware
     torch.set_float32_matmul_precision("medium")
@@ -99,11 +95,13 @@ def train(cfg: DictConfig) -> None:
         dataset_type=dataset_type,
         batch_size=batch_size,
         num_workers=num_workers,
-        download=False,
+        seed=seed,
     )
 
     # Initialize Model
     model = TicketClassificationModule(
+        model_name=model_name,
+        num_classes=num_classes,
         learning_rate=learning_rate,
         weight_decay=weight_decay,
     )
@@ -150,8 +148,8 @@ def train(cfg: DictConfig) -> None:
         max_epochs=num_epochs,
         callbacks=callbacks,
         logger=csv_logger,
-        deterministic=True,
-        log_every_n_steps=10,
+        deterministic=deterministic,
+        log_every_n_steps=log_every_n_steps,
     )
 
     # Train the model
@@ -179,68 +177,7 @@ def train(cfg: DictConfig) -> None:
     return final_metrics
 
 
-if __name__ == "__main__":
-    train()
-
-
-# TODO: Add Hydra config support for hyperparameter management
 # TODO: Add Weights & Biases logger integration
 
-"""
-app = typer.Typer(help="Customer support model training")
-
-
-@app.command(name="train")
-def train_command(
-    dataset_type: str = typer.Option("small", "-d", "--dataset-type", help="Dataset size: small, medium, or full"),
-    batch_size: int = typer.Option(32, "-b", "--batch-size", help="Training batch size"),
-    learning_rate: float = typer.Option(5e-5, "--lr", "--learning-rate", help="Learning rate for optimizer"),
-    num_epochs: int = typer.Option(3, "-e", "--epochs", help="Maximum number of training epochs"),
-    weight_decay: float = typer.Option(0.01, "--weight-decay", help="Weight decay for optimizer"),
-    patience: int = typer.Option(2, "-p", "--patience", help="Early stopping patience"),
-    output_dir: str = typer.Option("models", "-o", "--output-dir", help="Directory to save model checkpoints"),
-    log_dir: str = typer.Option("logs", "-l", "--log-dir", help="Directory to save training logs"),
-    no_save: bool = typer.Option(False, "--no-save", help="Do not save model checkpoint"),
-    seed: int = typer.Option(42, "--seed", help="Random seed for reproducibility"),
-    accelerator: str = typer.Option("auto", "--accelerator", help="Lightning accelerator (auto, cpu, gpu, tpu)"),
-    devices: str = typer.Option("auto", "--devices", help="Number of devices or 'auto'"),
-    precision: str | None = typer.Option(None, "--precision", help="Training precision (16-mixed, bf16-mixed, 32)"),
-    num_workers: int = typer.Option(0, "--num-workers", help="DataLoader workers"),
-) -> None:
-    "Train the customer support ticket priority classifier with PyTorch Lightning.
-
-    Examples:
-        uv run src/customer_support/train.py train
-        uv run src/customer_support/train.py train -d small -b 16 --lr 3e-5 -e 5
-        uv run src/customer_support/train.py train --dataset-type medium --epochs 10
-        uv run src/customer_support/train.py train --accelerator gpu --precision 16-mixed
-
-    # Parse devices if it's a string number
-    parsed_devices: str | int = devices
-    if devices != "auto":
-        try:
-            parsed_devices = int(devices)
-        except ValueError:
-            parsed_devices = devices
-
-    train(
-        dataset_type=dataset_type,
-        batch_size=batch_size,
-        learning_rate=learning_rate,
-        num_epochs=num_epochs,
-        weight_decay=weight_decay,
-        patience=patience,
-        output_dir=output_dir,
-        log_dir=log_dir,
-        save_model=not no_save,
-        seed=seed,
-        accelerator=accelerator,
-        devices=parsed_devices,
-        precision=precision,
-        num_workers=num_workers,
-    )
-
-
 if __name__ == "__main__":
-    app()
-"""
+    train()

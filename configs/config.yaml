@@ -1,8 +1,7 @@
 defaults:
-  # - model: cnn_small
+  - dataset: medium
   - training: default
-  # - optimizer: adam
-  - dataset: small
+  - model_name: distilbert-base-multilingual-cased
   - _self_
 
 # Global settings
