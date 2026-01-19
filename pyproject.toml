@@ -22,6 +22,7 @@ dependencies = [
     "dvc>=3.65.0",
     "dvc-gs>=3.0.2",
     "fastapi==0.128.0",
+    "hydra-core>=1.3.2",
     "kagglehub>=0.4.0",
     "lightning>=2.2.0",
     "loguru>=0.7.3",
@@ -58,7 +59,7 @@ cpu = [
     "torchvision==0.24.1; sys_platform == 'darwin'"
 ]
 cu128 = [
-  "torch==2.9.1+cu128", 
+  "torch==2.9.1+cu128",
   "torchvision==0.24.1",
   "accelerate>=1.12.0",
 ]
