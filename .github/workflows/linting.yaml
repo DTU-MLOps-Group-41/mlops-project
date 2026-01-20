@@ -1,4 +1,4 @@
-name: Code linting
+name: Lint and Quality Checks
 
 on:
   push:
@@ -7,15 +7,16 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   lint:
-    name: Ruff Lint & Format
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
@@ -26,8 +27,5 @@ jobs:
           enable-cache: true
           python-version-file: ".python-version"
 
-      - name: Run Ruff Check
-        run: uvx ruff check .
-
-      - name: Run Ruff Format
-        run: uvx ruff format --check .
+      - name: Run Pre-commit Hooks
+        run: uvx --with pre-commit-uv pre-commit run --all-files --show-diff-on-failure
