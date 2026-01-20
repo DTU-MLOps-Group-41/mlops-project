@@ -42,9 +42,7 @@ class TestTicketDataModule:
 
     def test_datasets_none_before_setup(self) -> None:
         """Test that datasets are None before setup is called."""
-        datamodule = TicketDataModule(
-            train_path="dummy.parquet", val_path="dummy.parquet", test_path="dummy.parquet"
-        )
+        datamodule = TicketDataModule(train_path="dummy.parquet", val_path="dummy.parquet", test_path="dummy.parquet")
 
         assert datamodule.train_dataset is None
         assert datamodule.val_dataset is None
