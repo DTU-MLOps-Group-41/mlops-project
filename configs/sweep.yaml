@@ -12,6 +12,8 @@
 # - Fine-tuned transformers often have calibration issues with loss
 
 program: src/customer_support/train.py
+project: customer_support
+entity: dtu-mlops-g41
 method: bayes
 name: distilbert-finetuning-sweep
 
