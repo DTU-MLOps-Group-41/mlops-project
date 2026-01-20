@@ -19,7 +19,7 @@ jobs:
       fail-fast: false # Keep running other OS tests even if one fails
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.12"] 
+        python-version: ["3.12"]
     permissions:
       id-token: write
 
