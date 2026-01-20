@@ -1,12 +1,27 @@
-FROM ghcr.io/astral-sh/uv:python3.12-alpine@sha256:68a899a90e077a6c0da311f268a9f05ee0f4984927761b576574c9548f469ead AS base
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
-COPY uv.lock uv.lock
-COPY pyproject.toml pyproject.toml
+# 1. Standardize the environment
+ENV UV_LINK_MODE=copy \
+    UV_COMPILE_BYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/app/.venv/bin:$PATH"
 
-RUN uv sync --frozen --no-install-project
+ARG DEVICE="cpu"
+WORKDIR /app
 
-COPY src src/
+# 2. Cache Dependencies (The "Structured" way)
+COPY uv.lock pyproject.toml ./
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev --no-install-project --extra $DEVICE
 
-RUN uv sync --frozen
+# 3. Copy source code last
+COPY src/ ./src/
+COPY data/ ./data/
+# TODO: Consider mounting data instead.
 
-ENTRYPOINT ["uv", "run", "src/customer_support/train.py"]
+# 4. Final Sync/Install
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev --extra $DEVICE
+
+# No 'uv run' needed because .venv/bin is in PATH
+ENTRYPOINT ["python", "src/customer_support/train.py"]

@@ -3,29 +3,32 @@
 from pathlib import Path
 
 import lightning.pytorch as pl
+from datasets import Dataset
 from torch.utils.data import DataLoader
 
-from customer_support.data import SEED, TicketDataset
+from customer_support.data import SEED, load_parquet_dataset
 
 
 class TicketDataModule(pl.LightningDataModule):
-    """Lightning DataModule wrapping TicketDataset.
+    """Lightning DataModule for customer support ticket classification.
 
-    Provides Lightning integration for the customer support ticket dataset,
-    handling data preparation, setup, and DataLoader creation.
+    Loads preprocessed parquet files directly using paths from Hydra config.
 
     Args:
-        root: Root directory for dataset files (default: "data")
-        dataset_type: Dataset size - "small", "medium", or "full" (default: "small")
-        batch_size: Batch size for DataLoaders (default: 32)
-        num_workers: Number of workers for DataLoaders (default: 0)
-        download: If True, download and preprocess if not found (default: False)
-        force_preprocess: If True, force reprocessing even if data exists (default: False)
-        model_name: Tokenizer model name (default: "distilbert-base-multilingual-cased")
-        seed: Random seed for reproducibility (default: 42)
+        train_path: Path to training parquet file.
+        val_path: Path to validation parquet file.
+        test_path: Path to test parquet file.
+        batch_size: Batch size for DataLoaders (default: 32).
+        num_workers: Number of workers for DataLoaders (default: 0).
+        seed: Random seed for reproducibility (default: 42).
 
     Example:
-        >>> datamodule = TicketDataModule(root="data", dataset_type="small", batch_size=32)
+        >>> datamodule = TicketDataModule(
+        ...     train_path="data/preprocessed/small_train.parquet",
+        ...     val_path="data/preprocessed/small_validation.parquet",
+        ...     test_path="data/preprocessed/small_test.parquet",
+        ...     batch_size=32,
+        ... )
         >>> datamodule.setup(stage="fit")
         >>> train_loader = datamodule.train_dataloader()
         >>> for batch in train_loader:
@@ -35,43 +38,27 @@ class TicketDataModule(pl.LightningDataModule):
 
     def __init__(
         self,
-        root: str | Path = "data",
-        dataset_type: str = "small",
+        train_path: str | Path,
+        val_path: str | Path,
+        test_path: str | Path,
         batch_size: int = 32,
         num_workers: int = 0,
-        download: bool = False,
-        force_preprocess: bool = False,
-        model_name: str = "distilbert-base-multilingual-cased",
         seed: int = SEED,
     ) -> None:
         super().__init__()
         self.save_hyperparameters()
 
-        self.root = root
-        self.dataset_type = dataset_type
+        self.train_path = Path(train_path)
+        self.val_path = Path(val_path)
+        self.test_path = Path(test_path)
         self.batch_size = batch_size
         self.num_workers = num_workers
-        self.download = download
-        self.force_preprocess = force_preprocess
-        self.model_name = model_name
         self.seed = seed
 
         # Will be populated in setup()
-        self.train_dataset: TicketDataset | None = None
-        self.val_dataset: TicketDataset | None = None
-        self.test_dataset: TicketDataset | None = None
-
-    def prepare_data(self) -> None:
-        """Download data if needed (called only on rank 0 in distributed training)."""
-        if self.download or self.force_preprocess:
-            TicketDataset(
-                root=self.root,
-                split="train",
-                dataset_type=self.dataset_type,
-                download=self.download,
-                force_preprocess=self.force_preprocess,
-                model_name=self.model_name,
-            )
+        self.train_dataset: Dataset | None = None
+        self.val_dataset: Dataset | None = None
+        self.test_dataset: Dataset | None = None
 
     def setup(self, stage: str | None = None) -> None:
         """Set up datasets for each stage.
@@ -80,38 +67,17 @@ class TicketDataModule(pl.LightningDataModule):
             stage: Either "fit", "validate", "test", or "predict"
         """
         if stage == "fit" or stage is None:
-            self.train_dataset = TicketDataset(
-                root=self.root,
-                split="train",
-                dataset_type=self.dataset_type,
-                download=False,
-                model_name=self.model_name,
-            )
-            self.val_dataset = TicketDataset(
-                root=self.root,
-                split="validation",
-                dataset_type=self.dataset_type,
-                download=False,
-                model_name=self.model_name,
-            )
+            self.train_dataset = load_parquet_dataset(self.train_path)
+            self.val_dataset = load_parquet_dataset(self.val_path)
 
         if stage == "validate" and self.val_dataset is None:
-            self.val_dataset = TicketDataset(
-                root=self.root,
-                split="validation",
-                dataset_type=self.dataset_type,
-                download=False,
-                model_name=self.model_name,
-            )
+            self.val_dataset = load_parquet_dataset(self.val_path)
 
         if stage == "test" or stage is None:
-            self.test_dataset = TicketDataset(
-                root=self.root,
-                split="test",
-                dataset_type=self.dataset_type,
-                download=False,
-                model_name=self.model_name,
-            )
+            self.test_dataset = load_parquet_dataset(self.test_path)
+
+        if stage == "predict":
+            self.test_dataset = load_parquet_dataset(self.test_path)
 
     def train_dataloader(self) -> DataLoader:
         """Return training DataLoader."""
@@ -133,6 +99,15 @@ class TicketDataModule(pl.LightningDataModule):
 
     def test_dataloader(self) -> DataLoader:
         """Return test DataLoader."""
+        return DataLoader(
+            self.test_dataset,
+            batch_size=self.batch_size,
+            shuffle=False,
+            num_workers=self.num_workers,
+        )
+
+    def predict_dataloader(self) -> DataLoader:
+        """Return predict DataLoader (uses test dataset)."""
         return DataLoader(
             self.test_dataset,
             batch_size=self.batch_size,

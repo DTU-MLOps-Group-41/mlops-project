@@ -1,9 +1,11 @@
 """PyTorch Lightning Module for customer support ticket classification."""
 
-import lightning.pytorch as pl
 import torch
-from torchmetrics.classification import MulticlassAccuracy
+import lightning.pytorch as pl
 from transformers import DistilBertForSequenceClassification
+from torchmetrics.classification import MulticlassAccuracy
+from hydra.utils import instantiate
+from omegaconf import DictConfig
 
 from customer_support.data import LABEL_MAP
 
@@ -32,6 +34,7 @@ class TicketClassificationModule(pl.LightningModule):
         num_classes: int | None = None,
         learning_rate: float = 5e-5,
         weight_decay: float = 0.01,
+        lr_scheduler_config: DictConfig | None = None,
     ) -> None:
         super().__init__()
 
@@ -39,12 +42,13 @@ class TicketClassificationModule(pl.LightningModule):
         if num_classes is None:
             num_classes = len(set(LABEL_MAP.values()))
 
-        self.save_hyperparameters()
+        self.save_hyperparameters(ignore=["lr_scheduler_config"])
 
         self.model_name = model_name
         self.num_classes = num_classes
         self.learning_rate = learning_rate
         self.weight_decay = weight_decay
+        self.lr_scheduler_config = lr_scheduler_config
 
         # Initialize the transformer model
         self.model = DistilBertForSequenceClassification.from_pretrained(
@@ -152,17 +156,55 @@ class TicketClassificationModule(pl.LightningModule):
         self.log("test_loss", loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
         self.log("test_accuracy", self.test_accuracy, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
 
-    def configure_optimizers(self):
-        """Configure AdamW optimizer with weight decay.
+    def predict_step(self, batch: dict[str, torch.Tensor], batch_idx: int) -> dict[str, torch.Tensor]:
+        """Predict step - return predictions and labels for visualization.
+
+        Args:
+            batch: Dictionary with input_ids, attention_mask, labels
+            batch_idx: Index of the current batch
 
         Returns:
-            AdamW optimizer configured with learning rate and weight decay
+            Dictionary with predictions and labels tensors
         """
-        return torch.optim.AdamW(
+        outputs = self(
+            input_ids=batch["input_ids"],
+            attention_mask=batch["attention_mask"],
+        )
+        predictions = torch.argmax(outputs.logits, dim=-1)
+        return {"predictions": predictions, "labels": batch["labels"]}
+
+    def configure_optimizers(self):
+        """Configure AdamW optimizer with optional LR scheduler via Hydra instantiate.
+
+        Returns:
+            AdamW optimizer, or dict with optimizer and lr_scheduler if scheduler is configured
+        """
+        optimizer = torch.optim.AdamW(
             self.parameters(),
             lr=self.learning_rate,
             weight_decay=self.weight_decay,
         )
+
+        # Check if scheduler is configured (has _target_)
+        if self.lr_scheduler_config is None or self.lr_scheduler_config.get("_target_") is None:
+            return optimizer
+
+        # Use Hydra instantiate with runtime parameters
+        total_steps = self.trainer.estimated_stepping_batches
+        scheduler = instantiate(
+            self.lr_scheduler_config,
+            optimizer=optimizer,
+            num_training_steps=total_steps,
+        )
+
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": {
+                "scheduler": scheduler,
+                "interval": "step",
+                "frequency": 1,
+            },
+        }
 
 
 if __name__ == "__main__":
