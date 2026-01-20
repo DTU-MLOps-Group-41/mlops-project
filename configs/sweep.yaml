@@ -1,0 +1,69 @@
+# W&B Sweep Configuration for DistilBERT Fine-tuning
+# Optimizes hyperparameters for customer support ticket classification
+#
+# Usage:
+#   wandb sweep configs/sweep.yaml
+#   wandb agent <sweep_id>
+#
+# Best Practice: Uses val_accuracy (not loss) as the optimization metric.
+# Research shows accuracy-based metrics are preferred for fine-tuning because:
+# - Loss can be misleading (low loss doesn't guarantee good predictions)
+# - Accuracy directly measures classification performance
+# - Fine-tuned transformers often have calibration issues with loss
+
+program: src/customer_support/train.py
+method: bayes
+name: distilbert-finetuning-sweep
+
+metric:
+  name: val_accuracy
+  goal: maximize
+
+# Hyperband early termination saves GPU hours by stopping underperforming runs
+early_terminate:
+  type: hyperband
+  min_iter: 2
+  eta: 3
+  s: 2
+
+parameters:
+  # Learning rate: most critical hyperparameter for fine-tuning
+  # Log-uniform distribution captures order-of-magnitude differences
+  training.learning_rate:
+    distribution: log_uniform_values
+    min: 1e-5
+    max: 5e-4
+
+  # Batch size affects training stability and generalization
+  training.batch_size:
+    values: [16, 32, 64]
+
+  # Weight decay for L2 regularization to prevent overfitting
+  training.weight_decay:
+    distribution: uniform
+    min: 0.0
+    max: 0.1
+
+  # Warmup steps for gradual learning rate increase
+  training.lr_scheduler.num_warmup_steps:
+    values: [0, 50, 100, 200]
+
+  # Gradient clipping prevents exploding gradients
+  training.gradient_clip_val:
+    values: [null, 0.5, 1.0]
+
+  # Gradient accumulation simulates larger effective batch sizes
+  training.accumulate_grad_batches:
+    values: [1, 2, 4]
+
+  # Fixed parameters for reproducibility and consistency
+  seed:
+    value: 42
+  wandb.mode:
+    value: online
+  training.num_epochs:
+    value: 5
+  training.patience:
+    value: 3
+  training.log_model:
+    value: false
