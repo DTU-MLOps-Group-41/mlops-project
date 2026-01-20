@@ -499,6 +499,42 @@ class TicketDataset(torch.utils.data.Dataset):
 
 
 # ============================================================================
+# UTILITY FUNCTIONS FOR HYDRA INTEGRATION
+# ============================================================================
+
+
+def load_parquet_dataset(path: str | Path) -> Dataset:
+    """Load a preprocessed dataset directly from a parquet file.
+
+    This is the recommended way to load data for training when using Hydra configs.
+    The parquet file should contain pre-tokenized data with columns:
+    'input_ids', 'attention_mask', 'labels'.
+
+    Args:
+        path: Path to the parquet file.
+
+    Returns:
+        HuggingFace Dataset with torch format set.
+
+    Raises:
+        FileNotFoundError: If the parquet file doesn't exist.
+
+    Example:
+        >>> dataset = load_parquet_dataset("data/preprocessed/small_train.parquet")
+        >>> len(dataset)
+        3200
+    """
+    path = Path(path)
+    if not path.exists():
+        raise FileNotFoundError(f"Parquet file not found: {path}")
+
+    dataset = Dataset.from_parquet(str(path))
+    dataset.set_format("torch")
+    logger.info(f"Loaded {len(dataset)} samples from {path}")
+    return dataset
+
+
+# ============================================================================
 # CLI ENTRY POINTS
 # ============================================================================
 

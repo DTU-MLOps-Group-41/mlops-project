@@ -1,0 +1,26 @@
+batch_size: 64
+learning_rate: 1e-4
+weight_decay: 0.01
+num_epochs: 3
+precision: 16-mixed
+deterministic: false
+log_every_n_steps: 10
+patience: 3
+save_best_only: true
+checkpoint_monitor: val_accuracy
+checkpoint_mode: max
+checkpoint_save_top_k: 1
+checkpoint_verbose: true
+
+# Advanced training features (disabled by default for fast testing)
+gradient_clip_val: null
+accumulate_grad_batches: 1
+val_check_interval: 1.0
+check_val_every_n_epoch: 1
+
+# Learning rate scheduler (null = disabled for fast baseline)
+lr_scheduler: null
+
+# Training metadata
+name: baseline
+description: "Default baseline training configuration for quick experiments"

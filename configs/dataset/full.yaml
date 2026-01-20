@@ -1,0 +1,5 @@
+name: full
+train_path: ${paths.data_root}/preprocessed/full_train.parquet
+test_path: ${paths.data_root}/preprocessed/full_test.parquet
+val_path: ${paths.data_root}/preprocessed/full_validation.parquet
+num_classes: 3
