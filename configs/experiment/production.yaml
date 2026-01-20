@@ -1,0 +1,11 @@
+# @package _global_
+# Production experiment - full training for deployment
+defaults:
+  - override /training: production
+  - override /dataset: full
+
+seed: 42
+
+experiment:
+  name: production
+  description: "Production experiment with full dataset and cosine scheduler"

@@ -1,6 +1,7 @@
 defaults:
   - dataset: medium
   - training: baseline
+  - optional experiment: null
   - _self_
 
 # Model

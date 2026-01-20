@@ -78,6 +78,11 @@ def train(cfg: DictConfig) -> None:
     checkpoint_mode: str = cfg.training.checkpoint_mode
     checkpoint_save_top_k: int = cfg.training.checkpoint_save_top_k
     checkpoint_verbose: bool = cfg.training.checkpoint_verbose
+    gradient_clip_val: Optional[float] = cfg.training.gradient_clip_val
+    accumulate_grad_batches: int = cfg.training.accumulate_grad_batches
+    val_check_interval: float = cfg.training.val_check_interval
+    check_val_every_n_epoch: int = cfg.training.check_val_every_n_epoch
+    lr_scheduler_cfg = cfg.training.get("lr_scheduler", None)
 
     # Set matmul precision for better performance on supported hardware
     torch.set_float32_matmul_precision("medium")
@@ -113,6 +118,7 @@ def train(cfg: DictConfig) -> None:
         num_classes=num_classes,
         learning_rate=learning_rate,
         weight_decay=weight_decay,
+        lr_scheduler_config=lr_scheduler_cfg,
     )
 
     # Configure callbacks
@@ -159,6 +165,10 @@ def train(cfg: DictConfig) -> None:
         logger=csv_logger,
         deterministic=deterministic,
         log_every_n_steps=log_every_n_steps,
+        gradient_clip_val=gradient_clip_val,
+        accumulate_grad_batches=accumulate_grad_batches,
+        val_check_interval=val_check_interval,
+        check_val_every_n_epoch=check_val_every_n_epoch,
     )
 
     # Train the model

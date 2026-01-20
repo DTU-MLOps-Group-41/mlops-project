@@ -1,14 +1,11 @@
-# Baseline experiment - uses defaults
+# @package _global_
+# Baseline experiment - quick testing on small dataset
 defaults:
   - override /training: baseline
   - override /dataset: small
-  - _self_
-
-# Global settings
 
 seed: 42
 
-# Experiment metadata
 experiment:
   name: baseline
-  description: "Baseline experiment with default hyperparameters"
+  description: "Baseline experiment with default hyperparameters for quick testing"
