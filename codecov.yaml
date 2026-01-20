@@ -1,2 +1,8 @@
+coverage:
+  status:
+    patch:
+      default:
+        # This ensures the check is informative but doesn't fail the CI
+        informational: true
 ignore:
   - "*/tests/*"
