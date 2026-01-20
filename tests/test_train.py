@@ -13,32 +13,38 @@ class TestTicketDataModule:
     def test_init_stores_hyperparameters(self) -> None:
         """Test that __init__ stores hyperparameters correctly."""
         datamodule = TicketDataModule(
-            root="data",
-            dataset_type="small",
+            train_path="data/preprocessed/small_train.parquet",
+            val_path="data/preprocessed/small_validation.parquet",
+            test_path="data/preprocessed/small_test.parquet",
             batch_size=16,
             num_workers=2,
         )
 
         assert datamodule.batch_size == 16
-        assert datamodule.dataset_type == "small"
-        assert datamodule.root == "data"
+        assert datamodule.hparams["batch_size"] == 16
         assert datamodule.num_workers == 2
+        assert datamodule.hparams["num_workers"] == 2
+        assert datamodule.train_path == Path("data/preprocessed/small_train.parquet")
+        assert datamodule.hparams["train_path"] == "data/preprocessed/small_train.parquet"
 
     def test_hparams_saved(self) -> None:
         """Test that hyperparameters are saved for checkpointing."""
         datamodule = TicketDataModule(
-            root="data",
-            dataset_type="medium",
+            train_path="data/preprocessed/small_train.parquet",
+            val_path="data/preprocessed/small_validation.parquet",
+            test_path="data/preprocessed/small_test.parquet",
             batch_size=64,
         )
 
         assert hasattr(datamodule, "hparams")
         assert datamodule.hparams["batch_size"] == 64
-        assert datamodule.hparams["dataset_type"] == "medium"
+        assert datamodule.hparams["train_path"] == "data/preprocessed/small_train.parquet"
 
     def test_datasets_none_before_setup(self) -> None:
         """Test that datasets are None before setup is called."""
-        datamodule = TicketDataModule()
+        datamodule = TicketDataModule(
+            train_path="dummy.parquet", val_path="dummy.parquet", test_path="dummy.parquet"
+        )
 
         assert datamodule.train_dataset is None
         assert datamodule.val_dataset is None
@@ -76,9 +82,11 @@ class TestTicketDataModuleWithData:
 
     def test_setup_creates_datasets(self, mock_preprocessed_data: Path) -> None:
         """Test that setup creates train/val datasets for fit stage."""
+        preprocessed_dir = mock_preprocessed_data / "preprocessed"
         datamodule = TicketDataModule(
-            root=mock_preprocessed_data,
-            dataset_type="small",
+            train_path=preprocessed_dir / "small_train.parquet",
+            val_path=preprocessed_dir / "small_validation.parquet",
+            test_path=preprocessed_dir / "small_test.parquet",
             batch_size=2,
         )
         datamodule.setup(stage="fit")
@@ -88,9 +96,11 @@ class TestTicketDataModuleWithData:
 
     def test_setup_creates_test_dataset(self, mock_preprocessed_data: Path) -> None:
         """Test that setup creates test dataset for test stage."""
+        preprocessed_dir = mock_preprocessed_data / "preprocessed"
         datamodule = TicketDataModule(
-            root=mock_preprocessed_data,
-            dataset_type="small",
+            train_path=preprocessed_dir / "small_train.parquet",
+            val_path=preprocessed_dir / "small_validation.parquet",
+            test_path=preprocessed_dir / "small_test.parquet",
             batch_size=2,
         )
         datamodule.setup(stage="test")
@@ -99,9 +109,11 @@ class TestTicketDataModuleWithData:
 
     def test_train_dataloader_returns_dataloader(self, mock_preprocessed_data: Path) -> None:
         """Test that train_dataloader returns a DataLoader."""
+        preprocessed_dir = mock_preprocessed_data / "preprocessed"
         datamodule = TicketDataModule(
-            root=mock_preprocessed_data,
-            dataset_type="small",
+            train_path=preprocessed_dir / "small_train.parquet",
+            val_path=preprocessed_dir / "small_validation.parquet",
+            test_path=preprocessed_dir / "small_test.parquet",
             batch_size=2,
         )
         datamodule.setup(stage="fit")
@@ -113,9 +125,11 @@ class TestTicketDataModuleWithData:
 
     def test_val_dataloader_returns_dataloader(self, mock_preprocessed_data: Path) -> None:
         """Test that val_dataloader returns a DataLoader."""
+        preprocessed_dir = mock_preprocessed_data / "preprocessed"
         datamodule = TicketDataModule(
-            root=mock_preprocessed_data,
-            dataset_type="small",
+            train_path=preprocessed_dir / "small_train.parquet",
+            val_path=preprocessed_dir / "small_validation.parquet",
+            test_path=preprocessed_dir / "small_test.parquet",
             batch_size=4,
         )
         datamodule.setup(stage="fit")
@@ -127,9 +141,11 @@ class TestTicketDataModuleWithData:
 
     def test_test_dataloader_returns_dataloader(self, mock_preprocessed_data: Path) -> None:
         """Test that test_dataloader returns a DataLoader."""
+        preprocessed_dir = mock_preprocessed_data / "preprocessed"
         datamodule = TicketDataModule(
-            root=mock_preprocessed_data,
-            dataset_type="small",
+            train_path=preprocessed_dir / "small_train.parquet",
+            val_path=preprocessed_dir / "small_validation.parquet",
+            test_path=preprocessed_dir / "small_test.parquet",
             batch_size=8,
         )
         datamodule.setup(stage="test")
@@ -141,9 +157,11 @@ class TestTicketDataModuleWithData:
 
     def test_dataloader_batch_has_required_keys(self, mock_preprocessed_data: Path) -> None:
         """Test that DataLoader batches have required keys."""
+        preprocessed_dir = mock_preprocessed_data / "preprocessed"
         datamodule = TicketDataModule(
-            root=mock_preprocessed_data,
-            dataset_type="small",
+            train_path=preprocessed_dir / "small_train.parquet",
+            val_path=preprocessed_dir / "small_validation.parquet",
+            test_path=preprocessed_dir / "small_test.parquet",
             batch_size=2,
         )
         datamodule.setup(stage="fit")
@@ -157,9 +175,11 @@ class TestTicketDataModuleWithData:
     def test_batch_tensors_have_correct_shape(self, mock_preprocessed_data: Path) -> None:
         """Test that batch tensors have correct shapes."""
         batch_size = 3
+        preprocessed_dir = mock_preprocessed_data / "preprocessed"
         datamodule = TicketDataModule(
-            root=mock_preprocessed_data,
-            dataset_type="small",
+            train_path=preprocessed_dir / "small_train.parquet",
+            val_path=preprocessed_dir / "small_validation.parquet",
+            test_path=preprocessed_dir / "small_test.parquet",
             batch_size=batch_size,
         )
         datamodule.setup(stage="fit")
@@ -172,9 +192,11 @@ class TestTicketDataModuleWithData:
 
     def test_train_dataloader_shuffles(self, mock_preprocessed_data: Path) -> None:
         """Test that train_dataloader shuffles data."""
+        preprocessed_dir = mock_preprocessed_data / "preprocessed"
         datamodule = TicketDataModule(
-            root=mock_preprocessed_data,
-            dataset_type="small",
+            train_path=preprocessed_dir / "small_train.parquet",
+            val_path=preprocessed_dir / "small_validation.parquet",
+            test_path=preprocessed_dir / "small_test.parquet",
             batch_size=10,  # Get all data in one batch
         )
         datamodule.setup(stage="fit")
@@ -186,9 +208,11 @@ class TestTicketDataModuleWithData:
 
     def test_val_dataloader_does_not_shuffle(self, mock_preprocessed_data: Path) -> None:
         """Test that val_dataloader does not shuffle data."""
+        preprocessed_dir = mock_preprocessed_data / "preprocessed"
         datamodule = TicketDataModule(
-            root=mock_preprocessed_data,
-            dataset_type="small",
+            train_path=preprocessed_dir / "small_train.parquet",
+            val_path=preprocessed_dir / "small_validation.parquet",
+            test_path=preprocessed_dir / "small_test.parquet",
             batch_size=2,
         )
         datamodule.setup(stage="fit")
