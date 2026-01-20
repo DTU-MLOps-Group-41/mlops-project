@@ -1,8 +1,10 @@
 defaults:
   - dataset: medium
-  - training: default
-  - model_name: distilbert-base-multilingual-cased
+  - training: baseline
   - _self_
+
+# Model
+model_name: distilbert-base-multilingual-cased
 
 # Global settings
 seed: 42

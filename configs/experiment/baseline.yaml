@@ -1,6 +1,6 @@
 # Baseline experiment - uses defaults
 defaults:
-  - override /training: default
+  - override /training: baseline
   - override /dataset: small
   - _self_
 

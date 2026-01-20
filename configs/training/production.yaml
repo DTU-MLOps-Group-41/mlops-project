@@ -1,0 +1,47 @@
+# @package _global_
+defaults:
+  - baseline  # Inherit from baseline as default
+
+# Production training configuration
+# Use this for serious training runs when performance matters
+
+# Override baseline with production-ready values
+batch_size: 32  # Smaller batch for better generalization
+learning_rate: 5e-5  # Lower LR for fine-tuning pretrained models
+weight_decay: 0.01
+num_epochs: 10  # More epochs for convergence
+precision: 16-mixed  # Keep mixed precision for efficiency
+
+# Reproducibility
+deterministic: true  # Ensure reproducible results
+
+# Logging
+log_every_n_steps: 50  # Less frequent logging to reduce overhead
+
+# Early stopping
+patience: 5  # More patience for production runs
+
+# Checkpointing - save more checkpoints for production
+save_best_only: false
+checkpoint_monitor: val_accuracy
+checkpoint_mode: max
+checkpoint_save_top_k: 3  # Keep top 3 models
+checkpoint_verbose: true
+
+# Gradient management
+gradient_clip_val: 1.0  # Prevent gradient explosion
+accumulate_grad_batches: 2  # Effective batch size = batch_size * 2
+
+# Learning rate scheduling
+lr_scheduler:
+  name: cosine  # cosine, linear, constant_with_warmup
+  warmup_steps: 100  # Warmup steps for stable training
+  num_cycles: 1  # For cosine scheduler
+
+# Validation
+val_check_interval: 1.0  # Validate every epoch (1.0 = once per epoch)
+check_val_every_n_epoch: 1
+
+# Training metadata
+name: production
+description: "Production-grade training configuration for serious model training"

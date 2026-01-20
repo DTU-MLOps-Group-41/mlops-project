@@ -1,5 +1,5 @@
 name: small
-train_path: preprocessed/small_train.parquet
-test_path: preprocessed/small_test.parquet
-val_path: preprocessed/small_validation.parquet
+train_path: ${paths.data_root}/preprocessed/small_train.parquet
+test_path: ${paths.data_root}/preprocessed/small_test.parquet
+val_path: ${paths.data_root}/preprocessed/small_validation.parquet
 num_classes: 3
