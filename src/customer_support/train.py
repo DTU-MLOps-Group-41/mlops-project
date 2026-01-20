@@ -57,6 +57,7 @@ def train(cfg: DictConfig) -> None:
     patience: int = cfg.training.patience
     precision: Optional[_PRECISION_INPUT] = cfg.training.precision
     weight_decay: float = cfg.training.weight_decay
+    enable_checkpointing: bool = cfg.training.enable_checkpointing
     checkpoint_monitor: str = cfg.training.checkpoint_monitor
     checkpoint_mode: str = cfg.training.checkpoint_mode
     checkpoint_save_top_k: int = cfg.training.checkpoint_save_top_k
@@ -156,6 +157,7 @@ def train(cfg: DictConfig) -> None:
         accumulate_grad_batches=accumulate_grad_batches,
         val_check_interval=val_check_interval,
         check_val_every_n_epoch=check_val_every_n_epoch,
+        enable_checkpointing=enable_checkpointing,
         profiler=profiler,
     )
 

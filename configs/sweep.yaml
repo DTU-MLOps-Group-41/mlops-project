@@ -80,3 +80,5 @@ parameters:
     value: 3
   training.log_model:
     value: false
+  training.enable_checkpointing:
+    value: false
