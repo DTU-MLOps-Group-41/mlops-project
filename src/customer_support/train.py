@@ -19,30 +19,11 @@ from omegaconf import DictConfig, OmegaConf
 
 ACCELERATOR_TY = Literal["auto", "cpu", "gpu", "tpu"]
 
+
+# TODO: Fix logging
 @hydra.main(version_base=None, config_path="../../configs", config_name="config.yaml")
 def train(cfg: DictConfig) -> None:
-    """Train the customer support ticket classifier using PyTorch Lightning.
-
-    Args:
-        data_root: Root directory for dataset files.
-        dataset_type: Dataset size - "small", "medium", or "full".
-        batch_size: Training batch size.
-        learning_rate: Learning rate for AdamW optimizer.
-        num_epochs: Maximum number of training epochs.
-        weight_decay: Weight decay for AdamW optimizer.
-        patience: Early stopping patience (epochs without improvement).
-        output_dir: Directory to save model checkpoints.
-        log_dir: Directory to save training logs.
-        save_model: Whether to save the best model checkpoint.
-        seed: Random seed for reproducibility.
-        accelerator: Lightning accelerator ("auto", "cpu", "gpu", "tpu").
-        devices: Number of devices or "auto".
-        precision: Training precision ("16-mixed", "bf16-mixed", "32", etc.).
-        num_workers: Number of DataLoader workers.
-
-    Returns:
-        Dictionary with final training metrics (train_loss, val_loss, train_accuracy, val_accuracy).
-    """
+    """Train the customer support ticket classifier using PyTorch Lightning."""
     logger.info("Resolved Hydra config:\n" + OmegaConf.to_yaml(cfg))
 
     seed: int = cfg.seed
@@ -86,21 +67,6 @@ def train(cfg: DictConfig) -> None:
 
     # Set matmul precision for better performance on supported hardware
     torch.set_float32_matmul_precision("medium")
-
-    logger.info(f"{'=' * 60}")
-    logger.info("Training Configuration (PyTorch Lightning):")
-    logger.info(f"  Dataset: {dataset_name}")
-    logger.info(f"  Train path: {train_path}")
-    logger.info(f"  Batch size: {batch_size}")
-    logger.info(f"  Learning rate: {learning_rate}")
-    logger.info(f"  Weight decay: {weight_decay}")
-    logger.info(f"  Max epochs: {num_epochs}")
-    logger.info(f"  Early stopping patience: {patience}")
-    logger.info(f"  Accelerator: {accelerator}")
-    logger.info(f"  Devices: {devices}")
-    logger.info(f"  Precision: {precision}")
-    logger.info(f"  Seed: {seed}")
-    logger.info(f"{'=' * 60}")
 
     # Initialize DataModule
     datamodule = TicketDataModule(
@@ -192,8 +158,6 @@ def train(cfg: DictConfig) -> None:
 
     if checkpoint_callback is not None and checkpoint_callback.best_model_path:
         logger.success(f"Best model saved to: {checkpoint_callback.best_model_path}")
-
-    return final_metrics
 
 
 # TODO: Add Weights & Biases logger integration
