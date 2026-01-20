@@ -15,6 +15,13 @@ program: src/customer_support/train.py
 method: bayes
 name: distilbert-finetuning-sweep
 
+# Custom command for Hydra compatibility (Hydra uses key=value, not --key=value)
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - ${args_no_hyphens}
+
 metric:
   name: val_accuracy
   goal: maximize
