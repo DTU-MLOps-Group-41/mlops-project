@@ -19,11 +19,11 @@ paths:
   model_dir: models
   output_dir: ${hydra:runtime.output_dir}
 
-# Wandb configuration 
+# Wandb configuration
 wandb:
-  entity: "dtu-mlops-g41"       
-  project: "customer_support"   
-  mode: "online"                
+  entity: "dtu-mlops-g41"
+  project: "customer_support"
+  mode: "online"
   log_model: true
 
 # Hydra specific

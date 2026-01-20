@@ -48,7 +48,6 @@ def train(cfg: DictConfig) -> None:
     num_workers: int = cfg.num_workers
     save_model: bool = cfg.training.save_best_only
 
-
     # Model Hyperparameters
     batch_size: int = cfg.training.batch_size
     deterministic: bool = cfg.training.deterministic
@@ -70,9 +69,8 @@ def train(cfg: DictConfig) -> None:
 
     # Wandb Config
     project = cfg.wandb.project
-    entity=cfg.wandb.entity
-    mode=cfg.wandb.mode
-
+    entity = cfg.wandb.entity
+    mode = cfg.wandb.mode
 
     # Profiling
     profiler = SimpleProfiler(dirpath=cfg.paths.output_dir, filename="profile_report")
@@ -158,12 +156,11 @@ def train(cfg: DictConfig) -> None:
         accumulate_grad_batches=accumulate_grad_batches,
         val_check_interval=val_check_interval,
         check_val_every_n_epoch=check_val_every_n_epoch,
-        profiler=profiler
+        profiler=profiler,
     )
 
     # Train the model
     trainer.fit(model=model, datamodule=datamodule)
-
 
     if getattr(wandb_logger, "experiment", None):
         wandb_logger.experiment.finish()
