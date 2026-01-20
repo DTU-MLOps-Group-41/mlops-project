@@ -46,7 +46,7 @@ def train(cfg: DictConfig) -> None:
     accelerator: ACCELERATOR_TY = cfg.accelerator
     devices: list[int] | str | int = cfg.devices
     num_workers: int = cfg.num_workers
-    save_model: bool = cfg.training.save_best_only
+    log_model: Literal["all"] | bool = cfg.training.log_model
 
     # Model Hyperparameters
     batch_size: int = cfg.training.batch_size
@@ -111,7 +111,7 @@ def train(cfg: DictConfig) -> None:
 
     # Model checkpoint callback - saves best model by val_accuracy
     checkpoint_callback = None
-    if save_model:
+    if log_model:
         output_path = Path(output_dir)
         output_path.mkdir(parents=True, exist_ok=True)
 
@@ -138,7 +138,7 @@ def train(cfg: DictConfig) -> None:
         mode=mode,
         name=f"{model_name}-{dataset_name}",
         config=OmegaConf.to_container(cfg, resolve=True, throw_on_missing=True),
-        log_model="all" if cfg.training.save_best_only else False,
+        log_model=log_model,
         save_dir=log_dir,
     )
 
