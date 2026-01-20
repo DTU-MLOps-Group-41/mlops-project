@@ -56,8 +56,10 @@ parameters:
     values: [0, 50, 100, 200]
 
   # Gradient clipping prevents exploding gradients
+  # Note: Using 0 instead of null (Hydra CLI passes "None" as string, causing errors)
+  # 0 effectively disables gradient clipping in PyTorch Lightning
   training.gradient_clip_val:
-    values: [null, 0.5, 1.0]
+    values: [0, 0.5, 1.0]
 
   # Gradient accumulation simulates larger effective batch sizes
   training.accumulate_grad_batches:
