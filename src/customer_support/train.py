@@ -49,13 +49,16 @@ def train(cfg: DictConfig) -> None:
     torch.manual_seed(seed)
     pl.seed_everything(seed, workers=True)
 
-    data_root: Path = Path(cfg.paths.data_root)
     log_dir: Path = Path(cfg.paths.output_dir)
     output_dir: Path = Path(cfg.paths.model_dir)
 
     model_name: str = cfg.model_name
 
-    dataset_type: str = cfg.dataset.name
+    # Dataset paths from Hydra config
+    train_path: str = cfg.dataset.train_path
+    val_path: str = cfg.dataset.val_path
+    test_path: str = cfg.dataset.test_path
+    dataset_name: str = cfg.dataset.name
     num_classes: int = cfg.dataset.num_classes
 
     accelerator: ACCELERATOR_TY = cfg.accelerator
@@ -71,13 +74,18 @@ def train(cfg: DictConfig) -> None:
     patience: int = cfg.training.patience
     precision: Optional[_PRECISION_INPUT] = cfg.training.precision
     weight_decay: float = cfg.training.weight_decay
+    checkpoint_monitor: str = cfg.training.checkpoint_monitor
+    checkpoint_mode: str = cfg.training.checkpoint_mode
+    checkpoint_save_top_k: int = cfg.training.checkpoint_save_top_k
+    checkpoint_verbose: bool = cfg.training.checkpoint_verbose
 
     # Set matmul precision for better performance on supported hardware
     torch.set_float32_matmul_precision("medium")
 
     logger.info(f"{'=' * 60}")
     logger.info("Training Configuration (PyTorch Lightning):")
-    logger.info(f"  Dataset: {dataset_type} (root: {data_root})")
+    logger.info(f"  Dataset: {dataset_name}")
+    logger.info(f"  Train path: {train_path}")
     logger.info(f"  Batch size: {batch_size}")
     logger.info(f"  Learning rate: {learning_rate}")
     logger.info(f"  Weight decay: {weight_decay}")
@@ -91,8 +99,9 @@ def train(cfg: DictConfig) -> None:
 
     # Initialize DataModule
     datamodule = TicketDataModule(
-        root=data_root,
-        dataset_type=dataset_type,
+        train_path=train_path,
+        val_path=val_path,
+        test_path=test_path,
         batch_size=batch_size,
         num_workers=num_workers,
         seed=seed,
@@ -126,11 +135,11 @@ def train(cfg: DictConfig) -> None:
 
         checkpoint_callback = ModelCheckpoint(
             dirpath=output_path,
-            filename=f"model_{dataset_type}",
-            monitor="val_accuracy",
-            mode="max",
-            save_top_k=1,
-            verbose=True,
+            filename=f"model_{dataset_name}",
+            monitor=checkpoint_monitor,
+            mode=checkpoint_mode,
+            save_top_k=checkpoint_save_top_k,
+            verbose=checkpoint_verbose,
         )
         callbacks.append(checkpoint_callback)
 
