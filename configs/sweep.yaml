@@ -68,6 +68,8 @@ parameters:
   # Fixed parameters for reproducibility and consistency
   seed:
     value: 42
+  dataset:
+    value: full
   wandb.mode:
     value: online
   training.num_epochs:
