@@ -14,8 +14,9 @@ from customer_support.model import TicketClassificationModule
 
 def evaluate(
     checkpoint_path: str | Path,
-    data_root: str | Path = "data",
-    dataset_type: str = "small",
+    train_path: str | Path = "data/preprocessed/small_train.parquet",
+    val_path: str | Path = "data/preprocessed/small_validation.parquet",
+    test_path: str | Path = "data/preprocessed/small_test.parquet",
     batch_size: int = 32,
     accelerator: str = "auto",
     devices: str | int = "auto",
@@ -49,7 +50,7 @@ def evaluate(
     logger.info(f"{'=' * 60}")
     logger.info("Model Evaluation Configuration:")
     logger.info(f"  Checkpoint: {checkpoint_file}")
-    logger.info(f"  Dataset: {dataset_type} (root: {data_root})")
+    logger.info(f"  Dataset (test): {test_path}")
     logger.info(f"  Batch size: {batch_size}")
     logger.info(f"  Accelerator: {accelerator}")
     logger.info(f"  Devices: {devices}")
@@ -57,11 +58,11 @@ def evaluate(
 
     # Initialize DataModule
     datamodule = TicketDataModule(
-        root=data_root,
-        dataset_type=dataset_type,
+        train_path=train_path,
+        val_path=val_path,
+        test_path=test_path,
         batch_size=batch_size,
         num_workers=num_workers,
-        download=False,
     )
 
     # Load model from checkpoint
@@ -109,7 +110,7 @@ def evaluate_command(
     ),
     dataset_type: str = typer.Option("small", "-d", "--dataset-type", help="Dataset size: small, medium, or full"),
     batch_size: int = typer.Option(32, "-b", "--batch-size", help="Evaluation batch size"),
-    data_root: str = typer.Option("data", "--data-root", help="Root directory for dataset files"),
+    # data_root: str = typer.Option("data", "--data-root", help="Root directory for dataset files"),
     accelerator: str = typer.Option("auto", "--accelerator", help="Lightning accelerator (auto, cpu, gpu, tpu)"),
     devices: str = typer.Option("auto", "--devices", help="Number of devices or 'auto'"),
     num_workers: int = typer.Option(0, "--num-workers", help="DataLoader workers"),
@@ -129,10 +130,15 @@ def evaluate_command(
         except ValueError:
             parsed_devices = devices
 
+    train_path = f"data/preprocessed/{dataset_type}_train.parquet"
+    val_path = f"data/preprocessed/{dataset_type}_validation.parquet"
+    test_path = f"data/preprocessed/{dataset_type}_test.parquet"
+
     evaluate(
         checkpoint_path=checkpoint,
-        data_root=data_root,
-        dataset_type=dataset_type,
+        train_path=train_path,
+        val_path=val_path,
+        test_path=test_path,
         batch_size=batch_size,
         accelerator=accelerator,
         devices=parsed_devices,

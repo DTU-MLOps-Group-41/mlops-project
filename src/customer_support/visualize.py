@@ -23,8 +23,9 @@ CLASS_NAMES = [REVERSE_LABEL_MAP[i] for i in CLASS_LABELS]
 
 def visualize(
     checkpoint_path: str | Path,
-    data_root: str | Path = "data",
-    dataset_type: str = "small",
+    train_path: str | Path = "data/preprocessed/small_train.parquet",
+    val_path: str | Path = "data/preprocessed/small_validation.parquet",
+    test_path: str | Path = "data/preprocessed/small_test.parquet",
     batch_size: int = 32,
     output_dir: str | Path = "reports/figures",
     accelerator: str = "auto",
@@ -60,7 +61,7 @@ def visualize(
     logger.info(f"{'=' * 60}")
     logger.info("Model Visualization Configuration:")
     logger.info(f"  Checkpoint: {checkpoint_file}")
-    logger.info(f"  Dataset: {dataset_type}")
+    logger.info(f"  Dataset (test): {test_path}")
     logger.info(f"  Output directory: {output_path}")
     logger.info(f"{'=' * 60}")
 
@@ -69,11 +70,11 @@ def visualize(
     model = TicketClassificationModule.load_from_checkpoint(checkpoint_file)
 
     datamodule = TicketDataModule(
-        root=data_root,
-        dataset_type=dataset_type,
+        train_path=train_path,
+        val_path=val_path,
+        test_path=test_path,
         batch_size=batch_size,
         num_workers=num_workers,
-        download=False,
     )
 
     # Use Lightning Trainer for inference
@@ -104,7 +105,7 @@ def visualize(
     # Set labels and title
     ax.set_xlabel("Predicted Label", fontsize=12)
     ax.set_ylabel("True Label", fontsize=12)
-    ax.set_title(f"Confusion Matrix - {dataset_type.upper()} Dataset", fontsize=14, fontweight="bold")
+    ax.set_title(f"Confusion Matrix - {Path(test_path).name} Dataset", fontsize=14, fontweight="bold")
 
     # Set ticks
     tick_marks = np.arange(len(CLASS_NAMES))
@@ -136,7 +137,7 @@ def visualize(
     plt.tight_layout()
 
     # Save figure
-    output_file = output_path / f"confusion_matrix_{dataset_type}.png"
+    output_file = output_path / f"confusion_matrix_{Path(test_path).name}.png"
     plt.savefig(output_file, dpi=300, bbox_inches="tight")
     logger.success(f"Confusion matrix saved to: {output_file}")
 
@@ -177,8 +178,9 @@ def visualize_command(
 
     visualize(
         checkpoint_path=checkpoint,
-        data_root=data_root,
-        dataset_type=dataset_type,
+        train_path=f"data/preprocessed/{dataset_type}_train.parquet",
+        val_path=f"data/preprocessed/{dataset_type}_validation.parquet",
+        test_path=f"data/preprocessed/{dataset_type}_test.parquet",
         batch_size=batch_size,
         output_dir=output_dir,
         accelerator=accelerator,

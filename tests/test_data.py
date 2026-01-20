@@ -365,7 +365,7 @@ def test_tokenize_dataset_with_percentile_trim() -> None:
     )
     dataset = Dataset.from_pandas(df)
 
-    result = TicketDataset._tokenize_dataset(dataset, length_percentile=0.5, length_handling="trim")
+    result = TicketDataset._tokenize_dataset(dataset, length_percentile=50, length_handling="trim")
 
     assert len(result) == 4, "Trim mode should preserve all samples"
     lengths = [len(result[i]["input_ids"]) for i in range(len(result))]
@@ -387,7 +387,7 @@ def test_tokenize_dataset_with_percentile_drop() -> None:
     )
     dataset = Dataset.from_pandas(df)
 
-    result = TicketDataset._tokenize_dataset(dataset, length_percentile=0.5, length_handling="drop")
+    result = TicketDataset._tokenize_dataset(dataset, length_percentile=50, length_handling="drop")
 
     assert len(result) <= 4, "Drop mode may remove samples"
     lengths = [len(result[i]["input_ids"]) for i in range(len(result))]
