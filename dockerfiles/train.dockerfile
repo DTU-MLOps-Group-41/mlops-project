@@ -15,6 +15,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --no-install-project --extra $DEVICE
 
 # 3. Copy source code last
+COPY README.md ./README.md
+COPY LICENSE ./LICENSE
 COPY src/ ./src/
 # Data should mounted during runtime
 
