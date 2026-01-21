@@ -1,13 +1,11 @@
+# @package _global_
+# Best experiment - optimized hyperparameters from wandb sweep
 defaults:
-  - baseline
+  - override /training: best_sweep
+  - override /dataset: full
 
-model_name: distilbert-base-multilingual-cased
-num_classes: 3
-learning_rate: 6.994404691067017e-05
-weight_decay: 0.0177522213390101
-train_path: data/preprocessed/full_train.parquet
-val_path: data/preprocessed/full_validation.parquet
-test_path: data/preprocessed/full_test.parquet
-batch_size: 64
-num_workers: 4
 seed: 42
+
+experiment:
+  name: best_sweep
+  description: "Best hyperparameters found via wandb sweep (val_accuracy optimization)"
