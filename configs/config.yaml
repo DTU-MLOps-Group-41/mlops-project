@@ -11,7 +11,7 @@ model_name: distilbert-base-multilingual-cased
 seed: 42
 devices: auto  # auto, 1, 2, ...
 accelerator: auto  # auto, gpu, cpu, tpu, ...
-num_workers: 0  # DataLoader num_workers
+num_workers: 4  # DataLoader num_workers
 
 # Paths
 paths:
@@ -19,12 +19,12 @@ paths:
   model_dir: models
   output_dir: ${hydra:runtime.output_dir}
 
-# Wandb configuration (TODO)
-# wandb:
-#   entity: XXX
-#   project: XXX
-#   mode: online  # online, offline, disabled
-#   log_model: true
+# Wandb configuration
+wandb:
+  entity: "dtu-mlops-g41"
+  project: "customer_support"
+  mode: "online"
+  log_model: true
 
 # Hydra specific
 hydra:

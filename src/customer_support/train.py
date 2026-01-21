@@ -8,9 +8,9 @@ from loguru import logger
 
 import lightning.pytorch as pl
 from lightning.pytorch.callbacks import EarlyStopping, ModelCheckpoint
-from lightning.pytorch.loggers import CSVLogger
+from lightning.pytorch.loggers import CSVLogger, WandbLogger
 from lightning.fabric.plugins.precision.precision import _PRECISION_INPUT
-
+from lightning.pytorch.profilers import SimpleProfiler
 from customer_support.datamodule import TicketDataModule
 from customer_support.model import TicketClassificationModule
 
@@ -30,6 +30,7 @@ def train(cfg: DictConfig) -> None:
     torch.manual_seed(seed)
     pl.seed_everything(seed, workers=True)
 
+    # Directories
     log_dir: Path = Path(cfg.paths.output_dir)
     output_dir: Path = Path(cfg.paths.model_dir)
 
@@ -45,8 +46,9 @@ def train(cfg: DictConfig) -> None:
     accelerator: ACCELERATOR_TY = cfg.accelerator
     devices: list[int] | str | int = cfg.devices
     num_workers: int = cfg.num_workers
-    save_model: bool = cfg.training.save_best_only
+    log_model: Literal["all"] | bool = cfg.training.log_model
 
+    # Model Hyperparameters
     batch_size: int = cfg.training.batch_size
     deterministic: bool = cfg.training.deterministic
     learning_rate: float = cfg.training.learning_rate
@@ -55,6 +57,7 @@ def train(cfg: DictConfig) -> None:
     patience: int = cfg.training.patience
     precision: Optional[_PRECISION_INPUT] = cfg.training.precision
     weight_decay: float = cfg.training.weight_decay
+    enable_checkpointing: bool = cfg.training.enable_checkpointing
     checkpoint_monitor: str = cfg.training.checkpoint_monitor
     checkpoint_mode: str = cfg.training.checkpoint_mode
     checkpoint_save_top_k: int = cfg.training.checkpoint_save_top_k
@@ -64,6 +67,14 @@ def train(cfg: DictConfig) -> None:
     val_check_interval: float = cfg.training.val_check_interval
     check_val_every_n_epoch: int = cfg.training.check_val_every_n_epoch
     lr_scheduler_cfg = cfg.training.get("lr_scheduler", None)
+
+    # Wandb Config
+    project = cfg.wandb.project
+    entity = cfg.wandb.entity
+    mode = cfg.wandb.mode
+
+    # Profiling
+    profiler = SimpleProfiler(dirpath=cfg.paths.output_dir, filename="profile_report")
 
     # Set matmul precision for better performance on supported hardware
     torch.set_float32_matmul_precision("medium")
@@ -101,7 +112,7 @@ def train(cfg: DictConfig) -> None:
 
     # Model checkpoint callback - saves best model by val_accuracy
     checkpoint_callback = None
-    if save_model:
+    if log_model:
         output_path = Path(output_dir)
         output_path.mkdir(parents=True, exist_ok=True)
 
@@ -121,6 +132,17 @@ def train(cfg: DictConfig) -> None:
         name="customer_support",
     )
 
+    # Configure Wandb logger
+    wandb_logger = WandbLogger(
+        project=project,
+        entity=entity,
+        mode=mode,
+        name=f"{model_name}-{dataset_name}",
+        config=OmegaConf.to_container(cfg, resolve=True, throw_on_missing=True),
+        log_model=log_model,
+        save_dir=log_dir,
+    )
+
     # Initialize Trainer
     trainer = pl.Trainer(
         accelerator=accelerator,
@@ -128,17 +150,22 @@ def train(cfg: DictConfig) -> None:
         precision=precision,
         max_epochs=num_epochs,
         callbacks=callbacks,
-        logger=csv_logger,
+        logger=[csv_logger, wandb_logger],
         deterministic=deterministic,
         log_every_n_steps=log_every_n_steps,
         gradient_clip_val=gradient_clip_val,
         accumulate_grad_batches=accumulate_grad_batches,
         val_check_interval=val_check_interval,
         check_val_every_n_epoch=check_val_every_n_epoch,
+        enable_checkpointing=enable_checkpointing,
+        profiler=profiler,
     )
 
     # Train the model
     trainer.fit(model=model, datamodule=datamodule)
+
+    if getattr(wandb_logger, "experiment", None):
+        wandb_logger.experiment.finish()
 
     # Collect final metrics
     final_metrics = {
