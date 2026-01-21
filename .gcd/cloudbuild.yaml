@@ -7,10 +7,9 @@ steps:
     'build',
     '.',
     '--build-arg', 'DEVICE=$_DEVICE',
-    '-t',
-    'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/$_IMAGE_NAME',
-    '-f',
-    '$_DOCKERFILE'
+    '--cache-from', 'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/$_IMAGE_NAME:latest',
+    '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/$_IMAGE_NAME',
+    '-f', '$_DOCKERFILE'
   ]
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push container image'
