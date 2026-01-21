@@ -1,0 +1,28 @@
+wandb_version: 1
+
+dataset:
+  value: full
+seed:
+  value: 42
+training.accumulate_grad_batches:
+  value: 4
+training.batch_size:
+  value: 64
+training.enable_checkpointing:
+  value: false
+training.gradient_clip_val:
+  value: 0.5
+training.learning_rate:
+  value: 4.847190400134034e-05
+training.log_model:
+  value: false
+training.lr_scheduler.num_warmup_steps:
+  value: 200
+training.num_epochs:
+  value: 5
+training.patience:
+  value: 3
+training.weight_decay:
+  value: 0.04589842012285803
+wandb.mode:
+  value: online
