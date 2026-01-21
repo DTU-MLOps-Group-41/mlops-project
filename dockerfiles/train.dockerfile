@@ -16,8 +16,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 # 3. Copy source code last
 COPY src/ ./src/
-COPY data/ ./data/
-# TODO: Consider mounting data instead.
+# Data should mounted during runtime
 
 # 4. Final Sync/Install
 RUN --mount=type=cache,target=/root/.cache/uv \
