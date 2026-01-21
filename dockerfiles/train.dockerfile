@@ -10,13 +10,11 @@ ARG DEVICE="cpu"
 WORKDIR /app
 
 # 2. Cache Dependencies (The "Structured" way)
-COPY uv.lock pyproject.toml ./
+COPY uv.lock pyproject.toml README.md LICENSE ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --no-install-project --extra $DEVICE
 
 # 3. Copy source code last
-COPY README.md ./README.md
-COPY LICENSE ./LICENSE
 COPY src/ ./src/
 # Data should mounted during runtime
 
