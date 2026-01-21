@@ -123,7 +123,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 1 fill here ---
+--- 41 ---
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -134,7 +134,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 2 fill here ---
+--- s256657, s243036, s242908, s250148 ---
 
 ### Question 3
 > **Did you end up using any open-source frameworks/packages not covered in the course during your project? If so**
@@ -148,7 +148,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 3 fill here ---
+--- We used the third-party framework **Hugging Face `transformers`** in our project. We used functionality **`DistilBertForSequenceClassification`** and functionality **`DistilBertTokenizer`** (distilbert-base-multilingual-cased) from this framework, to fine-tune a **DistilBert model** and perform **efficient tokenization of multilingual text data** in our project. ---
 
 ## Coding environment
 
@@ -168,7 +168,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 4 fill here ---
+--- We used **uv** as package manager and to manage our dependencies. The list of dependencies for our project are clearly defined in the `pyproject.toml` file. Additionally, `uv` generates a `uv.lock` file that ensures reproducibility between different members of the project. It contains the exact versions of all packages installed in the virtual environment, including sub-dependencies. To get a complete copy of our development environment, a new team member would have to run (after installing uv) `uv sync` which automatically creates a virtual environment and installs the exact versions specified in the lock file. Finally, if a user wants to use CUDA, they can run `uv sync --extra cu128` which installs the approriate GPU enabled PyTorch packages. ---
 
 ### Question 5
 
