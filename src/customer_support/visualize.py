@@ -1,6 +1,7 @@
 """Visualization script for customer support ticket classification model."""
 
 from pathlib import Path
+import sys
 
 import lightning.pytorch as pl
 import matplotlib.pyplot as plt
@@ -13,6 +14,15 @@ from sklearn.metrics import confusion_matrix
 from customer_support.data import LABEL_MAP
 from customer_support.datamodule import TicketDataModule
 from customer_support.model import TicketClassificationModule
+
+# Configure logging
+logger.remove()  # Remove default handler
+logger.add(
+    sys.stdout,
+    format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}",
+    level="INFO",
+    colorize=True,
+)
 
 
 # Reverse label map for display
