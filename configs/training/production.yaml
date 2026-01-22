@@ -10,7 +10,7 @@ num_epochs: 10
 deterministic: true
 log_every_n_steps: 50
 patience: 5
-log_model: true
+save_checkpoint: true
 checkpoint_save_top_k: 3
 
 # Enable advanced training features

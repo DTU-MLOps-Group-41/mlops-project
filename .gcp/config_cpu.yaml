@@ -6,5 +6,9 @@ workerPoolSpecs:
   containerSpec:
     imageUri: europe-west1-docker.pkg.dev/corded-smithy-484309-s4/g41-registry/train-cpu:latest
     env:
-    - name: WANDB_API_KEY
-      value: $WANDB_API_KEY
+      - name: WANDB_API_KEY
+        value: $WANDB_API_KEY
+    args:
+      - "+experiment=baseline"
+      - "training.save_checkpoint=false"
+      - "training.enable_checkpointing=false"
