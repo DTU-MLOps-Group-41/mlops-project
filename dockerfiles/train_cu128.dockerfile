@@ -24,11 +24,13 @@ COPY src/ ./src/
 COPY configs/ ./configs/
 COPY data.dvc ./data.dvc
 COPY .dvc ./.dvc/
-RUN dvc pull
 
-# 4. Final Sync/Install
+# 4. Copy entrypoint script (dvc pull happens at runtime when GCS credentials are available)
+COPY dockerfiles/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# 5. Final Sync/Install
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --extra $DEVICE
 
-# No 'uv run' needed because .venv/bin is in PATH
-ENTRYPOINT ["python", "src/customer_support/train.py"]
+ENTRYPOINT ["/entrypoint.sh"]
