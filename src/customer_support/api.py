@@ -2,12 +2,14 @@
 
 import glob
 import os
+import shutil
 from functools import lru_cache
-from fastapi.concurrency import asynccontextmanager
-import wandb
+from pathlib import Path
 
 import torch
+import wandb
 from fastapi import FastAPI, HTTPException
+from fastapi.concurrency import asynccontextmanager
 from pydantic import BaseModel, Field
 from transformers import DistilBertTokenizer
 
@@ -17,21 +19,50 @@ from customer_support.model import TicketClassificationModule
 PRIORITY_NAMES = {0: "low", 1: "medium", 2: "high"}
 model = None
 
+# GCS-mounted cache directory for model storage
+MODEL_CACHE_DIR = Path("/mnt/models")
+CACHE_DIGEST_FILE = MODEL_CACHE_DIR / ".digest"
+CACHE_MODEL_FILE = MODEL_CACHE_DIR / "model.ckpt"
+
 
 def _get_model() -> TicketClassificationModule:
-    """Load and cache the model from checkpoint."""
-    run = wandb.Api()  # type: ignore[attr-defined]
-    artifact = run.artifact(os.getenv("WANDB_ARTIFACT_PATH"), type="model")
-    artifact_dir = artifact.download()
-    # Find the .ckpt file in the artifact directory
-    ckpt_files = glob.glob(f"{artifact_dir}/*.ckpt")
-    if not ckpt_files:
-        raise FileNotFoundError(f"No .ckpt file found in {artifact_dir}")
-    checkpoint_path = ckpt_files[0]
-    model = TicketClassificationModule.load_from_checkpoint(checkpoint_path)
-    model.eval()
-    model.freeze()
-    return model
+    """Load model from cache if valid, otherwise download from W&B and cache."""
+    api = wandb.Api()  # type: ignore
+    artifact = api.artifact(os.getenv("WANDB_ARTIFACT_PATH"), type="model")
+    current_digest = artifact.digest
+
+    # Check if cached model exists and is up-to-date
+    if _is_cache_valid(current_digest):
+        checkpoint_path = CACHE_MODEL_FILE
+    else:
+        # Download from W&B and update cache
+        artifact_dir = artifact.download()
+        ckpt_files = glob.glob(f"{artifact_dir}/*.ckpt")
+        if not ckpt_files:
+            raise FileNotFoundError(f"No .ckpt file found in {artifact_dir}")
+        checkpoint_path = Path(ckpt_files[0])
+        _update_cache(checkpoint_path, current_digest)
+
+    loaded_model = TicketClassificationModule.load_from_checkpoint(checkpoint_path)
+    loaded_model.eval()
+    loaded_model.freeze()
+    return loaded_model
+
+
+def _is_cache_valid(current_digest: str) -> bool:
+    """Check if cached model exists and matches the current W&B artifact digest."""
+    if not CACHE_MODEL_FILE.exists() or not CACHE_DIGEST_FILE.exists():
+        return False
+    cached_digest = CACHE_DIGEST_FILE.read_text().strip()
+    return cached_digest == current_digest
+
+
+def _update_cache(checkpoint_path: Path, digest: str) -> None:
+    """Copy model to cache and save digest marker."""
+    if not MODEL_CACHE_DIR.exists():
+        return  # GCS mount not available, skip caching
+    shutil.copy2(checkpoint_path, CACHE_MODEL_FILE)
+    CACHE_DIGEST_FILE.write_text(digest)
 
 
 @asynccontextmanager

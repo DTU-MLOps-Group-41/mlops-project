@@ -26,7 +26,9 @@ steps:
     'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/api',
     '--region', 'europe-west1',
     '--platform', 'managed',
-    # optional argument if you want to inject secrets as environment variables
+    '--execution-environment', 'gen2',
+    '--add-volume=name=model-cache,type=cloud-storage,bucket=my_mlops_data_bucket3',
+    '--add-volume-mount=volume=model-cache,mount-path=/mnt/models',
     '--update-secrets=WANDB_API_KEY=WANDB_API_KEY:latest',
     '--set-env-vars=WANDB_ARTIFACT_PATH=wandb-registry-Ticket Urgency/models:latest'
   ]
