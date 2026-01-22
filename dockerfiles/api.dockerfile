@@ -12,16 +12,13 @@ WORKDIR /app
 
 # 2. Install dependencies ONLY (Best for Caching)
 # We only copy the files needed to resolve dependencies.
-COPY uv.lock pyproject.toml ./
+COPY uv.lock pyproject.toml README.md LICENSE ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --no-install-project --extra $DEVICE
 
 # 3. Copy the rest of the project
-# Now, changes to src/ won't trigger the heavy dependency sync above.
-COPY README.md LICENSE ./
 COPY src/ ./src/
-COPY data/ ./data/
-COPY models/ ./models/
+RUN mkdir -p /app/artifacts && chmod 777 /app/artifacts
 
 # 4. Install the project itself
 RUN --mount=type=cache,target=/root/.cache/uv \

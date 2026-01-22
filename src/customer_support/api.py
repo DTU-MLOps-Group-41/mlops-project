@@ -1,7 +1,10 @@
 """FastAPI application for customer support ticket priority classification."""
 
+import glob
 import os
 from functools import lru_cache
+from fastapi.concurrency import asynccontextmanager
+import wandb
 
 import torch
 from fastapi import FastAPI, HTTPException
@@ -12,11 +15,37 @@ from customer_support.model import TicketClassificationModule
 
 # Reverse mapping from class ID to priority name
 PRIORITY_NAMES = {0: "low", 1: "medium", 2: "high"}
+model = None
+
+
+def _get_model() -> TicketClassificationModule:
+    """Load and cache the model from checkpoint."""
+    run = wandb.Api()  # type: ignore[attr-defined]
+    artifact = run.artifact(os.getenv("WANDB_ARTIFACT_PATH"), type="model")
+    artifact_dir = artifact.download()
+    # Find the .ckpt file in the artifact directory
+    ckpt_files = glob.glob(f"{artifact_dir}/*.ckpt")
+    if not ckpt_files:
+        raise FileNotFoundError(f"No .ckpt file found in {artifact_dir}")
+    checkpoint_path = ckpt_files[0]
+    model = TicketClassificationModule.load_from_checkpoint(checkpoint_path)
+    model.eval()
+    model.freeze()
+    return model
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global model
+    model = _get_model()
+    yield
+
 
 app = FastAPI(
     title="Customer Support Ticket Classifier",
     description="API for classifying customer support ticket priority using DistilBERT",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 
@@ -42,23 +71,6 @@ class HealthResponse(BaseModel):
 
 
 @lru_cache(maxsize=1)
-def get_model() -> TicketClassificationModule:
-    """Load and cache the model from checkpoint.
-
-    Uses MODEL_PATH environment variable, defaulting to models/model_full.ckpt.
-    """
-    model_path = os.environ.get("MODEL_PATH", "models/model_full.ckpt")
-
-    if not os.path.exists(model_path):
-        raise FileNotFoundError(f"Model checkpoint not found at {model_path}")
-
-    model = TicketClassificationModule.load_from_checkpoint(model_path)
-    model.eval()
-    model.freeze()
-    return model
-
-
-@lru_cache(maxsize=1)
 def get_tokenizer() -> DistilBertTokenizer:
     """Load and cache the tokenizer."""
     return DistilBertTokenizer.from_pretrained("distilbert-base-multilingual-cased")
@@ -80,12 +92,7 @@ def read_root():
 @app.get("/health", response_model=HealthResponse)
 def health_check():
     """Health check endpoint for container orchestration."""
-    try:
-        _ = get_model()
-        model_loaded = True
-    except Exception:
-        model_loaded = False
-
+    model_loaded = model is not None
     return HealthResponse(
         status="healthy" if model_loaded else "unhealthy",
         model_loaded=model_loaded,
@@ -103,7 +110,7 @@ def predict(request: TicketRequest):
         TicketResponse with priority, priority_id, and confidence
     """
     try:
-        model = get_model()
+        # model = _get_model()
         tokenizer = get_tokenizer()
     except FileNotFoundError as e:
         raise HTTPException(status_code=503, detail=str(e))
@@ -119,6 +126,7 @@ def predict(request: TicketRequest):
 
     # Run inference
     with torch.inference_mode():
+        assert model is not None
         outputs = model(
             input_ids=encoding["input_ids"],
             attention_mask=encoding["attention_mask"],
