@@ -27,6 +27,8 @@ steps:
     '--region', 'europe-west1',
     '--platform', 'managed',
     '--execution-environment', 'gen2',
+    '--memory', '4Gi',
+    '--cpu-boost',
     '--add-volume=name=model-cache,type=cloud-storage,bucket=my_mlops_data_bucket3,readonly=false',
     '--add-volume-mount=volume=model-cache,mount-path=/mnt/models',
     '--update-secrets=WANDB_API_KEY=WANDB_API_KEY:latest',
