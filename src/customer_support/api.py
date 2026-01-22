@@ -47,13 +47,12 @@ def _get_model() -> TicketClassificationModule:
         artifact.download(root=str(temp_download_dir), skip_cache=True)
 
         # 2. Copy files from /tmp to the GCS mount (/mnt/models)
-        # We use shutil.copy2 which is more robust for GCS FUSE
         logger.debug(f"Moving model to GCS cache: {MODEL_CACHE_DIR}")
         MODEL_CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
         for item in temp_download_dir.iterdir():
             if item.is_file():
-                shutil.copy2(item, MODEL_CACHE_DIR / item.name)
+                shutil.copy(item, MODEL_CACHE_DIR / item.name)
 
         # 3. Write the digest to verify the cache later
         CACHE_DIGEST_FILE.write_text(current_digest)

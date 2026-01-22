@@ -33,6 +33,7 @@ steps:
     '--platform', 'managed',
     '--execution-environment', 'gen2',
     '--memory', '4Gi',
+    '--cpu', '2',
     '--cpu-boost',
     '--timeout', '600',
     '--add-volume=name=model-cache,type=cloud-storage,bucket=my_mlops_data_bucket3,readonly=false',
