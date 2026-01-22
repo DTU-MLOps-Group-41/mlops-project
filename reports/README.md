@@ -351,7 +351,6 @@ The image shows us a result of (incomplete) sweep run. During sweep we followed 
 
 ![W&B sweep](figures/wandb_sweep.png)
 
-
 ### Question 15
 
 > **Docker is an important tool for creating containerized applications. Explain how you used docker in your**
