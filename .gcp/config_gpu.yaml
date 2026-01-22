@@ -11,6 +11,6 @@ workerPoolSpecs:
       - name: WANDB_API_KEY
         value: $WANDB_API_KEY
     args:
-      - "+experiment=best"
+      - "experiment=best"
       - "training.save_checkpoint=false"
       - "training.enable_checkpointing=false"
