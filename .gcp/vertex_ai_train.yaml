@@ -18,7 +18,7 @@ steps:
     'custom-jobs',
     'create',
     '--region', 'europe-west1',
-    '--display-name', 'train-job-${$BUILD_ID}',
+    '--display-name', 'train-job-${BUILD_ID}',
     '--config', '${_VERTEX_TRAIN_CONFIG}',
   ]
 availableSecrets:
