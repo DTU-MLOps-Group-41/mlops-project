@@ -1,0 +1,11 @@
+# @package _global_
+# Best experiment - optimized hyperparameters from wandb sweep
+defaults:
+  - override /training: best_sweep
+  - override /dataset: full
+
+seed: 42
+
+experiment:
+  name: best_sweep
+  description: "Best hyperparameters found via wandb sweep (val_accuracy optimization)"
