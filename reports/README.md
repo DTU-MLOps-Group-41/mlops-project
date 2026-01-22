@@ -232,7 +232,7 @@ We added dvc configurations (via standard initialization process) and Google Clo
 >
 > Answer:
 
---- question 7 fill here ---
+In total, we have implemented 6 tests. Primarily we implemented data loading / preprocessing tests (`test_data.py`), model tests (`test_model.py`), training pipeline tests (`test_train.py`) and API-level tests (`test_api.py`) as these are the most critical parts of our application to ensure that the model runs reliably in the cloud environment and produces reproducible results. Additionally, we also implemented some small evaluation and visualization tests.
 
 ### Question 8
 
@@ -315,7 +315,7 @@ However, we expect that it shall be beneficial to use dvc where the data is fluc
 >
 > Answer:
 
---- question 12 fill here ---
+We make heavy use of **Hydra and config files** to configure our experiments and control the hyperparameters of the training pipeline. All default settings are defined in `config.yaml`. To run an experiment with custom hyperparameters, the user should create a new config file under `configs/experiment/`, for example `conf/experiment/experiment1.yaml`, and specify only the parameters he wishes to override. Finally the users just needs to run `uv run python src/customer_support/train.py experiment=experiment1`
 
 ### Question 13
 
@@ -330,7 +330,9 @@ However, we expect that it shall be beneficial to use dvc where the data is fluc
 >
 > Answer:
 
---- question 13 fill here ---
+As mentioned in the previous question, we made extensive use of **config files** to ensure that experiments are fully reproducible. Whenever an experiment is run, Hydra automatically creates a unique output directory containing the run's timestamp and stores the fully resolved configuration file, which includes all the hyperparameters and settings used for that experiment. All outputs from the run, including model checkpoints, logs and evaluation metrics, are also saved in this directory. We also fix the global random seed in the configuration to minimise randomness in data loading, model initialisation and training. To reproduce an experiment, simply rerun the same command: `uv run python src/customer_support/train.py experiment=experiment1`
+
+
 
 ### Question 14
 
@@ -598,4 +600,4 @@ However, we expect that it shall be beneficial to use dvc where the data is fluc
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
---- question 31 fill here ---
+*Student s243036 was responsible of developing the initial versions of the data preprocessing, model, training, and evaluation scripts. The student was also in charge of configuring the Weights & Biases experiments/sweeps and performing code profiling. In addition, the student helped set up and manage the training of the models in the cloud.* 
