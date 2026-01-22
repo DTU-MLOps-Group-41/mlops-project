@@ -4,12 +4,10 @@ import glob
 import os
 from functools import lru_cache
 from pathlib import Path
-import shutil
 import sys
 from loguru import logger
 
 import torch
-import wandb
 from fastapi import FastAPI, HTTPException
 from fastapi.concurrency import asynccontextmanager
 from pydantic import BaseModel, Field
@@ -31,45 +29,57 @@ logger.add(sys.stdout, level="WARNING")  # Add a new logger with WARNING level
 
 def _get_model() -> TicketClassificationModule:
     """Load model from cache if valid, otherwise download from W&B and cache."""
-    api = wandb.Api()  # type: ignore
-    artifact = api.artifact(os.getenv("WANDB_ARTIFACT_PATH"), type="model")
-    current_digest = artifact.digest
 
-    if not _is_cache_valid(current_digest):
-        # 1. Use a local temporary directory for the download
-        # Cloud Run /tmp is writable and supports chmod/renames
-        temp_download_dir = Path("/tmp/model_download")
-        if temp_download_dir.exists():
-            shutil.rmtree(temp_download_dir)
-        temp_download_dir.mkdir(parents=True)
+    model_path = Path("/mnt/models/model.ckpt")
+    # 'os.environ.get("MODEL_PATH", "models/model_full.ckpt")
 
-        logger.debug(f"Downloading artifact to temporary storage: {temp_download_dir}")
-        artifact.download(root=str(temp_download_dir), skip_cache=True)
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(f"Model checkpoint not found at {model_path}")
 
-        # 2. Copy files from /tmp to the GCS mount (/mnt/models)
-        logger.debug(f"Moving model to GCS cache: {MODEL_CACHE_DIR}")
-        MODEL_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    model = TicketClassificationModule.load_from_checkpoint(model_path)
+    model.eval()
+    model.freeze()
+    return model
 
-        for item in temp_download_dir.iterdir():
-            if item.is_file():
-                shutil.move(item, MODEL_CACHE_DIR / item.name)
+    # api = wandb.Api()  # type: ignore
+    # artifact = api.artifact(os.getenv("WANDB_ARTIFACT_PATH"), type="model")
+    # current_digest = artifact.digest
 
-        # 3. Write the digest to verify the cache later
-        CACHE_DIGEST_FILE.write_text(current_digest)
+    # if not _is_cache_valid(current_digest):
+    #     # 1. Use a local temporary directory for the download
+    #     # Cloud Run /tmp is writable and supports chmod/renames
+    #     temp_download_dir = Path("/tmp/model_download")
+    #     if temp_download_dir.exists():
+    #         shutil.rmtree(temp_download_dir)
+    #     temp_download_dir.mkdir(parents=True)
 
-        # Cleanup /tmp to save memory
-        shutil.rmtree(temp_download_dir)
+    #     logger.debug(f"Downloading artifact to temporary storage: {temp_download_dir}")
+    #     artifact.download(root=str(temp_download_dir), skip_cache=True)
 
-    # Find checkpoint file in cache directory
-    ckpt_files = glob.glob(f"{MODEL_CACHE_DIR}/*.ckpt")
-    if not ckpt_files:
-        raise FileNotFoundError(f"No .ckpt file found in {MODEL_CACHE_DIR}")
-    checkpoint_path = Path(ckpt_files[0])
+    #     # 2. Copy files from /tmp to the GCS mount (/mnt/models)
+    #     logger.debug(f"Moving model to GCS cache: {MODEL_CACHE_DIR}")
+    #     MODEL_CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
-    loaded_model = TicketClassificationModule.load_from_checkpoint(checkpoint_path)
-    loaded_model.eval()
-    loaded_model.freeze()
-    return loaded_model
+    #     for item in temp_download_dir.iterdir():
+    #         if item.is_file():
+    #             shutil.move(item, MODEL_CACHE_DIR / item.name)
+
+    #     # 3. Write the digest to verify the cache later
+    #     CACHE_DIGEST_FILE.write_text(current_digest)
+
+    #     # Cleanup /tmp to save memory
+    #     shutil.rmtree(temp_download_dir)
+
+    # # Find checkpoint file in cache directory
+    # ckpt_files = glob.glob(f"{MODEL_CACHE_DIR}/*.ckpt")
+    # if not ckpt_files:
+    #     raise FileNotFoundError(f"No .ckpt file found in {MODEL_CACHE_DIR}")
+    # checkpoint_path = Path(ckpt_files[0])
+
+    # loaded_model = TicketClassificationModule.load_from_checkpoint(checkpoint_path)
+    # loaded_model.eval()
+    # loaded_model.freeze()
+    # return loaded_model
 
 
 def _is_cache_valid(current_digest: str) -> bool:

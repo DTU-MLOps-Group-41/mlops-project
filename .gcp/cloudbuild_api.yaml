@@ -16,6 +16,29 @@ steps:
     'push',
     'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/api'
   ]
+- name: 'python:3.12-slim'
+  id: 'Sync Model to GCS'
+  entrypoint: 'sh'
+  secretEnv: ['WANDB_API_KEY']
+  args:
+  - '-c'
+  - |
+    pip install wandb
+    python -c "
+    import wandb, os, shutil
+    api = wandb.Api()
+    artifact = api.artifact('wandb-registry-Ticket Urgency/models:latest')
+    path = artifact.download(root='/tmp/model')
+    print(f'Downloaded to {path}')
+    "
+    # Use gsutil to sync the local folder to your bucket
+    # -m is for multi-threaded, -r is recursive
+    # This happens inside the build environment, NOT Cloud Run
+    apt-get update && apt-get install -y curl
+    curl https://sdk.cloud.google.com | bash
+    /root/google-cloud-sdk/bin/gsutil -m cp -r /tmp/model/* gs://my_mlops_data_bucket3/
+# --------------------------------
+
 - name: 'gcr.io/cloud-builders/gcloud'
   env:
     - 'WANDB_CACHE_DIR=/tmp/wandb_cache'
@@ -32,10 +55,10 @@ steps:
     '--region', 'europe-west1',
     '--platform', 'managed',
     '--execution-environment', 'gen2',
-    '--memory', '8Gi',
-    '--cpu', '2',
+    # '--memory', '8Gi',
+    # '--cpu', '2',
     '--cpu-boost',
-    '--timeout', '600',
+    # '--timeout', '600',
     '--add-volume=name=model-cache,type=cloud-storage,bucket=my_mlops_data_bucket3,readonly=false',
     '--add-volume-mount=volume=model-cache,mount-path=/mnt/models',
     '--update-secrets=WANDB_API_KEY=WANDB_API_KEY:latest',
