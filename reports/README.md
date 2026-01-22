@@ -454,7 +454,7 @@ TODO: Show registry after API is deployed
 >
 > Answer:
 
---- question 22 fill here ---
+We managed to train our model in the cloud using Vertex AI. We did this by turning on the Vertex AI service, adjusting the GPU quota for our region, building and deploying training docker images in the cloud (version for GPU and CPU). Then we prepared a `vertex_ai_train.yaml` file that was necessary to substitute API key for our W&B instance within on of `config_cpu.yaml` or `config_gpu.yaml` files containing configuration for the run. Config files contain source of the docker images as well as extra arguments passed to Hydra to use proper experiments and skip model logging within temporary container. We chose Vertex AI as it is dedicated for AI training and required no extra configuration other than the one focused on invoking training procedures.
 
 ## Deployment
 
