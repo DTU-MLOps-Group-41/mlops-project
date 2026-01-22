@@ -44,7 +44,7 @@ def _get_model() -> TicketClassificationModule:
         temp_download_dir.mkdir(parents=True)
 
         logger.debug(f"Downloading artifact to temporary storage: {temp_download_dir}")
-        artifact.download(root=str(temp_download_dir))
+        artifact.download(root=str(temp_download_dir), skip_cache=True)
 
         # 2. Copy files from /tmp to the GCS mount (/mnt/models)
         # We use shutil.copy2 which is more robust for GCS FUSE

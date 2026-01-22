@@ -17,6 +17,11 @@ steps:
     'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/api'
   ]
 - name: 'gcr.io/cloud-builders/gcloud'
+  env:
+    - 'WANDB_CACHE_DIR=/tmp/wandb_cache'
+    - 'WANDB_CONFIG_DIR=/tmp/wandb_config'
+    - 'WANDB_DIR=/tmp/wandb_logs'
+    - 'WANDB_DATA_DIR=/tmp/wandb_data'
   id: 'Deploy to Cloud Run'
   args: [
     'run',
@@ -29,6 +34,7 @@ steps:
     '--execution-environment', 'gen2',
     '--memory', '4Gi',
     '--cpu-boost',
+    '--timeout', '600',
     '--add-volume=name=model-cache,type=cloud-storage,bucket=my_mlops_data_bucket3,readonly=false',
     '--add-volume-mount=volume=model-cache,mount-path=/mnt/models',
     '--update-secrets=WANDB_API_KEY=WANDB_API_KEY:latest',
