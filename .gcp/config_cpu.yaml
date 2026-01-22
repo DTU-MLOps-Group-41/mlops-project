@@ -5,19 +5,3 @@ workerPoolSpecs:
   replicaCount: 1
   containerSpec:
     imageUri: europe-west1-docker.pkg.dev/corded-smithy-484309-s4/g41-registry/train-cpu:latest
-    env:
-      - name: WANDB_API_KEY
-        valueFrom:
-          secretKeyRef:
-            secretId: WANDB_API_KEY
-            versionId: latest
-      - name: WANDB_ENTITY
-        valueFrom:
-          secretKeyRef:
-            secretId: WANDB_ENTITY
-            versionId: latest
-      - name: WANDB_PROJECT
-        valueFrom:
-          secretKeyRef:
-            secretId: WANDB_PROJECT
-            versionId: latest
