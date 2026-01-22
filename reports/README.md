@@ -232,7 +232,7 @@ We added dvc configurations (via standard initialization process) and Google Clo
 >
 > Answer:
 
-In total, we have implemented 6 tests. Primarily we implemented data loading / preprocessing tests (`test_data.py`), model tests (`test_model.py`), training pipeline tests (`test_train.py`) and API-level tests (`test_api.py`) as these are the most critical parts of our application to ensure that the model runs reliably in the cloud environment and produces reproducible results. Additionally, we also implemented some small evaluation and visualization tests.
+In total, we have implemented 57 tests across 6 domains (api, data, evaluate, model, train, visualize). Primarily we implemented data loading / preprocessing tests (`test_data.py`), model tests (`test_model.py`), training pipeline tests (`test_train.py`) and API-level tests (`test_api.py`) as these are the most critical parts of our application to ensure that the model runs reliably in the cloud environment and produces reproducible results. Additionally, we also implemented some small evaluation and visualization tests.
 
 ### Question 8
 
@@ -332,8 +332,6 @@ We make heavy use of **Hydra and config files** to configure our experiments and
 
 As mentioned in the previous question, we made extensive use of **config files** to ensure that experiments are fully reproducible. Whenever an experiment is run, Hydra automatically creates a unique output directory containing the run's timestamp and stores the fully resolved configuration file, which includes all the hyperparameters and settings used for that experiment. All outputs from the run, including model checkpoints, logs and evaluation metrics, are also saved in this directory. We also fix the global random seed in the configuration to minimise randomness in data loading, model initialisation and training. To reproduce an experiment, simply rerun the same command: `uv run python src/customer_support/train.py experiment=experiment1`
 
-
-
 ### Question 14
 
 > **Upload 1 to 3 screenshots that show the experiments that you have done in W&B (or another experiment tracking**
@@ -349,7 +347,10 @@ As mentioned in the previous question, we made extensive use of **config files**
 >
 > Answer:
 
---- question 14 fill here ---
+The image shows us a result of (incomplete) sweep run. During sweep we followed fine-tuning practice of focusing on the result accuracy, which we used as a parameter to maximize. This sweep helped us identify, that for our case model was performing better on bigger batch sizes with lesser learning rates, which is not surprising, since we are working with a pre-trained model.
+
+![W&B sweep](figures/wandb_sweep.png)
+
 
 ### Question 15
 
@@ -420,7 +421,7 @@ As mentioned in the previous question, we made extensive use of **config files**
 >
 > Answer:
 
---- question 19 fill here ---
+![Our dvc bucket](figures/our_bucket.png)
 
 ### Question 20
 
@@ -551,7 +552,7 @@ As mentioned in the previous question, we made extensive use of **config files**
 >
 > Answer:
 
---- question 28 fill here ---
+We have used some extra github integrations, like RenovateBot with automatic PR+merging for automatic package version updates and lock file maintenance. Additionally we have linked code coverage test information to show up as a repository badge as well as trigger whenever a PR is updated to measure changes in code coverage.
 
 ### Question 29
 
@@ -582,7 +583,9 @@ As mentioned in the previous question, we made extensive use of **config files**
 >
 > Answer:
 
---- question 30 fill here ---
+By far the most consuming part was setting up the cloud services. Build and deployment times were serious punishments for each small mistake made along the way requiring to rerun the whole setup starting with rebuilding the container images.
+
+We have also encountered some hardships with initial setup of each of the newly introduced tool. Frequently what initially seemed well-designed structure/idea made a come-back at later phases of the project making us to revisit parts that we deemed finished.
 
 ### Question 31
 
@@ -601,3 +604,10 @@ As mentioned in the previous question, we made extensive use of **config files**
 > Answer:
 
 *Student s243036 was responsible of developing the initial versions of the data preprocessing, model, training, and evaluation scripts. The student was also in charge of configuring the Weights & Biases experiments/sweeps and performing code profiling. In addition, the student helped set up and manage the training of the models in the cloud.* 
+
+*Student s242908 was in charge of initial setup of all the systems and repository including CI automation pipelines. The student was also responsible or training, deploying and preparing an API for the model in cloud.*
+
+
+*All members actively participated in reviews of Pull Requests and contributed fixes if necessary.*
+
+*We have used generative AI (ChatGPT/Copilot/Claude/Gemini) to kickstart the development process, write reviews, sketch-out tests, and provide insights on bugs and other issues.*
