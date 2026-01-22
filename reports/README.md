@@ -429,7 +429,8 @@ The image shows us a result of (incomplete) sweep run. During sweep we followed 
 >
 > Answer:
 
---- question 20 fill here ---
+[Our registry](./figures/our_registry.png)
+TODO: Show registry after API is deployed
 
 ### Question 21
 
