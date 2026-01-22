@@ -1,0 +1,11 @@
+# @package _global_
+# Baseline experiment - quick testing on small dataset
+defaults:
+  - override /training: baseline
+  - override /dataset: small
+
+seed: 42
+
+experiment:
+  name: baseline
+  description: "Baseline experiment with default hyperparameters for quick testing"

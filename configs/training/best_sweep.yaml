@@ -1,0 +1,20 @@
+defaults:
+  - baseline
+
+# Best hyperparameters from wandb sweep
+batch_size: 64
+learning_rate: 6.994404691067017e-05
+weight_decay: 0.0177522213390101
+
+# Sweep also used these values
+gradient_clip_val: 1
+accumulate_grad_batches: 4
+
+# Learning rate scheduler with warmup
+lr_scheduler:
+  _target_: null  # Keep null if not using scheduler, or specify transformers.get_scheduler
+  num_warmup_steps: 200
+
+# Training metadata
+name: best_sweep
+description: "Best hyperparameters from wandb sweep optimization"

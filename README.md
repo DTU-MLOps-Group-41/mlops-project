@@ -22,7 +22,7 @@
 - **Mounika Maidamshetti** (s250148)
 
 
-This repository contains the project work carried out by group 41 in the MLOps course taught at DTU ([course website](https://skaftenicki.github.io/dtu_mlops/)). 
+This repository contains the project work carried out by group 41 in the MLOps course taught at DTU ([course website](https://skaftenicki.github.io/dtu_mlops/)).
 
 ###  Overall goal of the project
 
@@ -34,7 +34,7 @@ We are using the [PyTorch](https://pytorch.org) and [Hugging Face Transformers](
 
 ### Data
 
-We are using the [Kaggle](https://www.kaggle.com/) dataset [Customer IT Support - Ticket Dataset](https://www.kaggle.com/datasets/tobiasbueck/multilingual-customer-support-tickets). This dataset contains a total of 28,600 observations, each of which will have a topic assigned by the customer, a description of the customer's issue or inquiry, and a priority level (low, medium, or critical) assigned to the ticket. Additionally, each observation will have a department to which the email ticket is categorized. 
+We are using the [Kaggle](https://www.kaggle.com/) dataset [Customer IT Support - Ticket Dataset](https://www.kaggle.com/datasets/tobiasbueck/multilingual-customer-support-tickets). This dataset contains a total of 28,600 observations, each of which will have a topic assigned by the customer, a description of the customer's issue or inquiry, and a priority level (low, medium, or critical) assigned to the ticket. Additionally, each observation will have a department to which the email ticket is categorized.
 
 ###  Models
 

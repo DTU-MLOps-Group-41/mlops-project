@@ -36,6 +36,7 @@ dependencies = [
     "transformers>=4.57.3",
     "typer==0.21.1",
     "uvicorn==0.40.0",
+    "wandb>=0.24.0",
 ]
 
 [dependency-groups]
@@ -60,7 +61,7 @@ cpu = [
     "torchvision==0.24.1; sys_platform == 'darwin'"
 ]
 cu128 = [
-  "torch==2.9.1+cu128", 
+  "torch==2.9.1+cu128",
   "torchvision==0.24.1",
   "accelerate>=1.12.0",
 ]

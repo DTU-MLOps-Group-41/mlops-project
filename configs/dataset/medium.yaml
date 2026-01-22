@@ -1,0 +1,5 @@
+name: medium
+train_path: ${paths.data_root}/preprocessed/medium_train.parquet
+test_path: ${paths.data_root}/preprocessed/medium_test.parquet
+val_path: ${paths.data_root}/preprocessed/medium_validation.parquet
+num_classes: 3

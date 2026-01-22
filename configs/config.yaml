@@ -1,0 +1,34 @@
+defaults:
+  - dataset: medium
+  - training: baseline
+  - optional experiment: null
+  - _self_
+
+# Model
+model_name: distilbert-base-multilingual-cased
+
+# Global settings
+seed: 42
+devices: auto  # auto, 1, 2, ...
+accelerator: auto  # auto, gpu, cpu, tpu, ...
+num_workers: 4  # DataLoader num_workers
+
+# Paths
+paths:
+  data_root: data
+  model_dir: models
+  output_dir: ${hydra:runtime.output_dir}
+
+# Wandb configuration
+wandb:
+  entity: "dtu-mlops-g41"
+  project: "customer_support"
+  mode: "online"
+  log_model: true
+
+# Hydra specific
+hydra:
+  run:
+    dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  job:
+    chdir: false  # Don't change working directory
