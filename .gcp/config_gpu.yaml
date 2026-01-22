@@ -6,4 +6,4 @@ workerPoolSpecs:
         acceleratorCount: 1
     replicaCount: 1
     containerSpec:
-        imageUri: europe-west1-docker.pkg.dev/corded-smithy-484309-s4/g41-registry/train-gpu:latest
+        imageUri: europe-west1-docker.pkg.dev/corded-smithy-484309-s4/g41-registry/train-cu128:latest
