@@ -6,18 +6,9 @@ steps:
     - '-c'
     - |
       apk add --no-cache gettext
-      envsubst < config.yaml > config.yaml.tmp
-      mv config.yaml.tmp config.yaml
+      envsubst < ${_VERTEX_TRAIN_CONFIG} > ${_VERTEX_TRAIN_CONFIG}.tmp
+      mv ${_VERTEX_TRAIN_CONFIG}.tmp ${_VERTEX_TRAIN_CONFIG}
   secretEnv: ['WANDB_API_KEY']
-
-- name: 'alpine'
-  id: "Show config"
-  waitFor: ['Replace values in the training config']
-  entrypoint: "sh"
-  args:
-    - '-c'
-    - |
-      cat config.yaml
 
 - name: 'gcr.io/cloud-builders/gcloud'
   id: 'Train on vertex AI'
