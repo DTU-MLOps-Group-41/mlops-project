@@ -52,7 +52,7 @@ def _get_model() -> TicketClassificationModule:
 
         for item in temp_download_dir.iterdir():
             if item.is_file():
-                shutil.copy(item, MODEL_CACHE_DIR / item.name)
+                shutil.move(item, MODEL_CACHE_DIR / item.name)
 
         # 3. Write the digest to verify the cache later
         CACHE_DIGEST_FILE.write_text(current_digest)

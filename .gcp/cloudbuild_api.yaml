@@ -32,7 +32,7 @@ steps:
     '--region', 'europe-west1',
     '--platform', 'managed',
     '--execution-environment', 'gen2',
-    '--memory', '4Gi',
+    '--memory', '8Gi',
     '--cpu', '2',
     '--cpu-boost',
     '--timeout', '600',
