@@ -12,57 +12,48 @@ steps:
   ]
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push container image'
-  args: [
-    'push',
-    'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/api'
-  ]
-- name: 'python:3.12-slim'
+  args: ['push', 'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/api']
+
+# --- OPTIMIZED SYNC STEP ---
+- name: 'gcr.io/google.com/cloudsdktool/google-cloud-cli:slim'
   id: 'Sync Model to GCS'
-  entrypoint: 'sh'
+  entrypoint: 'bash'
   secretEnv: ['WANDB_API_KEY']
   args:
   - '-c'
   - |
     pip install wandb
-    python -c "
-    import wandb, os, shutil
-    api = wandb.Api()
+    python3 -c "
+    import wandb, os
+    api = wandb.Api(api_key=os.environ['WANDB_API_KEY'])
     artifact = api.artifact('wandb-registry-Ticket Urgency/models:latest')
-    path = artifact.download(root='/tmp/model')
-    print(f'Downloaded to {path}')
+    artifact.download(root='/tmp/model')
     "
-    # Use gsutil to sync the local folder to your bucket
-    # -m is for multi-threaded, -r is recursive
-    # This happens inside the build environment, NOT Cloud Run
-    apt-get update && apt-get install -y curl
-    curl https://sdk.cloud.google.com | bash
-    /root/google-cloud-sdk/bin/gsutil -m cp -r /tmp/model/* gs://my_mlops_data_bucket3/
-# --------------------------------
+    gsutil -m cp -r /tmp/model/* gs://my_mlops_data_bucket3/
 
 - name: 'gcr.io/cloud-builders/gcloud'
-  env:
-    - 'WANDB_CACHE_DIR=/tmp/wandb_cache'
-    - 'WANDB_CONFIG_DIR=/tmp/wandb_config'
-    - 'WANDB_DIR=/tmp/wandb_logs'
-    - 'WANDB_DATA_DIR=/tmp/wandb_data'
   id: 'Deploy to Cloud Run'
   args: [
     'run',
     'deploy',
     'g41-service',
-    '--image',
-    'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/api',
+    '--image', 'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/api',
     '--region', 'europe-west1',
     '--platform', 'managed',
     '--execution-environment', 'gen2',
-    # '--memory', '8Gi',
+    # '--memory', '4Gi',
     # '--cpu', '2',
     '--cpu-boost',
-    # '--timeout', '600',
-    '--add-volume=name=model-cache,type=cloud-storage,bucket=my_mlops_data_bucket3,readonly=false',
+    '--add-volume=name=model-cache,type=cloud-storage,bucket=my_mlops_data_bucket3,readonly=true',
     '--add-volume-mount=volume=model-cache,mount-path=/mnt/models',
     '--update-secrets=WANDB_API_KEY=WANDB_API_KEY:latest',
     '--set-env-vars=WANDB_ARTIFACT_PATH=wandb-registry-Ticket Urgency/models:latest'
   ]
+
+availableSecrets:
+  secretManager:
+  - env: 'WANDB_API_KEY'
+    versionName: projects/$PROJECT_ID/secrets/WANDB_API_KEY/versions/latest
+
 options:
   logging: CLOUD_LOGGING_ONLY
