@@ -17,7 +17,9 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # 3. Copy source code last
 COPY src/ ./src/
 COPY configs/ ./configs/
-# Data should mounted during runtime
+COPY data.dvc ./data.dvc
+COPY .dvc ./.dvc/
+RUN dvc pull
 
 # 4. Final Sync/Install
 RUN --mount=type=cache,target=/root/.cache/uv \

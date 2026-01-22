@@ -17,12 +17,9 @@ steps:
     'ai',
     'custom-jobs',
     'create',
-    '--region',
-    'europe-west1',
-    '--display-name',
-    'example-mlops-job',
-    '--config',
-    '${_VERTEX_TRAIN_CONFIG}',
+    '--region', 'europe-west1',
+    '--display-name', 'train-job-${$BUILD_ID}',
+    '--config', '${_VERTEX_TRAIN_CONFIG}',
   ]
 availableSecrets:
   secretManager:
