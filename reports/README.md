@@ -379,7 +379,7 @@ The image shows us a result of (incomplete) sweep run. During sweep we followed 
 >
 > Answer:
 
---- question 16 fill here ---
+Debugging method was dependent on group member. The use of PyTorch Lightning to reduce biolerplate cod, and extensive logging during training made it easier to fix and spot bugs during our experiments. These tools paired with the use of generative AI (Claude, Copilot etc) made it easier to perform debugging. We also used the built-in PyTorch Lightning profiler to analyse the performance of our model and training loop. Results showed that more than 96% of the total runtime was spent inside the training epoch, with the majority of this time dominated by the forward and optimiser steps. Therefore, we concluded that it was not worth to further optimse our code.
 
 ## Working in the cloud
 
