@@ -52,45 +52,45 @@ will check the repositories and the code to verify your answers.
 
 ### Week 1
 
-* [ ] Create a git repository (M5)
-* [ ] Make sure that all team members have write access to the GitHub repository (M5)
-* [ ] Create a dedicated environment for you project to keep track of your packages (M2)
-* [ ] Create the initial file structure using cookiecutter with an appropriate template (M6)
-* [ ] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6)
-* [ ] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6)
-* [ ] Remember to either fill out the `requirements.txt`/`requirements_dev.txt` files or keeping your
+* [x] Create a git repository (M5)
+* [x] Make sure that all team members have write access to the GitHub repository (M5)
+* [x] Create a dedicated environment for you project to keep track of your packages (M2)
+* [x] Create the initial file structure using cookiecutter with an appropriate template (M6)
+* [x] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6)
+* [x] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6)
+* [x] Remember to either fill out the `requirements.txt`/`requirements_dev.txt` files or keeping your
     `pyproject.toml`/`uv.lock` up-to-date with whatever dependencies that you are using (M2+M6)
-* [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
-* [ ] Do a bit of code typing and remember to document essential parts of your code (M7)
-* [ ] Setup version control for your data or part of your data (M8)
-* [ ] Add command line interfaces and project commands to your code where it makes sense (M9)
-* [ ] Construct one or multiple docker files for your code (M10)
-* [ ] Build the docker files locally and make sure they work as intended (M10)
-* [ ] Write one or multiple configurations files for your experiments (M11)
-* [ ] Used Hydra to load the configurations and manage your hyperparameters (M11)
-* [ ] Use profiling to optimize your code (M12)
-* [ ] Use logging to log important events in your code (M14)
-* [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
-* [ ] Consider running a hyperparameter optimization sweep (M14)
-* [ ] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
+* [x] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
+* [x] Do a bit of code typing and remember to document essential parts of your code (M7)
+* [x] Setup version control for your data or part of your data (M8)
+* [x] Add command line interfaces and project commands to your code where it makes sense (M9)
+* [x] Construct one or multiple docker files for your code (M10)
+* [x] Build the docker files locally and make sure they work as intended (M10)
+* [x] Write one or multiple configurations files for your experiments (M11)
+* [x] Used Hydra to load the configurations and manage your hyperparameters (M11)
+* [x] Use profiling to optimize your code (M12)
+* [x] Use logging to log important events in your code (M14)
+* [x] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
+* [x] Consider running a hyperparameter optimization sweep (M14)
+* [x] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
 
 ### Week 2
 
-* [ ] Write unit tests related to the data part of your code (M16)
-* [ ] Write unit tests related to model construction and or model training (M16)
-* [ ] Calculate the code coverage (M16)
-* [ ] Get some continuous integration running on the GitHub repository (M17)
-* [ ] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
-* [ ] Add a linting step to your continuous integration (M17)
-* [ ] Add pre-commit hooks to your version control setup (M18)
+* [x] Write unit tests related to the data part of your code (M16)
+* [x] Write unit tests related to model construction and or model training (M16)
+* [x] Calculate the code coverage (M16)
+* [x] Get some continuous integration running on the GitHub repository (M17)
+* [x] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
+* [x] Add a linting step to your continuous integration (M17)
+* [x] Add pre-commit hooks to your version control setup (M18)
 * [ ] Add a continues workflow that triggers when data changes (M19)
 * [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
-* [ ] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
-* [ ] Create a trigger workflow for automatically building your docker images (M21)
-* [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
-* [ ] Create a FastAPI application that can do inference using your model (M22)
+* [x] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
+* [x] Create a trigger workflow for automatically building your docker images (M21)
+* [x] Get your model training in GCP using either the Engine or Vertex AI (M21)
+* [x] Create a FastAPI application that can do inference using your model (M22)
 * [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
-* [ ] Write API tests for your application and setup continues integration for these (M24)
+* [x] Write API tests for your application and setup continues integration for these (M24)
 * [ ] Load test your application (M24)
 * [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
 * [ ] Create a frontend for your API (M26)
@@ -168,7 +168,7 @@ We used the third-party framework **Hugging Face `transformers`** in our project
 >
 > Answer:
 
-We used **uv** as package manager and to manage our dependencies. The list of dependencies for our project are clearly defined in the `pyproject.toml` file. Additionally, `uv` generates a `uv.lock` file that ensures reproducibility between different members of the project. It contains the exact versions of all packages installed in the virtual environment, including sub-dependencies. To get a complete copy of our development environment, a new team member would have to run (after installing uv) `uv sync` which automatically creates a virtual environment and installs the exact versions specified in the lock file. Finally, if a user wants to use CUDA, they can run `uv sync --extra cu128` which installs the approriate GPU enabled PyTorch packages.
+We used **uv** as package manager to manage our dependencies. The list of dependencies for our project are clearly defined in the `pyproject.toml` file. Additionally, `uv` generates a `uv.lock` file that ensures reproducibility between different members of the project. It contains the exact versions of all packages installed in the virtual environment, including sub-dependencies. To get a complete copy of our development environment, a new team member would have to run (after installing uv) `uv sync --extra cpu` which automatically creates a virtual environment and installs the exact versions specified in the lock file. Finally, if a user wants to use CUDA, they can run `uv sync --extra cu128` which installs the appropriate GPU enabled PyTorch packages.
 
 ### Question 5
 
@@ -184,7 +184,21 @@ We used **uv** as package manager and to manage our dependencies. The list of de
 >
 > Answer:
 
---- question 5 fill here ---
+We initialized the cookiecutter template in the following way:
+
+- repo_name: mlops-project
+- project_name: customer_support
+- project_structure: advance
+- deps_manager: uv
+- add_coding_agent_support: True
+- author_name: Group 41
+- description: DTU MLOps course project.
+- python_version: 3.12
+- open_source_license: MIT
+
+At the end we ended up not using the default dev container, since uv handles all the dependencies very nicely.
+
+We added dvc configurations (via standard initialization process) and Google Cloud Platform directory to keep all it's configs there.
 
 ### Question 6
 
@@ -248,7 +262,7 @@ We used **uv** as package manager and to manage our dependencies. The list of de
 >
 > Answer:
 
---- question 9 fill here ---
+We made use of both branches and PRs in our project. In our group, each branch was dedicated to certain feature or project requirement or bug fix. To merge code a pull request must be submitted with all tests and checks passing and additionally 1 review is required from a person that was not actively involved in the development on the branch.
 
 ### Question 10
 
@@ -263,7 +277,9 @@ We used **uv** as package manager and to manage our dependencies. The list of de
 >
 > Answer:
 
---- question 10 fill here ---
+We did make use of DVC, mostly as a convenient data storage with easy to use interface. Our data was mostly limited to a single source that we found and we did not have much use of data versioning. Our data was originally divided into 3, strictly overlapping input sets (small, medium, full), and we decided to keep all at the same time for easier handling. 
+
+However, we expect that it shall be beneficial to use dvc where the data is fluctuating or new sources are made available, such that a certain degree of experiment reproducibility can be maintained.
 
 ### Question 11
 
