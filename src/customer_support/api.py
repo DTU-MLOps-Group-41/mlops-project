@@ -2,7 +2,6 @@
 
 import glob
 import os
-import shutil
 from functools import lru_cache
 from pathlib import Path
 
@@ -22,7 +21,6 @@ model = None
 # GCS-mounted cache directory for model storage
 MODEL_CACHE_DIR = Path("/mnt/models")
 CACHE_DIGEST_FILE = MODEL_CACHE_DIR / ".digest"
-CACHE_MODEL_FILE = MODEL_CACHE_DIR / "model.ckpt"
 
 
 def _get_model() -> TicketClassificationModule:
@@ -32,16 +30,17 @@ def _get_model() -> TicketClassificationModule:
     current_digest = artifact.digest
 
     # Check if cached model exists and is up-to-date
-    if _is_cache_valid(current_digest):
-        checkpoint_path = CACHE_MODEL_FILE
-    else:
-        # Download from W&B and update cache
-        artifact_dir = artifact.download()
-        ckpt_files = glob.glob(f"{artifact_dir}/*.ckpt")
-        if not ckpt_files:
-            raise FileNotFoundError(f"No .ckpt file found in {artifact_dir}")
-        checkpoint_path = Path(ckpt_files[0])
-        _update_cache(checkpoint_path, current_digest)
+    if not _is_cache_valid(current_digest):
+        # Download directly to GCS mount, skipping wandb's local cache
+        artifact.download(root=str(MODEL_CACHE_DIR), skip_cache=True)
+        # Save digest marker for future cache validation
+        CACHE_DIGEST_FILE.write_text(current_digest)
+
+    # Find checkpoint file in cache directory
+    ckpt_files = glob.glob(f"{MODEL_CACHE_DIR}/*.ckpt")
+    if not ckpt_files:
+        raise FileNotFoundError(f"No .ckpt file found in {MODEL_CACHE_DIR}")
+    checkpoint_path = Path(ckpt_files[0])
 
     loaded_model = TicketClassificationModule.load_from_checkpoint(checkpoint_path)
     loaded_model.eval()
@@ -51,18 +50,13 @@ def _get_model() -> TicketClassificationModule:
 
 def _is_cache_valid(current_digest: str) -> bool:
     """Check if cached model exists and matches the current W&B artifact digest."""
-    if not CACHE_MODEL_FILE.exists() or not CACHE_DIGEST_FILE.exists():
+    if not MODEL_CACHE_DIR.exists() or not CACHE_DIGEST_FILE.exists():
+        return False
+    ckpt_files = glob.glob(f"{MODEL_CACHE_DIR}/*.ckpt")
+    if not ckpt_files:
         return False
     cached_digest = CACHE_DIGEST_FILE.read_text().strip()
     return cached_digest == current_digest
-
-
-def _update_cache(checkpoint_path: Path, digest: str) -> None:
-    """Copy model to cache and save digest marker."""
-    if not MODEL_CACHE_DIR.exists():
-        return  # GCS mount not available, skip caching
-    shutil.copy2(checkpoint_path, CACHE_MODEL_FILE)
-    CACHE_DIGEST_FILE.write_text(digest)
 
 
 @asynccontextmanager
