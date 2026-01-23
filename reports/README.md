@@ -308,7 +308,7 @@ For linting we utilize our pre-commit configuration for consistency between loca
 
 The tests are only executed after successful linting and are run in parallel for Linux, Mac/Os and Windows. In addition to just running the unit tests we also report test coverage across our sources, which is reported within PR and as a Github repository badge in our [README.md](../README.md). We are however, only testing a single Python version, since it is enforced by `uv`, our dependency manager.
 
-The source code for our testing action can be found here: <.github/workflows/tests.yaml>
+The source code for our testing action can be found here: [../.github/workflows/tests.yaml](../.github/workflows/tests.yaml)
 
 In addition, we also have miscellaneous actions that support our repo, that is pre-commit auto updater, which we left untouched from the cookiecutter template and PR auto-approving action, that will automatically approve PRs created by our dependency maintenance bot, such that all version bump merges are performed automatically.
 
@@ -383,9 +383,9 @@ The image shows us a result of (incomplete) sweep run. During sweep we followed 
 For our project we developed several images: two images for training and one for deployment. For example to run the training docker image on GPU (with CUDA 12.8) with baseline hyperparameters and data one can type: `docker run train:latest`. More advanced training setups are available by passing a hydra argument at the end (e.g. `experiment=best`). For the training docker files we additionally used an entry script that sets up training data with `dvc pull` (with no-scm flag enabled, since we do not clone the repository which is required for dvc) before executing training code.
 
 Link to docker files:
-- <dockerfiles/train_cu128.dockerfile>
-- <dockerfiles/train_cpu.dockerfile
-- <dockerfiles/api.dockerfile>
+- [../dockerfiles/train_cu128.dockerfile](../dockerfiles/train_cu128.dockerfile)
+- [../dockerfiles/train_cpu.dockerfil](../dockerfiles/train_cpu.dockerfil)
+- [../dockerfiles/api.dockerfile](../dockerfiles/api.dockerfile)
 
 ### Question 16
 
@@ -526,7 +526,7 @@ We did manage to write an API for our model. We used FastAPI to do this. We did 
 >
 > Answer:
 
-For deployment we wrapped our model into application using FastAPI. We first tried locally serving the model, which worked. Afterwards we deployed it in the cloud, using GCP Cloud Run triggered by pushes to main branch on our Github repository. A build config can be found [here (couldbuild_api.yaml)](.gcp/cloudbuild_api.yaml). This cloud build first builds docker container image, then pushes it to our registry, next there are 2 steps that handle pulling and saving our model from our Weights & Biases registry to our bucket which is later mounted to the container image that hosts our service via Cloud Run.
+For deployment we wrapped our model into application using FastAPI. We first tried locally serving the model, which worked. Afterwards we deployed it in the cloud, using GCP Cloud Run triggered by pushes to main branch on our Github repository. A build config can be found [here (couldbuild_api.yaml)](../.gcp/cloudbuild_api.yaml). This cloud build first builds docker container image, then pushes it to our registry, next there are 2 steps that handle pulling and saving our model from our Weights & Biases registry to our bucket which is later mounted to the container image that hosts our service via Cloud Run.
 To invoke the service a user would call:
 
 ```
@@ -628,7 +628,7 @@ We have used some extra github integrations, like RenovateBot with automatic PR+
 >
 > Answer:
 
---- question 29 fill here ---
+![Setup overview](figures/our_overview.png)
 
 ### Question 30
 
