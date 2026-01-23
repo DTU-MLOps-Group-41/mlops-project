@@ -46,7 +46,7 @@ def train(cfg: DictConfig) -> None:
     accelerator: ACCELERATOR_TY = cfg.accelerator
     devices: list[int] | str | int = cfg.devices
     num_workers: int = cfg.num_workers
-    log_model: Literal["all"] | bool = cfg.training.log_model
+    save_checkpoint: bool = cfg.training.save_checkpoint
 
     # Model Hyperparameters
     batch_size: int = cfg.training.batch_size
@@ -72,6 +72,7 @@ def train(cfg: DictConfig) -> None:
     project = cfg.wandb.project
     entity = cfg.wandb.entity
     mode = cfg.wandb.mode
+    wandb_log_model: Literal["all"] | bool = cfg.wandb.log_model
 
     # Profiling
     profiler = SimpleProfiler(dirpath=cfg.paths.output_dir, filename="profile_report")
@@ -110,9 +111,9 @@ def train(cfg: DictConfig) -> None:
     )
     callbacks.append(early_stopping)
 
-    # Model checkpoint callback - saves best model by val_accuracy
+    # Model checkpoint callback - saves best model locally
     checkpoint_callback = None
-    if log_model:
+    if save_checkpoint:
         output_path = Path(output_dir)
         output_path.mkdir(parents=True, exist_ok=True)
 
@@ -139,7 +140,7 @@ def train(cfg: DictConfig) -> None:
         mode=mode,
         name=f"{model_name}-{dataset_name}",
         config=OmegaConf.to_container(cfg, resolve=True, throw_on_missing=True),
-        log_model=log_model,
+        log_model=wandb_log_model,
         save_dir=log_dir,
     )
 

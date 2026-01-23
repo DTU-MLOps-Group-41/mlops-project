@@ -21,5 +21,12 @@ plugins:
 
 nav:
   - Home: index.md
+  - Getting Started: getting_started.md
   - Data Processing: data.md
+  - Model: model.md
+  - Training: training.md
+  - API: api.md
+  - CLI Commands: cli.md
+  - Testing: testing.md
   - Data Versioning: dvc.md
+  - Cloud Infrastructure: cloud.md

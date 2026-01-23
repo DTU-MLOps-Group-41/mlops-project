@@ -1,0 +1,57 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  env:
+    - 'DOCKER_BUILDKIT=1'
+  id: 'Build container image'
+  args: [
+    'build',
+    '.',
+    '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/api',
+    '--cache-from', 'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/api:latest',
+    '-f', 'dockerfiles/api.dockerfile'
+  ]
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Push container image'
+  args: ['push', 'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/api']
+- name: 'python:3.12-slim'
+  id: 'Download Model from WandB'
+  entrypoint: 'bash'
+  secretEnv: ['WANDB_API_KEY']
+  args:
+  - '-c'
+  - |
+    pip install wandb
+    python -c "
+    import wandb, os
+    api = wandb.Api(api_key=os.environ['WANDB_API_KEY'])
+    artifact = api.artifact('wandb-registry-Ticket Urgency/models:latest')
+    artifact.download(root='/workspace/model')
+    "
+- name: 'gcr.io/cloud-builders/gsutil'
+  id: 'Sync Model to GCS'
+  args: ['-m', 'cp', '-r', '/workspace/model/*', 'gs://my_mlops_data_bucket3/']
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: 'Deploy to Cloud Run'
+  args: [
+    'run',
+    'deploy',
+    'g41-service',
+    '--image', 'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/api',
+    '--region', 'europe-west1',
+    '--platform', 'managed',
+    '--execution-environment', 'gen2',
+    '--cpu-boost',
+    '--allow-unauthenticated',
+    '--add-volume=name=model-cache,type=cloud-storage,bucket=my_mlops_data_bucket3,readonly=true',
+    '--add-volume-mount=volume=model-cache,mount-path=/mnt/models',
+    '--update-secrets=WANDB_API_KEY=WANDB_API_KEY:latest',
+    '--set-env-vars=WANDB_ARTIFACT_PATH=wandb-registry-Ticket Urgency/models:latest,MODEL_PATH=/mnt/models/model.ckpt'
+  ]
+
+availableSecrets:
+  secretManager:
+  - env: 'WANDB_API_KEY'
+    versionName: projects/$PROJECT_NUMBER/secrets/WANDB_API_KEY/versions/latest
+
+options:
+  logging: CLOUD_LOGGING_ONLY
