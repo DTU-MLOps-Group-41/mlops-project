@@ -674,12 +674,12 @@ We experienced some degree of uncertainty each time a new feature was implemente
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
-*Student s243036 was responsible of developing the initial versions of the data preprocessing, model, training, and evaluation scripts. The student was also in charge of configuring the Weights & Biases experiments/sweeps and performing code profiling. In addition, the student helped set up and manage the training of the models in the cloud.*
+Student s243036 was responsible of developing the initial versions of the data preprocessing, model, training, and evaluation scripts. The student was also in charge of configuring the Weights & Biases experiments/sweeps and performing code profiling. In addition, the student helped set up and manage the training of the models in the cloud.
 
-*Student s242908 was in charge of initial setup of all the systems and repository including CI automation pipelines. The student was also responsible for training, deploying and preparing an API for the model in cloud.*
+Student s242908 was in charge of initial setup of all the systems and repository including CI automation pipelines. The student was also responsible for training, deploying and preparing an API for the model in cloud, as well as for managing documentation and github pages deployment.
 
-*Student s256657 was in charge of creating dockerfiles and hyperparameters in the config files(.yaml) which were then integrated with hydra and later used for cloud deployment and model training. Furthermore he created the frontend which is a streamlit app that calls the FastAPI backend for predictions when available or falls back to running the DistilBERT model locally if the API is unavailable. Furthermore the student supported in the documentations of the project by also creating intial versions for the architecheral diagram of the MLops pipeline.*
+Student s256657 was in charge of creating dockerfiles and hyperparameters in the config files(.yaml) which were then integrated with hydra and later used for cloud deployment and model training. Furthermore he created the frontend which is a streamlit app that calls the FastAPI backend for predictions when available or falls back to running the DistilBERT model locally if the API is unavailable. Furthermore the student supported in the documentations of the project by also creating intial versions for the architecheral diagram of the MLops pipeline.
 
-*All members actively participated in reviews of Pull Requests and contributed fixes if necessary.*
+All members actively participated in reviews of Pull Requests and contributed fixes if necessary.
 
-*We have used generative AI (ChatGPT/Copilot/Claude/Gemini) to kickstart the development process, write reviews, sketch-out tests, and provide insights on bugs and other issues.*
+We have used generative AI (ChatGPT/Copilot/Claude/Gemini) to kickstart the development process, write reviews, sketch-out tests, and provide insights on bugs and other issues.
