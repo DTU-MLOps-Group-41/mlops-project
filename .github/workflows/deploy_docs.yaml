@@ -23,8 +23,8 @@ jobs:
       with:
         enable-cache: true
     - name: Install dependencies
-      # We use --frozen to ensure the lockfile is respected exactly
-      run: uv sync --frozen --group dev --extra cpu
+      # Only install docs dependencies, not the full dev group or project
+      run: uv sync --frozen --no-dev --group docs --no-install-project
 
     - name: Deploy docs
-      run: uv run --no-sync mkdocs gh-deploy --force
+      run: uv run --no-sync mkdocs gh-deploy --force --config-file docs/mkdocs.yaml
