@@ -1,14 +1,11 @@
-"""Streamlit web application for customer support ticket classification."""
+"""Streamlit web application for customer support ticket classification via FastAPI."""
 
 import os
-from pathlib import Path
+from typing import Any
 
+import requests  # type: ignore
 import streamlit as st
-import torch
 from loguru import logger
-from transformers import DistilBertTokenizer
-
-from customer_support.model import TicketClassificationModule
 
 # ============================================================================
 # PAGE CONFIGURATION
@@ -87,7 +84,7 @@ with st.sidebar:
     st.write(
         """
         This application classifies customer support tickets by priority level
-        using a fine-tuned **DistilBERT** model.
+        using a fine-tuned **DistilBERT** model via FastAPI backend.
 
         **Priority Levels:**
         - 🟢 **Low**: Non-urgent tickets
@@ -95,6 +92,26 @@ with st.sidebar:
         - 🔴 **High**: Urgent, requires immediate attention
         """
     )
+
+    st.markdown("---")
+
+    st.subheader("API Configuration")
+    api_url = st.text_input(
+        "FastAPI URL",
+        value=os.getenv("API_URL", "http://localhost:8080"),
+        help="FastAPI backend endpoint",
+    )
+    st.session_state.api_url = api_url
+
+    if st.button("🔗 Check API Connection", use_container_width=True):
+        try:
+            response = requests.get(f"{api_url}/health", timeout=5)
+            if response.status_code == 200:
+                st.success("✅ Connected to API")
+            else:
+                st.error(f"❌ API returned status {response.status_code}")
+        except Exception as e:
+            st.error(f"❌ Connection failed: {str(e)}")
 
     st.markdown("---")
 
@@ -120,118 +137,40 @@ with st.sidebar:
         """
     )
 
+
 # ============================================================================
-# SESSION STATE & CACHING
+# HELPER FUNCTIONS
 # ============================================================================
 
 
-@st.cache_resource
-def load_model() -> tuple[TicketClassificationModule | None, DistilBertTokenizer]:
-    """Load the trained model and tokenizer.
-
-    Returns None for model if checkpoint not found (demo mode).
-    """
-    model_path = Path(os.getenv("MODEL_PATH", "models/model.ckpt"))
-    model = None
-
-    if model_path.exists():
-        logger.info(f"Loading model from {model_path}")
-        try:
-            # Load model
-            model = TicketClassificationModule.load_from_checkpoint(
-                model_path,
-                local_files_only=True,
-            )
-            model.eval()
-            model.freeze()
-        except Exception as e:
-            logger.warning(f"Failed to load model: {e}")
-            model = None
-    else:
-        logger.warning(f"Model checkpoint not found at {model_path}. Running in demo mode.")
-
-    # Load tokenizer
-    try:
-        tokenizer = DistilBertTokenizer.from_pretrained(
-            "distilbert-base-multilingual-cased",
-            local_files_only=True,
-        )
-    except Exception:
-        logger.warning("Downloading tokenizer from HuggingFace")
-        tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-multilingual-cased")
-
-    return model, tokenizer
-
-
-def predict(text: str, model: TicketClassificationModule | None, tokenizer: DistilBertTokenizer) -> dict:
-    """Predict ticket priority.
+@st.cache_data
+def predict_via_api(text: str, api_url: str) -> dict[str, Any] | None:
+    """Call FastAPI endpoint for prediction.
 
     Args:
         text: Ticket body text
-        model: Loaded TicketClassificationModule or None for demo mode
-        tokenizer: DistilBERT tokenizer
+        api_url: FastAPI backend URL
 
     Returns:
-        Dictionary with priority, priority_id, and confidence
+        Prediction dictionary or None if error
     """
-    # Demo mode: return simulated predictions based on text keywords
-    if model is None:
-        keywords_high = ["urgent", "critical", "emergency", "down", "broken", "crash", "fail"]
-        keywords_medium = ["help", "issue", "problem", "error", "not working", "unable"]
-
-        text_lower = text.lower()
-        if any(kw in text_lower for kw in keywords_high):
-            priority = "high"
-            priority_id = 2
-            confidence = 0.85
-        elif any(kw in text_lower for kw in keywords_medium):
-            priority = "medium"
-            priority_id = 1
-            confidence = 0.72
-        else:
-            priority = "low"
-            priority_id = 0
-            confidence = 0.68
-
-        return {
-            "priority": priority,
-            "priority_id": priority_id,
-            "confidence": confidence,
-        }
-
-    # Real prediction mode
-    # Tokenize input
-    encoded = tokenizer.encode_plus(
-        text,
-        add_special_tokens=True,
-        max_length=512,
-        padding="max_length",
-        truncation=True,
-        return_tensors="pt",
-    )
-
-    input_ids = encoded["input_ids"]
-    attention_mask = encoded["attention_mask"]
-
-    # Forward pass
-    with torch.no_grad():
-        outputs = model(input_ids, attention_mask)
-
-    # Get predictions
-    logits = outputs[0]
-    probabilities = torch.nn.functional.softmax(logits, dim=-1)
-    predicted_class = torch.argmax(probabilities, dim=-1).item()
-    confidence = probabilities[0, predicted_class].item()
-
-    # Map class ID to priority name
-    priority_map = {0: "low", 1: "medium", 2: "high"}
-    priority = priority_map[predicted_class]
-
-    return {
-        "priority": priority,
-        "priority_id": predicted_class,
-        "confidence": confidence,
-    }
+    try:
+        response = requests.post(
+            f"{api_url}/predict",
+            json={"text": text},
+            timeout=30,
+        )
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.ConnectionError:
+        logger.error(f"Failed to connect to API at {api_url}")
+        return None
+    except requests.exceptions.Timeout:
+        logger.error("API request timed out")
+        return None
+    except Exception as e:
+        logger.error(f"API error: {str(e)}")
+        return None
 
 
 def get_badge_html(priority: str, confidence: float) -> str:
@@ -263,16 +202,9 @@ st.markdown(
 
 st.markdown("---")
 
-# Load model
-model, tokenizer = load_model()
-st.session_state.model_loaded = model is not None
-
-if not st.session_state.model_loaded:
-    st.warning(
-        "⚠️ **Demo Mode**: Model checkpoint not available. "
-        "Predictions will be simulated. "
-        "Set MODEL_PATH environment variable to use a real model."
-    )
+# Initialize API URL in session state
+if "api_url" not in st.session_state:
+    st.session_state.api_url = os.getenv("API_URL", "http://localhost:8080")
 
 # Main input section
 col1, col2 = st.columns([3, 1])
@@ -318,52 +250,67 @@ if predict_button:
         st.warning("⚠️ Please enter a ticket description first.")
     else:
         with st.spinner("Classifying ticket..."):
-            prediction = predict(ticket_text, model, tokenizer)
+            prediction = predict_via_api(ticket_text, st.session_state.api_url)
 
-            # Store in session state for history
-            if "predictions" not in st.session_state:
-                st.session_state.predictions = []
-            st.session_state.predictions.append(
-                {"text": ticket_text, "prediction": prediction},
-            )
+            if prediction is None:
+                st.error(
+                    f"❌ Failed to connect to API at {st.session_state.api_url}\n\n"
+                    "Please ensure:\n"
+                    "1. FastAPI server is running: `uv run uvicorn customer_support.api:app --port 8080`\n"
+                    "2. API URL is correct in the sidebar\n"
+                    "3. Model checkpoint is available at `models/model.ckpt`"
+                )
+            else:
+                # Store in session state for history
+                if "predictions" not in st.session_state:
+                    st.session_state.predictions = []
+                st.session_state.predictions.append(
+                    {"text": ticket_text, "prediction": prediction},
+                )
 
-        st.markdown("---")
-        st.subheader("✅ Classification Result")
+                st.markdown("---")
+                st.subheader("✅ Classification Result")
 
-        # Display results in columns
-        col1, col2, col3 = st.columns(3)
+                # Display results in columns
+                col1, col2, col3 = st.columns(3)
 
-        with col1:
-            st.markdown("**Priority Level**")
-            st.markdown(get_badge_html(prediction["priority"], prediction["confidence"]), unsafe_allow_html=True)
+                with col1:
+                    st.markdown("**Priority Level**")
+                    st.markdown(
+                        get_badge_html(prediction["priority"], prediction["confidence"]),
+                        unsafe_allow_html=True,
+                    )
 
-        with col2:
-            st.metric("Confidence Score", f"{prediction['confidence'] * 100:.1f}%")
+                with col2:
+                    st.metric("Confidence Score", f"{prediction['confidence'] * 100:.1f}%")
 
-        with col3:
-            priority_descriptions = {
-                "low": "Non-urgent ticket",
-                "medium": "Standard priority",
-                "high": "Urgent attention needed",
-            }
-            st.info(f"**Note:** {priority_descriptions[prediction['priority']]}")
+                with col3:
+                    priority_descriptions = {
+                        "low": "Non-urgent ticket",
+                        "medium": "Standard priority",
+                        "high": "Urgent attention needed",
+                    }
+                    st.info(f"**Note:** {priority_descriptions[prediction['priority']]}")
 
-        # Additional info
-        st.markdown("---")
-        col1, col2 = st.columns(2)
+                # Additional info
+                st.markdown("---")
+                col1, col2 = st.columns(2)
 
-        with col1:
-            st.write("**Ticket Text:**")
-            st.text(ticket_text[:300] + ("..." if len(ticket_text) > 300 else ""))
+                with col1:
+                    st.write("**Ticket Text:**")
+                    st.text(ticket_text[:300] + ("..." if len(ticket_text) > 300 else ""))
 
-        with col2:
-            st.write("**Model Used:**")
-            st.caption("DistilBERT Base Multilingual Cased")
+                with col2:
+                    st.write("**Model Used:**")
+                    st.caption("DistilBERT Base Multilingual Cased (via FastAPI)")
 
 # History section (collapsible)
 if "predictions" in st.session_state and len(st.session_state.predictions) > 0:
     st.markdown("---")
-    with st.expander(f"📜 Prediction History ({len(st.session_state.predictions)} predictions)", expanded=False):
+    with st.expander(
+        f"📜 Prediction History ({len(st.session_state.predictions)} predictions)",
+        expanded=False,
+    ):
         for i, pred in enumerate(reversed(st.session_state.predictions), 1):
             col1, col2 = st.columns([3, 1])
             with col1:
