@@ -93,7 +93,7 @@ will check the repositories and the code to verify your answers.
 * [x] Write API tests for your application and setup continues integration for these (M24)
 * [ ] Load test your application (M24)
 * [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
-* [ ] Create a frontend for your API (M26)
+* [x] Create a frontend for your API (M26)
 
 ### Week 3
 
@@ -678,6 +678,7 @@ We experienced some degree of uncertainty each time a new feature was implemente
 
 *Student s242908 was in charge of initial setup of all the systems and repository including CI automation pipelines. The student was also responsible or training, deploying and preparing an API for the model in cloud.*
 
+*Student s256657 was in charge of creating dockerfiles and hyperparameters in the config files(.yaml) which were then integrated with hydra and later used for cloud deployment and model training. Furthermore he created the frontend which is a streamlit app that calls the FastAPI backend for predictions when available or falls back to running the DistilBERT model locally if the API is unavailable. Furthermore the student supported in the documentations of the project by also creating intial versions for the architecheral diagram of the MLops pipeline.*
 
 *All members actively participated in reviews of Pull Requests and contributed fixes if necessary.*
 
