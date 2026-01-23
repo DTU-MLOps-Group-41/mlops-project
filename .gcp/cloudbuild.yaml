@@ -1,0 +1,21 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  env:
+    - 'DOCKER_BUILDKIT=1'
+  id: 'Build container image'
+  args: [
+    'build',
+    '.',
+    '--build-arg', 'DEVICE=$_DEVICE',
+    '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/$_IMAGE_NAME',
+    '--cache-from', 'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/$_IMAGE_NAME:latest',
+    '-f', '$_DOCKERFILE'
+  ]
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Push container image'
+  args: [
+    'push',
+    'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/$_IMAGE_NAME'
+  ]
+options:
+  logging: CLOUD_LOGGING_ONLY
