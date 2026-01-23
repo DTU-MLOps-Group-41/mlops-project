@@ -123,10 +123,7 @@ with st.sidebar:
     st.subheader("Documentation")
     st.markdown(
         """
-        - [📊 Data](https://dtu-mlops-group-41.github.io/mlops-project/data/)
-        - [🤖 Model](https://dtu-mlops-group-41.github.io/mlops-project/model/)
-        - [🚀 API](https://dtu-mlops-group-41.github.io/mlops-project/api/)
-        - [🐳 Training](https://dtu-mlops-group-41.github.io/mlops-project/training/)
+        [📚 View Full Documentation](https://dtu-mlops-group-41.github.io/mlops-project/)
         """
     )
 
