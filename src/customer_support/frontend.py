@@ -349,13 +349,7 @@ if "api_url" not in st.session_state:
 local_model, tokenizer = load_local_model()
 
 # Main input section
-col1, col2 = st.columns([3, 1])
-
-with col1:
-    st.subheader("📝 Enter Ticket Details")
-
-with col2:
-    st.markdown("##### Examples")
+st.subheader("📝 Enter Ticket Details")
 
 # Ticket input
 ticket_text = st.text_area(
@@ -366,19 +360,38 @@ ticket_text = st.text_area(
     help="Enter the customer's support ticket text for classification",
 )
 
-# Example tickets sidebar
-with col2:
-    with st.expander("📋 Sample Tickets", expanded=False):
-        examples = {
-            "Low": "I'd like to know how to change my profile picture. Is there a help section?",
-            "Medium": "I'm unable to log into my account. I've tried resetting my password but it's not working.",
-            "High": "The system is completely down and I have an important presentation in 1 hour. This is critical!",
-        }
+# Example tickets table
+st.markdown("**Example Tickets:**")
+examples = {
+    "Low": "I'd like to know how to change my profile picture. Is there a help section?",
+    "Medium": "I'm unable to log into my account. I've tried resetting my password but it's not working.",
+    "High": "The system is completely down and I have an important presentation in 1 hour. This is critical!",
+}
 
-        for priority, example_text in examples.items():
-            if st.button(f"Use {priority} Example", key=f"example_{priority}"):
-                ticket_text = example_text
-                st.rerun()
+example_cols = st.columns([1, 4, 1])
+with example_cols[0]:
+    st.markdown("**Priority**")
+with example_cols[1]:
+    st.markdown("**Example Ticket**")
+with example_cols[2]:
+    st.markdown("")
+
+for priority, example_text in examples.items():
+    emoji_map = {"Low": "🟢", "Medium": "🟡", "High": "🔴"}
+    col1, col2, col3 = st.columns([1, 4, 1])
+    with col1:
+        st.caption(f"{emoji_map[priority]} {priority}")
+    with col2:
+        st.caption(example_text)
+    with col3:
+        if st.button("Use", key=f"example_{priority}", use_container_width=True):
+            st.session_state.example_ticket = example_text
+            st.rerun()
+
+# Check if example was selected
+if "example_ticket" in st.session_state:
+    ticket_text = st.session_state.example_ticket
+    del st.session_state.example_ticket
 
 # Predict button
 col1, col2, col3 = st.columns([1, 1, 2])
