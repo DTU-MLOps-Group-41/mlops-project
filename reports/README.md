@@ -629,9 +629,9 @@ We have used some extra github integrations, like RenovateBot with automatic PR+
 >
 > Answer:
 
-By far the most consuming part was setting up the cloud services. Build and deployment times were serious punishments for each small mistake made along the way requiring to rerun the whole setup starting with rebuilding the container images.
+By far the most consuming part was our fight with the cloud services. It did not help that each action on cloud took at least a few minutes, up to twenty in worst cases. This meant that we experiences severe punishments for each small mistake made along the way requiring us to rerun or resubmit whatever we were working on (e.g. docker container images).
 
-We have also encountered some hardships with initial setup of each of the newly introduced tool. Frequently what initially seemed well-designed structure/idea made a come-back at later phases of the project making us to revisit parts that we deemed finished.
+We experienced some degree of uncertainty each time a new feature was implemented. It both happened as we learned intensely to execute the task, but also some our contribution required revisits as our project grew and gradually moved toward cloud deployment and automation. Especially docker setup on cloud proofed to be a little tricky, since it was no longer possible to test something fully locally, if we expected to use some cloud-exclusive features.
 
 ### Question 31
 
