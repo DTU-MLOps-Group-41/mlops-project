@@ -654,9 +654,11 @@ Finally, end-users can query our Cloud Run API to get ticket priority prediction
 >
 > Answer:
 
-By far the most consuming part was our fight with the cloud services. It did not help that each action on cloud took at least a few minutes, up to twenty in worst cases. This meant that we experiences severe punishments for each small mistake made along the way requiring us to rerun or resubmit whatever we were working on (e.g. docker container images).
+The most time-consuming and challenging aspect of the project was working with cloud services and their associated tooling. Unlike local development, where feedback is almost immediate, cloud-based workflows introduced significant delays. Many actions, such as building and pushing Docker images, deploying services, or triggering training jobs, took several minutes, and in some cases up to twenty minutes. As a result, even small configuration errors or missteps led to substantial time loss, as entire processes had to be rerun or resubmitted. This made iteration slow and increased the cost of experimentation, especially during early development.
 
-We experienced some degree of uncertainty each time a new feature was implemented. It both happened as we learned intensely to execute the task, but also some our contribution required revisits as our project grew and gradually moved toward cloud deployment and automation. Especially docker setup on cloud proofed to be a little tricky, since it was no longer possible to test something fully locally, if we expected to use some cloud-exclusive features.
+Another recurring challenge was the uncertainty that accompanied the introduction of new features. As the project evolved, many components had to be revisited and adapted to fit an increasingly automated, cloud-oriented pipeline. This was partly due to the learning curve associated with new tools and services, but also because design decisions that worked initially did not always scale well once cloud deployment and CI/CD integration were introduced. In particular, the Docker setup for cloud deployment proved to be non-trivial. Certain cloud-specific requirements and behaviors could not be fully tested locally, which made debugging more difficult and required repeated deployment attempts to validate changes.
+
+The initial setup of the model training pipeline also posed challenges. During this phase, generative AI tools were used extensively to assist with debugging configuration issues and resolving compatibility problems, which ultimately helped us converge on a working setup more efficiently. Although it did take nearly an entire day
 
 ### Question 31
 
