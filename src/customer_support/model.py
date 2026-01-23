@@ -35,6 +35,7 @@ class TicketClassificationModule(pl.LightningModule):
         learning_rate: float = 5e-5,
         weight_decay: float = 0.01,
         lr_scheduler_config: DictConfig | None = None,
+        local_files_only: bool = False,
     ) -> None:
         super().__init__()
 
@@ -54,6 +55,7 @@ class TicketClassificationModule(pl.LightningModule):
         self.model = DistilBertForSequenceClassification.from_pretrained(
             model_name,
             num_labels=num_classes,
+            local_files_only=local_files_only,
         )
         # Set to train mode to avoid Lightning warning about modules in eval mode
         self.model.train()

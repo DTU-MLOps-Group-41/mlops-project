@@ -32,7 +32,10 @@ def _get_model() -> TicketClassificationModule:
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Model checkpoint not found at {model_path}")
 
-    model = TicketClassificationModule.load_from_checkpoint(model_path)
+    model = TicketClassificationModule.load_from_checkpoint(
+        model_path,
+        local_files_only=True,
+    )
     model.eval()
     model.freeze()
     return model
@@ -77,7 +80,10 @@ class HealthResponse(BaseModel):
 @lru_cache(maxsize=1)
 def get_tokenizer() -> DistilBertTokenizer:
     """Load and cache the tokenizer."""
-    return DistilBertTokenizer.from_pretrained("distilbert-base-multilingual-cased")
+    return DistilBertTokenizer.from_pretrained(
+        "distilbert-base-multilingual-cased",
+        local_files_only=True,
+    )
 
 
 @app.get("/")

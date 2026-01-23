@@ -24,11 +24,16 @@ RUN mkdir -p /app/artifacts && chmod 777 /app/artifacts
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --extra $DEVICE
 
-# 5. Security: Run as non-root user
+# 5. Pre-download HuggingFace model files to avoid rate limiting at runtime
+RUN python -c "from transformers import DistilBertTokenizer, DistilBertConfig; \
+    DistilBertTokenizer.from_pretrained('distilbert-base-multilingual-cased'); \
+    DistilBertConfig.from_pretrained('distilbert-base-multilingual-cased')"
+
+# 6. Security: Run as non-root user
 RUN groupadd -r appuser && useradd -r -m -g appuser appuser
 USER appuser
 
 EXPOSE 8080
 
-# 6. Entrypoint (Simplified since .venv/bin is in PATH)
+# 7. Entrypoint (Simplified since .venv/bin is in PATH)
 ENTRYPOINT ["uvicorn", "customer_support.api:app", "--host", "0.0.0.0", "--port", "8080"]
