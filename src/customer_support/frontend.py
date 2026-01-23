@@ -126,43 +126,80 @@ with st.sidebar:
 
 
 @st.cache_resource
-def load_model() -> tuple[TicketClassificationModule, DistilBertTokenizer]:
-    """Load the trained model and tokenizer."""
+def load_model() -> tuple[TicketClassificationModule | None, DistilBertTokenizer]:
+    """Load the trained model and tokenizer.
+
+    Returns None for model if checkpoint not found (demo mode).
+    """
     model_path = Path(os.getenv("MODEL_PATH", "models/model.ckpt"))
+    model = None
 
-    if not model_path.exists():
-        raise FileNotFoundError(f"Model checkpoint not found at {model_path}")
-
-    logger.info(f"Loading model from {model_path}")
-
-    # Load model
-    model = TicketClassificationModule.load_from_checkpoint(
-        model_path,
-        local_files_only=True,
-    )
-    model.eval()
-    model.freeze()
+    if model_path.exists():
+        logger.info(f"Loading model from {model_path}")
+        try:
+            # Load model
+            model = TicketClassificationModule.load_from_checkpoint(
+                model_path,
+                local_files_only=True,
+            )
+            model.eval()
+            model.freeze()
+        except Exception as e:
+            logger.warning(f"Failed to load model: {e}")
+            model = None
+    else:
+        logger.warning(f"Model checkpoint not found at {model_path}. Running in demo mode.")
 
     # Load tokenizer
-    tokenizer = DistilBertTokenizer.from_pretrained(
-        "distilbert-base-multilingual-cased",
-        local_files_only=True,
-    )
+    try:
+        tokenizer = DistilBertTokenizer.from_pretrained(
+            "distilbert-base-multilingual-cased",
+            local_files_only=True,
+        )
+    except Exception:
+        logger.warning("Downloading tokenizer from HuggingFace")
+        tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-multilingual-cased")
 
     return model, tokenizer
 
 
-def predict(text: str, model: TicketClassificationModule, tokenizer: DistilBertTokenizer) -> dict:
+def predict(text: str, model: TicketClassificationModule | None, tokenizer: DistilBertTokenizer) -> dict:
     """Predict ticket priority.
 
     Args:
         text: Ticket body text
-        model: Loaded TicketClassificationModule
+        model: Loaded TicketClassificationModule or None for demo mode
         tokenizer: DistilBERT tokenizer
 
     Returns:
         Dictionary with priority, priority_id, and confidence
     """
+    # Demo mode: return simulated predictions based on text keywords
+    if model is None:
+        keywords_high = ["urgent", "critical", "emergency", "down", "broken", "crash", "fail"]
+        keywords_medium = ["help", "issue", "problem", "error", "not working", "unable"]
+
+        text_lower = text.lower()
+        if any(kw in text_lower for kw in keywords_high):
+            priority = "high"
+            priority_id = 2
+            confidence = 0.85
+        elif any(kw in text_lower for kw in keywords_medium):
+            priority = "medium"
+            priority_id = 1
+            confidence = 0.72
+        else:
+            priority = "low"
+            priority_id = 0
+            confidence = 0.68
+
+        return {
+            "priority": priority,
+            "priority_id": priority_id,
+            "confidence": confidence,
+        }
+
+    # Real prediction mode
     # Tokenize input
     encoded = tokenizer.encode_plus(
         text,
@@ -227,12 +264,15 @@ st.markdown(
 st.markdown("---")
 
 # Load model
-try:
-    model, tokenizer = load_model()
-    st.session_state.model_loaded = True
-except FileNotFoundError as e:
-    st.error(f"❌ {str(e)}")
-    st.stop()
+model, tokenizer = load_model()
+st.session_state.model_loaded = model is not None
+
+if not st.session_state.model_loaded:
+    st.warning(
+        "⚠️ **Demo Mode**: Model checkpoint not available. "
+        "Predictions will be simulated. "
+        "Set MODEL_PATH environment variable to use a real model."
+    )
 
 # Main input section
 col1, col2 = st.columns([3, 1])
