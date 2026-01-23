@@ -593,9 +593,11 @@ We used:
 
 In total $3.36
 
-The most expensive service was Vertex AI which we used to train our model with addition of 1 GPU.
+The most expensive service was Vertex AI which we used to train our model with addition of 1 GPU. Second most expensive was Artifact Registry, which we used intensively during development of our docker images.
 
-Working in the cloud was slow and painful. However, we recognize that in many cases it is a necessary evil.
+Working in the cloud was slow and painful. We acknowledge that the cloud as a service or infrastructure is a gargantuan task. To provide a universal platform "for everything" that has closes to none of the downtime, manages resources intelligently and is secure. This environment on the other hand creates very advanced setup frequently leading to configuration hell, where you need to wait a long time for your task to fail, because you made a typo, or did not understand sometimes non-obvious configuration schematics.
+
+That said, we recognize that in many cases cloud services are a necessary evil.
 
 ### Question 28
 
