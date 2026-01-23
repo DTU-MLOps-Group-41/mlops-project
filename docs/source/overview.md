@@ -1,7 +1,7 @@
 # Welcome to `customer_support`
 
 ## Overview
-Welcome to the documentation for `customer_support`, a machine learning project for clasifying the .
+Welcome to the documentation for `customer_support`, a machine learning project for classifying customer support ticket priorities using DistilBERT.
 
 ---
 
