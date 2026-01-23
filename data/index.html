@@ -1,0 +1,1331 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Group 41">
+      
+      
+      
+        <link rel="prev" href="../getting_started/">
+      
+      
+        <link rel="next" href="../model/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Data Processing - customer_support</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#data-processing" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="customer_support" class="md-header__button md-logo" aria-label="customer_support" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            customer_support
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Data Processing
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="customer_support" class="md-nav__button md-logo" aria-label="customer_support" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    customer_support
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Processing
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Processing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#data-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Processing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dataset Details
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preprocessing-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preprocessing Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-raw-data-from-kaggle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download raw data from Kaggle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preprocess-a-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preprocess a dataset
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load-preprocessed-data-in-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load preprocessed data in Python
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-with-pytorch-dataloader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use with PyTorch DataLoader
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CLI Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download Command
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preprocess-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preprocess Command
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Python API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ticketdataset-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TicketDataset Class
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TicketDataset Class">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-dataloader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With DataLoader
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constructor-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#class-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#return-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-transforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Transforms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Versioning
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../training/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Versioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#data-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Processing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dataset Details
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preprocessing-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preprocessing Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-raw-data-from-kaggle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download raw data from Kaggle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preprocess-a-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preprocess a dataset
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load-preprocessed-data-in-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load preprocessed data in Python
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-with-pytorch-dataloader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use with PyTorch DataLoader
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CLI Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download Command
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preprocess-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preprocess Command
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Python API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ticketdataset-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TicketDataset Class
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TicketDataset Class">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-dataloader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With DataLoader
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constructor-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#class-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#return-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-transforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Transforms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Versioning
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>Data Processing</h1>
+
+<h2 id="data-processing">Data Processing</h2>
+<p>This project uses the <a href="https://www.kaggle.com/datasets/tobiasbueck/multilingual-customer-support-tickets">Multilingual Customer Support Tickets</a> dataset from Kaggle for training a ticket priority classification model. The dataset contains 28,600 customer support tickets with descriptions and priority labels.</p>
+<p>Three dataset sizes are available:
+- <strong>small</strong>: ~4,000 tickets (for rapid experimentation)
+- <strong>medium</strong>: ~20,000 tickets (for balanced training)
+- <strong>full</strong>: ~50,000+ tickets (for maximum performance)</p>
+<h2 id="dataset-details">Dataset Details</h2>
+<p>The dataset consists of multilingual customer support tickets with the following characteristics:</p>
+<ul>
+<li><strong>Source</strong>: <a href="https://www.kaggle.com/datasets/tobiasbueck/multilingual-customer-support-tickets">Kaggle - Customer IT Support Ticket Dataset</a></li>
+<li><strong>Total observations</strong>: 28,600 tickets</li>
+<li><strong>Features used</strong>:</li>
+<li><code>body</code>: Customer's ticket description (text)</li>
+<li><code>priority</code>: Ticket priority level (label)</li>
+<li><strong>Label mapping</strong>:</li>
+<li><code>very_low</code> → 0</li>
+<li><code>low</code> → 1</li>
+<li><code>medium</code> → 2</li>
+<li><code>high</code> → 3</li>
+<li><code>critical</code> → 4</li>
+<li><strong>Data splits</strong>: 80% train, 10% validation, 10% test (stratified by labels for balanced representation)</li>
+<li><strong>Tokenization</strong>: DistilBERT multilingual model (<code>distilbert-base-multilingual-cased</code>)</li>
+</ul>
+<p>Note: The original dataset contains additional fields (topic, department) that are not currently used in the preprocessing pipeline.</p>
+<h2 id="preprocessing-pipeline">Preprocessing Pipeline</h2>
+<p>The automated preprocessing pipeline performs the following steps:</p>
+<ol>
+<li><strong>Download</strong>: Fetch dataset from Kaggle using KaggleHub (with automatic caching)</li>
+<li><strong>Clean</strong>: Select relevant columns (<code>body</code>, <code>priority</code>) and remove rows with missing values</li>
+<li><strong>Encode</strong>: Convert priority strings to integer labels using the label mapping</li>
+<li><strong>Tokenize</strong>: Apply DistilBERT multilingual tokenizer to ticket body text</li>
+<li><strong>Split</strong>: Divide into train/validation/test sets with stratified sampling</li>
+<li><strong>Save</strong>: Export as Parquet files for efficient loading</li>
+</ol>
+<p>All preprocessing is handled automatically by the <code>TicketDataset</code> class or can be run manually via CLI commands.</p>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="download-raw-data-from-kaggle">Download raw data from Kaggle</h3>
+<pre><code class="language-bash">uv run src/customer_support/data.py download
+</code></pre>
+<p>Or using invoke:</p>
+<pre><code class="language-bash">uv run invoke download-data
+</code></pre>
+<h3 id="preprocess-a-dataset">Preprocess a dataset</h3>
+<pre><code class="language-bash"># Preprocess the small dataset
+uv run src/customer_support/data.py preprocess -d small
+
+# Preprocess all datasets
+uv run src/customer_support/data.py preprocess --all
+</code></pre>
+<p>Or using invoke:</p>
+<pre><code class="language-bash">uv run invoke preprocess-data --dataset-type small
+uv run invoke preprocess-data  # processes all sizes
+</code></pre>
+<h3 id="load-preprocessed-data-in-python">Load preprocessed data in Python</h3>
+<pre><code class="language-python">from customer_support.data import TicketDataset
+
+# Load preprocessed training data
+train_data = TicketDataset(root=&quot;data&quot;, split=&quot;train&quot;, dataset_type=&quot;small&quot;)
+
+# Access a sample
+sample = train_data[0]
+print(sample.keys())  # dict_keys(['input_ids', 'attention_mask', 'labels'])
+</code></pre>
+<h3 id="use-with-pytorch-dataloader">Use with PyTorch DataLoader</h3>
+<pre><code class="language-python">from torch.utils.data import DataLoader
+from customer_support.data import TicketDataset
+
+train_data = TicketDataset(root=&quot;data&quot;, split=&quot;train&quot;, dataset_type=&quot;small&quot;)
+loader = DataLoader(train_data, batch_size=32, shuffle=True)
+
+for batch in loader:
+    input_ids = batch[&quot;input_ids&quot;]
+    attention_mask = batch[&quot;attention_mask&quot;]
+    labels = batch[&quot;labels&quot;]
+    # Training logic here
+</code></pre>
+<h2 id="cli-commands">CLI Commands</h2>
+<p>The data module provides two main CLI commands via Typer.</p>
+<h3 id="download-command">Download Command</h3>
+<p>Downloads all dataset sizes from Kaggle to <code>data/raw/</code>.</p>
+<pre><code class="language-bash">uv run src/customer_support/data.py download
+</code></pre>
+<p>Or via invoke task:</p>
+<pre><code class="language-bash">uv run invoke download-data
+</code></pre>
+<p>This command:
+- Uses KaggleHub's caching mechanism (downloads only if not cached)
+- Saves all three dataset sizes (small, medium, full) as CSV files
+- Overwrites existing files in <code>data/raw/</code></p>
+<h3 id="preprocess-command">Preprocess Command</h3>
+<p>Preprocesses datasets by cleaning, tokenizing, splitting, and saving as Parquet files.</p>
+<pre><code class="language-bash"># Preprocess a specific dataset size
+uv run src/customer_support/data.py preprocess --dataset-type small
+uv run src/customer_support/data.py preprocess -d medium
+
+# Preprocess all dataset sizes
+uv run src/customer_support/data.py preprocess --all
+
+# Use a custom tokenizer
+uv run src/customer_support/data.py preprocess -d small -m bert-base-multilingual-cased
+</code></pre>
+<p>Or via invoke tasks:</p>
+<pre><code class="language-bash">uv run invoke preprocess-data --dataset-type small
+uv run invoke preprocess-data  # processes all sizes
+</code></pre>
+<p>Options:
+- <code>-d, --dataset-type</code>: Dataset size (<code>small</code>, <code>medium</code>, or <code>full</code>)
+- <code>-a, --all</code>: Process all dataset sizes
+- <code>-m, --model</code>: Tokenizer model name (default: <code>distilbert-base-multilingual-cased</code>)</p>
+<p>Note: The preprocess command always forces reprocessing, even if preprocessed data already exists.</p>
+<h2 id="python-api">Python API</h2>
+<h3 id="ticketdataset-class">TicketDataset Class</h3>
+<p>The <code>TicketDataset</code> class provides a PyTorch-compatible dataset following the design patterns of <code>torchvision.datasets.MNIST</code>.</p>
+<h4 id="basic-usage">Basic Usage</h4>
+<pre><code class="language-python">from customer_support.data import TicketDataset
+
+# Load preprocessed data (most common use case)
+train_data = TicketDataset(root=&quot;data&quot;, split=&quot;train&quot;, dataset_type=&quot;small&quot;)
+
+# Auto-download and preprocess if data not found
+train_data = TicketDataset(root=&quot;data&quot;, split=&quot;train&quot;, download=True)
+
+# Force reprocessing even if data exists
+train_data = TicketDataset(root=&quot;data&quot;, split=&quot;train&quot;, force_preprocess=True)
+
+# Load different splits
+val_data = TicketDataset(root=&quot;data&quot;, split=&quot;validation&quot;, dataset_type=&quot;small&quot;)
+test_data = TicketDataset(root=&quot;data&quot;, split=&quot;test&quot;, dataset_type=&quot;small&quot;)
+</code></pre>
+<h4 id="with-dataloader">With DataLoader</h4>
+<pre><code class="language-python">from torch.utils.data import DataLoader
+
+train_data = TicketDataset(root=&quot;data&quot;, split=&quot;train&quot;, dataset_type=&quot;small&quot;)
+loader = DataLoader(train_data, batch_size=32, shuffle=True)
+
+for batch in loader:
+    input_ids = batch[&quot;input_ids&quot;]           # Shape: [batch_size, seq_length]
+    attention_mask = batch[&quot;attention_mask&quot;] # Shape: [batch_size, seq_length]
+    labels = batch[&quot;labels&quot;]                 # Shape: [batch_size]
+</code></pre>
+<h4 id="constructor-parameters">Constructor Parameters</h4>
+<ul>
+<li><code>root</code> (str | Path): Root directory where dataset files are stored (e.g., <code>"data"</code>)</li>
+<li><code>split</code> (str): Dataset split - <code>"train"</code>, <code>"validation"</code>, or <code>"test"</code> (default: <code>"train"</code>)</li>
+<li><code>dataset_type</code> (str): Dataset size - <code>"small"</code>, <code>"medium"</code>, or <code>"full"</code> (default: <code>"small"</code>)</li>
+<li><code>download</code> (bool): If True, download and preprocess if not found (default: <code>False</code>)</li>
+<li><code>force_preprocess</code> (bool): If True, force reprocessing even if data exists (default: <code>False</code>)</li>
+<li><code>transform</code> (Callable | None): Optional transform applied to tokenized samples</li>
+<li><code>target_transform</code> (Callable | None): Optional transform applied to labels</li>
+<li><code>model_name</code> (str): Tokenizer model name (default: <code>"distilbert-base-multilingual-cased"</code>)</li>
+</ul>
+<h4 id="class-methods">Class Methods</h4>
+<pre><code class="language-python"># Get the label mapping dictionary
+label_map = TicketDataset.get_label_map()
+# Returns: {&quot;very_low&quot;: 0, &quot;low&quot;: 1, &quot;medium&quot;: 2, &quot;high&quot;: 3, &quot;critical&quot;: 4}
+</code></pre>
+<h4 id="return-format">Return Format</h4>
+<p>Each sample returned by <code>__getitem__</code> is a dictionary with the following keys:</p>
+<ul>
+<li><code>input_ids</code> (torch.Tensor): Tokenized input IDs, shape <code>[seq_length]</code></li>
+<li><code>attention_mask</code> (torch.Tensor): Attention mask, shape <code>[seq_length]</code></li>
+<li><code>labels</code> (torch.Tensor): Priority label (0-4), shape <code>[]</code> (scalar)</li>
+</ul>
+<h4 id="custom-transforms">Custom Transforms</h4>
+<pre><code class="language-python"># Apply custom transform to samples
+def add_noise(sample):
+    sample[&quot;input_ids&quot;] = sample[&quot;input_ids&quot;] + torch.randn_like(sample[&quot;input_ids&quot;]) * 0.01
+    return sample
+
+dataset = TicketDataset(root=&quot;data&quot;, split=&quot;train&quot;, transform=add_noise)
+
+# Apply custom transform to labels
+def offset_labels(label):
+    return label + 1
+
+dataset = TicketDataset(root=&quot;data&quot;, split=&quot;train&quot;, target_transform=offset_labels)
+</code></pre>
+<h2 id="file-structure">File Structure</h2>
+<p>The data directory is organized as follows:</p>
+<pre><code>data/
+├── raw/                          # Raw CSV files from Kaggle
+│   ├── small.csv
+│   ├── medium.csv
+│   └── full.csv
+└── preprocessed/                 # Preprocessed Parquet files
+    ├── small_train.parquet
+    ├── small_validation.parquet
+    ├── small_test.parquet
+    ├── medium_train.parquet
+    ├── medium_validation.parquet
+    ├── medium_test.parquet
+    ├── full_train.parquet
+    ├── full_validation.parquet
+    └── full_test.parquet
+</code></pre>
+<p>The Parquet format is used for efficient storage and fast loading of preprocessed datasets. Each split is saved as a separate file to enable selective loading.</p>
+<h2 id="data-versioning">Data Versioning</h2>
+<p>The <code>data/</code> directory is tracked with DVC (Data Version Control) to maintain reproducibility across team members and environments.</p>
+<p>After preprocessing or modifying data, you should version your changes using DVC. See <a href="../dvc/">Data Version Control</a> for the complete workflow on:
+- Setting up DVC with the DTU databar cluster
+- Versioning data changes with <code>dvc add</code>, tagging, and pushing
+- Pulling specific data versions
+- Troubleshooting DVC issues</p>
+<p><strong>Quick reference:</strong></p>
+<pre><code class="language-bash"># After preprocessing, version the changes
+dvc add data/
+git add data.dvc .gitignore
+git commit -m &quot;Update preprocessed data&quot;
+git tag -a &quot;v1.x&quot; -m &quot;data v1.x&quot;
+git push --follow-tags
+dvc push
+</code></pre>
+<p>For detailed instructions and troubleshooting, refer to the <a href="../dvc/">Data Version Control</a> documentation.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

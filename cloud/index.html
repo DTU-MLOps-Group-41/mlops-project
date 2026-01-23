@@ -1,0 +1,1250 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Group 41">
+      
+      
+      
+        <link rel="prev" href="../dvc/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Cloud Infrastructure - customer_support</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cloud-infrastructure" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="customer_support" class="md-header__button md-logo" aria-label="customer_support" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            customer_support
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Cloud Infrastructure
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="customer_support" class="md-nav__button md-logo" aria-label="customer_support" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    customer_support
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Processing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../training/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Versioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cloud-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker Images
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Docker Images">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automatic-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic Builds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-image-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Image Build
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-entrypoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container Entrypoint
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vertex-ai-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vertex AI Training
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vertex AI Training">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#submitting-training-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Submitting Training Jobs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#training-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Training Configurations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customizing-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customizing Training
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secrets-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secrets Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiment Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gcp-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GCP Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#required-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cloud-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Build
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vertex-ai-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vertex AI Jobs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cloud-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker Images
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Docker Images">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automatic-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic Builds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-image-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Image Build
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-entrypoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container Entrypoint
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vertex-ai-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vertex AI Training
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vertex AI Training">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#submitting-training-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Submitting Training Jobs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#training-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Training Configurations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customizing-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customizing Training
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secrets-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secrets Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiment Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gcp-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GCP Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#required-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cloud-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Build
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vertex-ai-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vertex AI Jobs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>Cloud Infrastructure</h1>
+
+<h2 id="cloud-infrastructure">Cloud Infrastructure</h2>
+<p>This project uses Google Cloud Platform (GCP) for cloud-based training. The infrastructure includes Cloud Build for CI/CD, Artifact Registry for Docker images, Vertex AI for managed training, and Google Cloud Storage for data (via DVC).</p>
+<h2 id="architecture-overview">Architecture Overview</h2>
+<pre><code>GitHub Repository
+        │
+        │ push to main
+        ▼
+┌───────────────────┐
+│   Cloud Build     │ ◄── Automatic trigger
+│  (Docker images)  │
+└─────────┬─────────┘
+          │
+          ▼
+┌───────────────────┐
+│ Artifact Registry │
+│  europe-west1     │
+└─────────┬─────────┘
+          │
+          │ Manual: gcloud builds submit
+          ▼
+┌───────────────────┐      ┌───────────────┐
+│    Vertex AI      │ ◄────│  GCS Bucket   │
+│  Training Jobs    │      │  (DVC data)   │
+└─────────┬─────────┘      └───────────────┘
+          │
+          ▼
+┌───────────────────┐
+│ Weights &amp; Biases  │
+│ (Experiment logs) │
+└───────────────────┘
+</code></pre>
+<p><strong>Key Components:</strong></p>
+<ul>
+<li><strong>Artifact Registry</strong>: <code>europe-west1-docker.pkg.dev/corded-smithy-484309-s4/g41-registry/</code></li>
+<li><strong>GCS Data Bucket</strong>: <code>gs://my_mlops_data_bucket3/</code></li>
+<li><strong>WandB</strong>: Entity <code>dtu-mlops-g41</code>, Project <code>customer_support</code></li>
+<li><strong>Region</strong>: <code>europe-west1</code></li>
+</ul>
+<h2 id="docker-images">Docker Images</h2>
+<p>Two training images are maintained:</p>
+<table>
+<thead>
+<tr>
+<th>Image</th>
+<th>Base</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>train-cpu</code></td>
+<td><code>uv:python3.12-bookworm-slim</code></td>
+<td>CPU-only training</td>
+</tr>
+<tr>
+<td><code>train-cu128</code></td>
+<td><code>nvidia/cuda:12.8.0-runtime-ubuntu24.04</code></td>
+<td>GPU training (CUDA 12.8)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="automatic-builds">Automatic Builds</h3>
+<p>Docker images are automatically built and pushed when commits are pushed to the <code>main</code> branch. This is configured as a Cloud Build trigger in the GCP Console.</p>
+<p>The build process (<code>.gcp/cloudbuild.yaml</code>) uses Docker BuildKit and pushes to Artifact Registry.</p>
+<h3 id="manual-image-build">Manual Image Build</h3>
+<p>To manually trigger a build:</p>
+<pre><code class="language-bash"># Build GPU image
+gcloud builds submit . --config=.gcp/cloudbuild.yaml \
+  --substitutions=_DEVICE=cu128,_IMAGE_NAME=train-cu128:latest,_DOCKERFILE=dockerfiles/train_cu128.dockerfile
+
+# Build CPU image
+gcloud builds submit . --config=.gcp/cloudbuild.yaml \
+  --substitutions=_DEVICE=cpu,_IMAGE_NAME=train-cpu:latest,_DOCKERFILE=dockerfiles/train_cpu.dockerfile
+</code></pre>
+<h3 id="container-entrypoint">Container Entrypoint</h3>
+<p>Both images use <code>dockerfiles/entrypoint.sh</code> which:</p>
+<ol>
+<li>Configures DVC for containerized environment (<code>core.no_scm true</code>)</li>
+<li>Pulls training data from GCS via DVC</li>
+<li>Runs the training script with provided arguments</li>
+</ol>
+<h2 id="vertex-ai-training">Vertex AI Training</h2>
+<h3 id="submitting-training-jobs">Submitting Training Jobs</h3>
+<p>Training jobs are submitted via Cloud Build, which handles secret injection and job creation:</p>
+<pre><code class="language-bash"># GPU training (recommended for production)
+gcloud builds submit . --config=.gcp/vertex_ai_train.yaml \
+  --substitutions=_VERTEX_TRAIN_CONFIG=.gcp/config_gpu.yaml
+
+# CPU training (for testing)
+gcloud builds submit . --config=.gcp/vertex_ai_train.yaml \
+  --substitutions=_VERTEX_TRAIN_CONFIG=.gcp/config_cpu.yaml
+</code></pre>
+<h3 id="training-configurations">Training Configurations</h3>
+<p><strong>GPU Configuration</strong> (<code>.gcp/config_gpu.yaml</code>):</p>
+<ul>
+<li>Machine: <code>n1-standard-8</code> with 1x NVIDIA Tesla T4</li>
+<li>Image: <code>train-cu128:latest</code></li>
+<li>Default experiment: <code>experiment=best</code> (optimized hyperparameters, full dataset)</li>
+</ul>
+<p><strong>CPU Configuration</strong> (<code>.gcp/config_cpu.yaml</code>):</p>
+<ul>
+<li>Machine: <code>n1-standard-8</code></li>
+<li>Image: <code>train-cpu:latest</code></li>
+<li>Default experiment: <code>experiment=baseline</code> (quick testing, small dataset)</li>
+</ul>
+<h3 id="customizing-training">Customizing Training</h3>
+<p>Modify the <code>args</code> in the config files to pass Hydra overrides:</p>
+<pre><code class="language-yaml">args:
+  - &quot;experiment=best&quot;
+  - &quot;training.num_epochs=10&quot;
+  - &quot;training.batch_size=32&quot;
+</code></pre>
+<p>Available experiments:</p>
+<ul>
+<li><code>experiment=baseline</code> - Quick testing on small dataset</li>
+<li><code>experiment=best</code> - Optimized hyperparameters on full dataset</li>
+</ul>
+<h2 id="secrets-management">Secrets Management</h2>
+<p>The WandB API key is stored in Google Secret Manager and automatically injected during training job submission.</p>
+<h2 id="experiment-tracking">Experiment Tracking</h2>
+<p>Training runs are logged to Weights &amp; Biases:</p>
+<ul>
+<li><strong>Entity</strong>: <code>dtu-mlops-g41</code></li>
+<li><strong>Project</strong>: <code>customer_support</code></li>
+<li><strong>Dashboard</strong>: <a href="https://wandb.ai/dtu-mlops-g41/customer_support">wandb.ai/dtu-mlops-g41/customer_support</a></li>
+</ul>
+<p>Configuration in <code>configs/config.yaml</code>:</p>
+<pre><code class="language-yaml">wandb:
+  entity: &quot;dtu-mlops-g41&quot;
+  project: &quot;customer_support&quot;
+  mode: &quot;online&quot;
+  log_model: true
+</code></pre>
+<p><strong>Note</strong>: WandB Model Registry integration is not yet configured. Currently <code>log_model: true</code> logs model artifacts to individual runs.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="gcp-authentication">GCP Authentication</h3>
+<pre><code class="language-bash">gcloud auth login
+gcloud config set project corded-smithy-484309-s4
+gcloud config set compute/region europe-west1
+</code></pre>
+<h3 id="required-permissions">Required Permissions</h3>
+<ul>
+<li>Cloud Build Editor - submit builds</li>
+<li>Vertex AI User - create training jobs</li>
+<li>Storage Object Viewer - access DVC data</li>
+<li>Secret Manager Secret Accessor - access WANDB_API_KEY (for service account)</li>
+</ul>
+<h2 id="monitoring">Monitoring</h2>
+<h3 id="cloud-build">Cloud Build</h3>
+<pre><code class="language-bash"># List recent builds
+gcloud builds list --limit=10
+
+# Stream build logs
+gcloud builds log BUILD_ID --stream
+</code></pre>
+<h3 id="vertex-ai-jobs">Vertex AI Jobs</h3>
+<pre><code class="language-bash"># List training jobs
+gcloud ai custom-jobs list --region=europe-west1
+
+# View job details
+gcloud ai custom-jobs describe JOB_ID --region=europe-west1
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p><strong>Build fails with permission errors</strong></p>
+<ul>
+<li>Verify Cloud Build service account has Artifact Registry Writer role</li>
+<li>Check Secret Manager access for WANDB_API_KEY</li>
+</ul>
+<p><strong>Training job fails to start</strong></p>
+<ul>
+<li>Check GPU quota in europe-west1 region</li>
+<li>Verify image exists: <code>gcloud artifacts docker images list europe-west1-docker.pkg.dev/corded-smithy-484309-s4/g41-registry</code></li>
+</ul>
+<p><strong>DVC pull fails in container</strong></p>
+<ul>
+<li>Ensure GCS bucket allows access from Vertex AI service account</li>
+<li>Check <code>.dvc/config</code> remote URL matches bucket</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
