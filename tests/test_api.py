@@ -10,9 +10,11 @@ from customer_support.api import PRIORITY_NAMES, app
 
 
 @pytest.fixture
-def client():
-    """Create a test client for the FastAPI app."""
-    return TestClient(app)
+def client(mock_model):
+    """Create a test client with mocked model loaded at startup."""
+    with patch("customer_support.api._get_model", return_value=mock_model):
+        with TestClient(app) as client:
+            yield client
 
 
 @pytest.fixture
@@ -57,31 +59,28 @@ class TestRootEndpoint:
 class TestHealthEndpoint:
     """Tests for the health check endpoint."""
 
-    def test_health_returns_200(self, client, mock_model):
+    def test_health_returns_200(self, client):
         """Test that health endpoint returns 200 when model loads."""
-        with patch("customer_support.api.get_model", return_value=mock_model):
-            response = client.get("/health")
-            assert response.status_code == 200
+        response = client.get("/health")
+        assert response.status_code == 200
 
-    def test_health_returns_status(self, client, mock_model):
+    def test_health_returns_status(self, client):
         """Test that health endpoint returns status field."""
-        with patch("customer_support.api.get_model", return_value=mock_model):
-            response = client.get("/health")
-            data = response.json()
-            assert "status" in data
-            assert "model_loaded" in data
+        response = client.get("/health")
+        data = response.json()
+        assert "status" in data
+        assert "model_loaded" in data
 
-    def test_health_reports_healthy_when_model_loaded(self, client, mock_model):
+    def test_health_reports_healthy_when_model_loaded(self, client):
         """Test that health reports healthy when model is loaded."""
-        with patch("customer_support.api.get_model", return_value=mock_model):
-            response = client.get("/health")
-            data = response.json()
-            assert data["status"] == "healthy"
-            assert data["model_loaded"] is True
+        response = client.get("/health")
+        data = response.json()
+        assert data["status"] == "healthy"
+        assert data["model_loaded"] is True
 
-    def test_health_reports_unhealthy_when_model_fails(self, client):
-        """Test that health reports unhealthy when model loading fails."""
-        with patch("customer_support.api.get_model", side_effect=FileNotFoundError("Model not found")):
+    def test_health_reports_unhealthy_when_model_is_none(self, client):
+        """Test that health reports unhealthy when model is None."""
+        with patch("customer_support.api.model", None):
             response = client.get("/health")
             data = response.json()
             assert data["status"] == "unhealthy"
@@ -91,63 +90,45 @@ class TestHealthEndpoint:
 class TestPredictEndpoint:
     """Tests for the prediction endpoint."""
 
-    def test_predict_returns_200_with_valid_request(self, client, mock_model, mock_tokenizer):
+    def test_predict_returns_200_with_valid_request(self, client, mock_tokenizer):
         """Test that predict endpoint returns 200 with valid input."""
-        with (
-            patch("customer_support.api.get_model", return_value=mock_model),
-            patch("customer_support.api.get_tokenizer", return_value=mock_tokenizer),
-        ):
+        with patch("customer_support.api.get_tokenizer", return_value=mock_tokenizer):
             response = client.post("/predict", json={"text": "My computer is broken"})
             assert response.status_code == 200
 
-    def test_predict_returns_expected_fields(self, client, mock_model, mock_tokenizer):
+    def test_predict_returns_expected_fields(self, client, mock_tokenizer):
         """Test that predict endpoint returns all expected fields."""
-        with (
-            patch("customer_support.api.get_model", return_value=mock_model),
-            patch("customer_support.api.get_tokenizer", return_value=mock_tokenizer),
-        ):
+        with patch("customer_support.api.get_tokenizer", return_value=mock_tokenizer):
             response = client.post("/predict", json={"text": "My computer is broken"})
             data = response.json()
             assert "priority" in data
             assert "priority_id" in data
             assert "confidence" in data
 
-    def test_predict_priority_id_in_valid_range(self, client, mock_model, mock_tokenizer):
+    def test_predict_priority_id_in_valid_range(self, client, mock_tokenizer):
         """Test that priority_id is in valid range [0, 2]."""
-        with (
-            patch("customer_support.api.get_model", return_value=mock_model),
-            patch("customer_support.api.get_tokenizer", return_value=mock_tokenizer),
-        ):
+        with patch("customer_support.api.get_tokenizer", return_value=mock_tokenizer):
             response = client.post("/predict", json={"text": "My computer is broken"})
             data = response.json()
             assert data["priority_id"] in [0, 1, 2]
 
-    def test_predict_confidence_in_valid_range(self, client, mock_model, mock_tokenizer):
+    def test_predict_confidence_in_valid_range(self, client, mock_tokenizer):
         """Test that confidence is in valid range [0, 1]."""
-        with (
-            patch("customer_support.api.get_model", return_value=mock_model),
-            patch("customer_support.api.get_tokenizer", return_value=mock_tokenizer),
-        ):
+        with patch("customer_support.api.get_tokenizer", return_value=mock_tokenizer):
             response = client.post("/predict", json={"text": "My computer is broken"})
             data = response.json()
             assert 0.0 <= data["confidence"] <= 1.0
 
-    def test_predict_priority_matches_priority_id(self, client, mock_model, mock_tokenizer):
+    def test_predict_priority_matches_priority_id(self, client, mock_tokenizer):
         """Test that priority string matches priority_id."""
-        with (
-            patch("customer_support.api.get_model", return_value=mock_model),
-            patch("customer_support.api.get_tokenizer", return_value=mock_tokenizer),
-        ):
+        with patch("customer_support.api.get_tokenizer", return_value=mock_tokenizer):
             response = client.post("/predict", json={"text": "My computer is broken"})
             data = response.json()
             assert data["priority"] == PRIORITY_NAMES[data["priority_id"]]
 
-    def test_predict_priority_is_valid_value(self, client, mock_model, mock_tokenizer):
+    def test_predict_priority_is_valid_value(self, client, mock_tokenizer):
         """Test that priority is one of: low, medium, high."""
-        with (
-            patch("customer_support.api.get_model", return_value=mock_model),
-            patch("customer_support.api.get_tokenizer", return_value=mock_tokenizer),
-        ):
+        with patch("customer_support.api.get_tokenizer", return_value=mock_tokenizer):
             response = client.post("/predict", json={"text": "My computer is broken"})
             data = response.json()
             assert data["priority"] in ["low", "medium", "high"]
@@ -161,12 +142,3 @@ class TestPredictEndpoint:
         """Test that missing text field returns 422 validation error."""
         response = client.post("/predict", json={})
         assert response.status_code == 422
-
-    def test_predict_returns_503_when_model_not_found(self, client, mock_tokenizer):
-        """Test that predict returns 503 when model checkpoint is missing."""
-        with (
-            patch("customer_support.api.get_model", side_effect=FileNotFoundError("Model not found")),
-            patch("customer_support.api.get_tokenizer", return_value=mock_tokenizer),
-        ):
-            response = client.post("/predict", json={"text": "My computer is broken"})
-            assert response.status_code == 503

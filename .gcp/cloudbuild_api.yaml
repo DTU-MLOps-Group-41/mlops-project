@@ -45,7 +45,7 @@ steps:
     '--add-volume=name=model-cache,type=cloud-storage,bucket=my_mlops_data_bucket3,readonly=true',
     '--add-volume-mount=volume=model-cache,mount-path=/mnt/models',
     '--update-secrets=WANDB_API_KEY=WANDB_API_KEY:latest',
-    '--set-env-vars=WANDB_ARTIFACT_PATH=wandb-registry-Ticket Urgency/models:latest'
+    '--set-env-vars=WANDB_ARTIFACT_PATH=wandb-registry-Ticket Urgency/models:latest,MODEL_PATH=/mnt/models/model.ckpt'
   ]
 
 availableSecrets:

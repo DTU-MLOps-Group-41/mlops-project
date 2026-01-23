@@ -28,7 +28,7 @@ logger.add(sys.stdout, level="WARNING")  # Add a new logger with WARNING level
 
 def _get_model() -> TicketClassificationModule:
     """Load model from cache if valid, otherwise download from W&B and cache."""
-    model_path = Path("/mnt/models/model.ckpt")
+    model_path = Path(os.getenv("MODEL_PATH", "models/model.ckpt"))
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Model checkpoint not found at {model_path}")
 
