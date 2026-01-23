@@ -449,7 +449,7 @@ We used the following GCP services:
 >
 > Answer:
 
-The only time we used the Compute engine was during exercises. For the rest of the cases we strived to aim at the dedicated services that provide more streamlined and tailored experience, such as Vertex AI for training or Cloud Run for deployment.
+The only time we used the Compute engine was during exercises. For the project implementation, however, we did not rely on Compute Engine directly. Instead, we prioritized managed, purpose-built services that abstract away VM management and provide a more streamlined and production-oriented workflow. Model training was carried out using Vertex AI, which internally relies on Compute Engine but additional ML-specific capabilitie. Similarly, model deployment was handled using Cloud Run, allowing us to deploy containerized inference services without managing virtual machines explicitly.
 
 ### Question 19
 
