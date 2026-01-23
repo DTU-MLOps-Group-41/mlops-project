@@ -215,7 +215,9 @@ Otherwise did our best to follow the cookiecutter template placing different pro
 >
 > Answer:
 
---- question 6 fill here ---
+We used a default ruff setup for linting (with 120 line length limit). And utilized mypy as an extra pre-commit hook. In this way we guaranteed reasonable typing and documentation enforcement leaving a lot of freedom to individuals. We ended up having this solution mostly because of the scale of our project. We are only a few people and our pull request require manual review. So this time we valued convenience over total-standardization. We wanted to omit annoying alerts and possibly false-positives.
+
+However, we agree that for bigger projects it is a strict necessity to implement as much of enforcement as possible, since the inertia is much bigger. Commonly it is not a single person responsible for a codebase, so without a strict set of rules the quality of the source code could shift from merge to merge leading to inconsistencies and higher maintenance costs.
 
 ## Version control
 
