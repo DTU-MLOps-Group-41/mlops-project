@@ -40,6 +40,10 @@ We are using the [Kaggle](https://www.kaggle.com/) dataset [Customer IT Support 
 
 We intend to use a pre-trained natural language processing (NLP) model. To train the model and perform hyperparameter sweeping, we will initially use compressed versions of [BERT](https://huggingface.co/docs/transformers/en/model_doc/bert), such as [DistilBERT](https://huggingface.co/docs/transformers/en/model_doc/distilbert) or [ALBERT](https://huggingface.co/docs/transformers/en/model_doc/albert). These compressed versions allow for more efficient training and a greater focus on the MLOps aspect of the project.
 
+## Project flow diagram
+
+![The flow diagram of our project](./reports/figures/our_overview.png)
+
 ## Project structure
 
 The directory structure of the project looks like this:
