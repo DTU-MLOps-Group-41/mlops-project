@@ -582,7 +582,16 @@ Additionally we could implement metrics monitoring (using e.g. Prometheus metric
 >
 > Answer:
 
---- question 27 fill here ---
+!TODO!
+
+We used:
+- $1,59
+
+In total ...
+
+The most expensive service was Vertex AI which we used to train our model with addition of 1 GPU.
+
+Working in the cloud was slow and painful. However, we recognize that in many cases it is a necessary evil.
 
 ### Question 28
 
