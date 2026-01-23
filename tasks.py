@@ -67,9 +67,9 @@ def visualize(ctx: Context, checkpoint: str) -> None:
 
 
 @task
-def streamlit_app(ctx: Context) -> None:
+def frontend(ctx: Context) -> None:
     """Run Streamlit web interface for ticket classification."""
-    ctx.run(f"uv run streamlit run src/{PROJECT_NAME}/streamlit_app.py", echo=True, pty=not WINDOWS)
+    ctx.run(f"uv run src/{PROJECT_NAME}/frontend.py", echo=True, pty=not WINDOWS)
 
 
 @task
