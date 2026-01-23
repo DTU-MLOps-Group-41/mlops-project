@@ -1,11 +1,16 @@
-"""Streamlit web application for customer support ticket classification via FastAPI."""
+"""Streamlit web application for customer support ticket classification with hybrid inference."""
 
 import os
+from pathlib import Path
 from typing import Any
 
 import requests  # type: ignore
 import streamlit as st
+import torch
 from loguru import logger
+from transformers import DistilBertTokenizer
+
+from customer_support.model import TicketClassificationModule
 
 # ============================================================================
 # PAGE CONFIGURATION
@@ -143,6 +148,43 @@ with st.sidebar:
 # ============================================================================
 
 
+@st.cache_resource
+def load_local_model() -> tuple[TicketClassificationModule | None, DistilBertTokenizer]:
+    """Load model and tokenizer for local inference fallback.
+
+    Returns None for model if checkpoint not found.
+    """
+    model_path = Path(os.getenv("MODEL_PATH", "models/model.ckpt"))
+    model = None
+
+    if model_path.exists():
+        logger.info(f"Loading model from {model_path}")
+        try:
+            model = TicketClassificationModule.load_from_checkpoint(
+                model_path,
+                local_files_only=True,
+            )
+            model.eval()
+            model.freeze()
+        except Exception as e:
+            logger.warning(f"Failed to load model: {e}")
+            model = None
+    else:
+        logger.warning(f"Model checkpoint not found at {model_path}")
+
+    # Load tokenizer
+    try:
+        tokenizer = DistilBertTokenizer.from_pretrained(
+            "distilbert-base-multilingual-cased",
+            local_files_only=True,
+        )
+    except Exception:
+        logger.warning("Downloading tokenizer from HuggingFace")
+        tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-multilingual-cased")
+
+    return model, tokenizer
+
+
 @st.cache_data
 def predict_via_api(text: str, api_url: str) -> dict[str, Any] | None:
     """Call FastAPI endpoint for prediction.
@@ -171,6 +213,103 @@ def predict_via_api(text: str, api_url: str) -> dict[str, Any] | None:
     except Exception as e:
         logger.error(f"API error: {str(e)}")
         return None
+
+
+def predict_locally(
+    text: str, model: TicketClassificationModule | None, tokenizer: DistilBertTokenizer
+) -> dict[str, Any]:
+    """Perform local prediction using the model.
+
+    Args:
+        text: Ticket body text
+        model: Loaded TicketClassificationModule or None for demo mode
+        tokenizer: DistilBERT tokenizer
+
+    Returns:
+        Prediction dictionary
+    """
+    # Demo mode: keyword-based predictions
+    if model is None:
+        keywords_high = ["urgent", "critical", "emergency", "down", "broken", "crash", "fail"]
+        keywords_medium = ["help", "issue", "problem", "error", "not working", "unable"]
+
+        text_lower = text.lower()
+        if any(kw in text_lower for kw in keywords_high):
+            priority = "high"
+            priority_id = 2
+            confidence = 0.85
+        elif any(kw in text_lower for kw in keywords_medium):
+            priority = "medium"
+            priority_id = 1
+            confidence = 0.72
+        else:
+            priority = "low"
+            priority_id = 0
+            confidence = 0.68
+
+        return {
+            "priority": priority,
+            "priority_id": priority_id,
+            "confidence": confidence,
+        }
+
+    # Real inference
+    encoded = tokenizer.encode_plus(
+        text,
+        add_special_tokens=True,
+        max_length=512,
+        padding="max_length",
+        truncation=True,
+        return_tensors="pt",
+    )
+
+    input_ids = encoded["input_ids"]
+    attention_mask = encoded["attention_mask"]
+
+    with torch.no_grad():
+        outputs = model(input_ids, attention_mask)
+
+    logits = outputs[0]
+    probabilities = torch.nn.functional.softmax(logits, dim=-1)
+    predicted_class = torch.argmax(probabilities, dim=-1).item()
+    confidence = probabilities[0, predicted_class].item()
+
+    priority_map = {0: "low", 1: "medium", 2: "high"}
+    priority = priority_map[predicted_class]
+
+    return {
+        "priority": priority,
+        "priority_id": predicted_class,
+        "confidence": confidence,
+    }
+
+
+def predict_with_fallback(
+    text: str,
+    api_url: str,
+    local_model: TicketClassificationModule | None,
+    tokenizer: DistilBertTokenizer,
+) -> tuple[dict[str, Any], str]:
+    """Try API first, then fall back to local inference.
+
+    Args:
+        text: Ticket body text
+        api_url: FastAPI backend URL
+        local_model: Local model for fallback
+        tokenizer: Tokenizer for fallback
+
+    Returns:
+        Tuple of (prediction dict, inference_mode)
+    """
+    # Try API first
+    prediction = predict_via_api(text, api_url)
+    if prediction is not None:
+        return prediction, "API"
+
+    # Fall back to local inference
+    logger.info("API unavailable, using local inference")
+    prediction = predict_locally(text, local_model, tokenizer)
+    return prediction, "Local"
 
 
 def get_badge_html(priority: str, confidence: float) -> str:
@@ -205,6 +344,9 @@ st.markdown("---")
 # Initialize API URL in session state
 if "api_url" not in st.session_state:
     st.session_state.api_url = os.getenv("API_URL", "http://localhost:8080")
+
+# Load local model for fallback
+local_model, tokenizer = load_local_model()
 
 # Main input section
 col1, col2 = st.columns([3, 1])
@@ -250,59 +392,62 @@ if predict_button:
         st.warning("⚠️ Please enter a ticket description first.")
     else:
         with st.spinner("Classifying ticket..."):
-            prediction = predict_via_api(ticket_text, st.session_state.api_url)
+            # Try API first, fall back to local inference
+            prediction, inference_mode = predict_with_fallback(
+                ticket_text,
+                st.session_state.api_url,
+                local_model,
+                tokenizer,
+            )
 
-            if prediction is None:
-                st.error(
-                    f"❌ Failed to connect to API at {st.session_state.api_url}\n\n"
-                    "Please ensure:\n"
-                    "1. FastAPI server is running: `uv run uvicorn customer_support.api:app --port 8080`\n"
-                    "2. API URL is correct in the sidebar\n"
-                    "3. Model checkpoint is available at `models/model.ckpt`"
-                )
+            # Store in session state for history
+            if "predictions" not in st.session_state:
+                st.session_state.predictions = []
+            st.session_state.predictions.append(
+                {"text": ticket_text, "prediction": prediction, "mode": inference_mode},
+            )
+
+            st.markdown("---")
+            st.subheader("✅ Classification Result")
+
+            # Display inference mode
+            if inference_mode == "API":
+                mode_badge = "🌐 **Via API**"
             else:
-                # Store in session state for history
-                if "predictions" not in st.session_state:
-                    st.session_state.predictions = []
-                st.session_state.predictions.append(
-                    {"text": ticket_text, "prediction": prediction},
+                mode_badge = "🖥️ **Local Inference**"
+
+            # Display results in columns
+            col1, col2, col3 = st.columns(3)
+
+            with col1:
+                st.markdown("**Priority Level**")
+                st.markdown(
+                    get_badge_html(prediction["priority"], prediction["confidence"]),
+                    unsafe_allow_html=True,
                 )
 
-                st.markdown("---")
-                st.subheader("✅ Classification Result")
+            with col2:
+                st.metric("Confidence Score", f"{prediction['confidence'] * 100:.1f}%")
 
-                # Display results in columns
-                col1, col2, col3 = st.columns(3)
+            with col3:
+                st.metric("Inference Mode", mode_badge)
 
-                with col1:
-                    st.markdown("**Priority Level**")
-                    st.markdown(
-                        get_badge_html(prediction["priority"], prediction["confidence"]),
-                        unsafe_allow_html=True,
-                    )
+            # Additional info
+            st.markdown("---")
+            col1, col2 = st.columns(2)
 
-                with col2:
-                    st.metric("Confidence Score", f"{prediction['confidence'] * 100:.1f}%")
+            with col1:
+                st.write("**Ticket Text:**")
+                st.text(ticket_text[:300] + ("..." if len(ticket_text) > 300 else ""))
 
-                with col3:
-                    priority_descriptions = {
-                        "low": "Non-urgent ticket",
-                        "medium": "Standard priority",
-                        "high": "Urgent attention needed",
-                    }
-                    st.info(f"**Note:** {priority_descriptions[prediction['priority']]}")
-
-                # Additional info
-                st.markdown("---")
-                col1, col2 = st.columns(2)
-
-                with col1:
-                    st.write("**Ticket Text:**")
-                    st.text(ticket_text[:300] + ("..." if len(ticket_text) > 300 else ""))
-
-                with col2:
-                    st.write("**Model Used:**")
-                    st.caption("DistilBERT Base Multilingual Cased (via FastAPI)")
+            with col2:
+                st.write("**Model Used:**")
+                if inference_mode == "API":
+                    st.caption("DistilBERT via FastAPI Backend")
+                elif local_model is not None:
+                    st.caption("DistilBERT Local Inference")
+                else:
+                    st.caption("Demo Mode (Keywords)")
 
 # History section (collapsible)
 if "predictions" in st.session_state and len(st.session_state.predictions) > 0:
@@ -312,7 +457,7 @@ if "predictions" in st.session_state and len(st.session_state.predictions) > 0:
         expanded=False,
     ):
         for i, pred in enumerate(reversed(st.session_state.predictions), 1):
-            col1, col2 = st.columns([3, 1])
+            col1, col2, col3 = st.columns([2, 1, 1])
             with col1:
                 st.text(f"Ticket {len(st.session_state.predictions) - i + 1}")
                 st.text(pred["text"][:100] + "..." if len(pred["text"]) > 100 else pred["text"])
@@ -321,6 +466,9 @@ if "predictions" in st.session_state and len(st.session_state.predictions) > 0:
                     get_badge_html(pred["prediction"]["priority"], pred["prediction"]["confidence"]),
                     unsafe_allow_html=True,
                 )
+            with col3:
+                mode_emoji = "🌐" if pred.get("mode") == "API" else "🖥️" if pred.get("mode") == "Local" else "🎯"
+                st.caption(f"{mode_emoji} {pred.get('mode', 'Unknown')}")
 
         if st.button("🗑️ Clear History"):
             st.session_state.predictions = []
