@@ -13,24 +13,23 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push container image'
   args: ['push', 'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/api']
-
-# --- OPTIMIZED SYNC STEP ---
-- name: 'gcr.io/google.com/cloudsdktool/google-cloud-cli:slim'
-  id: 'Sync Model to GCS'
+- name: 'python:3.12-slim'
+  id: 'Download Model from WandB'
   entrypoint: 'bash'
   secretEnv: ['WANDB_API_KEY']
   args:
   - '-c'
   - |
     pip install wandb
-    python3 -c "
+    python -c "
     import wandb, os
     api = wandb.Api(api_key=os.environ['WANDB_API_KEY'])
     artifact = api.artifact('wandb-registry-Ticket Urgency/models:latest')
-    artifact.download(root='/tmp/model')
+    artifact.download(root='/workspace/model')
     "
-    gsutil -m cp -r /tmp/model/* gs://my_mlops_data_bucket3/
-
+- name: 'gcr.io/cloud-builders/gsutil'
+  id: 'Sync Model to GCS'
+  args: ['-m', 'cp', '-r', '/workspace/model/*', 'gs://my_mlops_data_bucket3/']
 - name: 'gcr.io/cloud-builders/gcloud'
   id: 'Deploy to Cloud Run'
   args: [
