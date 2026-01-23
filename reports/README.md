@@ -236,7 +236,7 @@ However, we agree that for bigger projects it is a strict necessity to implement
 >
 > Answer:
 
-In total, we have implemented 57 tests across 6 domains (api, data, evaluate, model, train, visualize). Primarily we implemented data loading / preprocessing tests (`test_data.py`), model tests (`test_model.py`), training pipeline tests (`test_train.py`) and API-level tests (`test_api.py`) as these are the most critical parts of our application to ensure that the model runs reliably in the cloud environment and produces reproducible results. Additionally, we also implemented some small evaluation and visualization tests.
+In total, we have implemented 71 tests across 6 domains (api, data, evaluate, model, train, visualize). Primarily we implemented data loading / preprocessing tests (`test_data.py`), model tests (`test_model.py`), training pipeline tests (`test_train.py`) and API-level tests (`test_api.py`) as these are the most critical parts of our application to ensure that the model runs reliably in the cloud environment and produces reproducible results. Additionally, we also implemented some small evaluation and visualization tests.
 
 ### Question 8
 
