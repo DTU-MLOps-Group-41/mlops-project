@@ -1,0 +1,1437 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Group 41">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Frontend Service - customer_support</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#frontend-service" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="customer_support" class="md-header__button md-logo" aria-label="customer_support" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            customer_support
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Frontend Service
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="customer_support" class="md-nav__button md-logo" aria-label="customer_support" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    customer_support
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Processing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../training/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Versioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running-locally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running Locally
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interactive-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive UI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inference-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inference Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sidebar-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sidebar Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-to-google-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment to Google Cloud
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deployment to Google Cloud">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-artifact-registry-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Artifact Registry Repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-and-push-docker-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build and Push Docker Image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-to-cloud-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy to Cloud Run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-service-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get Service URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deployment Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables-on-cloud-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables on Cloud Run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-a-model-checkpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using a Model Checkpoint
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scaling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scaling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resource-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#view-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#demo-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demo Mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Demo Mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#demo-keywords" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demo Keywords
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#app-fails-to-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App Fails to Start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-connection-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Connection Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#slow-predictions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slow Predictions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-image-too-large" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container Image Too Large
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Tips
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#development-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Development Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-compose-local-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker Compose (Local Testing)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cicd-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI/CD Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost Optimization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="frontend-service">Frontend Service</h1>
+<p>The project includes a Streamlit web interface for interactive ticket priority classification with integration to the FastAPI backend.</p>
+<h2 id="overview">Overview</h2>
+<p>The frontend is a user-friendly web application that classifies customer support tickets in real-time:</p>
+<ul>
+<li><strong>Framework</strong>: Streamlit</li>
+<li><strong>Backend</strong>: FastAPI (optional, with local model fallback)</li>
+<li><strong>Port</strong>: 8501 (default)</li>
+<li><strong>Model</strong>: DistilBERT with local inference support</li>
+</ul>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="running-locally">Running Locally</h3>
+<p><strong>Terminal 1: Start FastAPI Backend</strong></p>
+<pre><code class="language-bash">uv run uvicorn customer_support.api:app --host 0.0.0.0 --port 8080 --reload
+</code></pre>
+<p><strong>Terminal 2: Start Streamlit Frontend</strong></p>
+<pre><code class="language-bash">uv run invoke frontend
+</code></pre>
+<p>Or directly:</p>
+<pre><code class="language-bash">uv run streamlit run src/customer_support/frontend.py
+</code></pre>
+<p>The frontend opens at <code>http://localhost:8501</code></p>
+<h2 id="architecture">Architecture</h2>
+<pre><code>User Browser (Port 8501)
+    ↓
+Streamlit UI
+    ↓
+    ├─→ Try HTTP POST /predict to API (Port 8080)
+    │
+    └─→ Fallback: Local DistilBERT Model
+</code></pre>
+<h2 id="features">Features</h2>
+<h3 id="interactive-ui">Interactive UI</h3>
+<ul>
+<li><strong>Text Input</strong>: Paste or type customer support tickets</li>
+<li><strong>Priority Classification</strong>: Displays predicted priority (Low, Medium, High)</li>
+<li><strong>Confidence Score</strong>: Shows model confidence as percentage</li>
+<li><strong>Prediction History</strong>: Tracks all predictions in current session</li>
+<li><strong>Color-Coded Badges</strong>: Visual indicators for priority levels</li>
+<li>🟢 Low (Green)</li>
+<li>🟡 Medium (Orange)</li>
+<li>🔴 High (Red)</li>
+</ul>
+<h3 id="configuration">Configuration</h3>
+<ul>
+<li><strong>API URL Setting</strong>: Configure backend URL in sidebar</li>
+<li><strong>Connection Testing</strong>: Built-in button to test API connectivity</li>
+<li><strong>Environment Variables</strong>: Support for <code>API_URL</code> env var</li>
+</ul>
+<h3 id="inference-modes">Inference Modes</h3>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Description</th>
+<th>When Used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>API</strong> (🌐)</td>
+<td>Calls FastAPI backend</td>
+<td>Primary mode, fastest</td>
+</tr>
+<tr>
+<td><strong>Local</strong> (🖥️)</td>
+<td>Uses local DistilBERT model</td>
+<td>API unavailable, offline</td>
+</tr>
+<tr>
+<td><strong>Demo</strong> (🎯)</td>
+<td>Keyword-based classification</td>
+<td>Model not found</td>
+</tr>
+</tbody>
+</table>
+<h2 id="configuration_1">Configuration</h2>
+<h3 id="environment-variables">Environment Variables</h3>
+<pre><code class="language-bash"># Set custom API URL (default: http://localhost:8080)
+export API_URL=http://api.example.com:8080
+
+# Set custom model path (default: models/model.ckpt)
+export MODEL_PATH=/path/to/model.ckpt
+
+# Start frontend
+uv run invoke frontend
+</code></pre>
+<h3 id="sidebar-options">Sidebar Options</h3>
+<ul>
+<li><strong>FastAPI URL</strong>: Change API endpoint in real-time</li>
+<li><strong>Check API Connection</strong>: Test if backend is reachable</li>
+<li>Shows current inference mode and API status</li>
+</ul>
+<h2 id="deployment-to-google-cloud">Deployment to Google Cloud</h2>
+<h3 id="prerequisites">Prerequisites</h3>
+<ul>
+<li>Google Cloud Project set up</li>
+<li><code>gcloud</code> CLI installed and configured</li>
+<li>Artifact Registry API enabled</li>
+<li>Cloud Run API enabled</li>
+</ul>
+<h3 id="environment-setup">Environment Setup</h3>
+<pre><code class="language-bash">export PROJECT_ID=&quot;your-gcp-project-id&quot;
+export REGION=&quot;europe-west1&quot;
+export REGISTRY=&quot;${REGION}-docker.pkg.dev&quot;
+</code></pre>
+<h3 id="create-artifact-registry-repository">Create Artifact Registry Repository</h3>
+<pre><code class="language-bash">gcloud artifacts repositories create mlops-registry \
+  --repository-format=docker \
+  --location=$REGION \
+  --project=$PROJECT_ID
+</code></pre>
+<h3 id="build-and-push-docker-image">Build and Push Docker Image</h3>
+<p><strong>Option A: Using Cloud Build (recommended for CI/CD)</strong></p>
+<pre><code class="language-bash">gcloud builds submit \
+  --config=cloudbuild-frontend.yaml \
+  --project=$PROJECT_ID \
+  --substitutions=_REGION=$REGION
+</code></pre>
+<p><strong>Option B: Build Locally</strong></p>
+<pre><code class="language-bash"># Authenticate Docker
+gcloud auth configure-docker ${REGISTRY}
+
+# Build image
+docker build -t ${REGISTRY}/${PROJECT_ID}/mlops-registry/frontend:latest \
+  -f dockerfiles/frontend.dockerfile .
+
+# Push image
+docker push ${REGISTRY}/${PROJECT_ID}/mlops-registry/frontend:latest
+</code></pre>
+<h3 id="deploy-to-cloud-run">Deploy to Cloud Run</h3>
+<pre><code class="language-bash">gcloud run deploy customer-support-classifier \
+  --image ${REGISTRY}/${PROJECT_ID}/mlops-registry/frontend:latest \
+  --platform managed \
+  --region $REGION \
+  --project $PROJECT_ID \
+  --memory 2Gi \
+  --cpu 1 \
+  --timeout 3600 \
+  --allow-unauthenticated
+</code></pre>
+<h3 id="get-service-url">Get Service URL</h3>
+<pre><code class="language-bash">gcloud run services describe customer-support-classifier \
+  --region $REGION \
+  --project $PROJECT_ID \
+  --format='value(status.url)'
+</code></pre>
+<h2 id="deployment-configuration">Deployment Configuration</h2>
+<h3 id="environment-variables-on-cloud-run">Environment Variables on Cloud Run</h3>
+<pre><code class="language-bash">gcloud run deploy customer-support-classifier \
+  --set-env-vars MODEL_PATH=/app/models/model.ckpt \
+  --set-env-vars API_URL=https://api-xxxxx.run.app \
+  # ... other flags
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>API_URL</code></td>
+<td><code>http://localhost:8080</code></td>
+<td>FastAPI backend URL</td>
+</tr>
+<tr>
+<td><code>MODEL_PATH</code></td>
+<td><code>models/model.ckpt</code></td>
+<td>Local model checkpoint path</td>
+</tr>
+<tr>
+<td><code>STREAMLIT_SERVER_PORT</code></td>
+<td><code>8080</code></td>
+<td>Server port</td>
+</tr>
+</tbody>
+</table>
+<h3 id="using-a-model-checkpoint">Using a Model Checkpoint</h3>
+<p><strong>1. Upload to Google Cloud Storage:</strong></p>
+<pre><code class="language-bash">gsutil cp models/model.ckpt gs://${PROJECT_ID}-models/model.ckpt
+</code></pre>
+<p><strong>2. Deploy with Cloud Storage path:</strong></p>
+<pre><code class="language-bash">gcloud run deploy customer-support-classifier \
+  --set-env-vars MODEL_PATH=/gcs/${PROJECT_ID}-models/model.ckpt \
+  # ... other flags
+</code></pre>
+<h2 id="scaling">Scaling</h2>
+<p>Adjust resources based on traffic:</p>
+<pre><code class="language-bash">gcloud run deploy customer-support-classifier \
+  --memory 4Gi \
+  --cpu 2 \
+  --min-instances 1 \
+  --max-instances 100 \
+  # ... other flags
+</code></pre>
+<h3 id="resource-guidelines">Resource Guidelines</h3>
+<table>
+<thead>
+<tr>
+<th>Load</th>
+<th>Memory</th>
+<th>CPU</th>
+<th>Min Instances</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low</td>
+<td>1Gi</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>2Gi</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>High</td>
+<td>4Gi</td>
+<td>2</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<h2 id="monitoring">Monitoring</h2>
+<h3 id="view-logs">View Logs</h3>
+<pre><code class="language-bash">gcloud run logs read customer-support-classifier \
+  --region $REGION \
+  --project $PROJECT_ID
+</code></pre>
+<h3 id="view-metrics">View Metrics</h3>
+<pre><code class="language-bash">gcloud monitoring dashboards list --project $PROJECT_ID
+</code></pre>
+<h2 id="demo-mode">Demo Mode</h2>
+<p>If no model checkpoint is provided, the app runs in <strong>demo mode</strong>:
+- Shows a warning banner
+- Uses keyword-based priority classification
+- Perfect for testing UI without ML infrastructure</p>
+<h3 id="demo-keywords">Demo Keywords</h3>
+<pre><code>High Priority: urgent, critical, emergency, down, broken, crash, fail
+Medium Priority: help, issue, problem, error, not working, unable
+Low Priority: question, info, fyi, documentation, feature request
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="app-fails-to-start">App Fails to Start</h3>
+<ol>
+<li>
+<p><strong>Check dependencies:</strong>
+   <code>bash
+   uv run pip list | grep streamlit</code></p>
+</li>
+<li>
+<p><strong>Check port availability:</strong>
+   <code>bash
+   lsof -i :8501</code></p>
+</li>
+<li>
+<p><strong>Increase memory if using model:</strong>
+   <code>bash
+   gcloud run deploy ... --memory 4Gi</code></p>
+</li>
+</ol>
+<h3 id="api-connection-issues">API Connection Issues</h3>
+<ol>
+<li>
+<p><strong>Check API is running:</strong>
+   <code>bash
+   curl http://localhost:8080/health</code></p>
+</li>
+<li>
+<p><strong>Check API URL in sidebar</strong> - Default is <code>http://localhost:8080</code></p>
+</li>
+<li>
+<p><strong>Check model checkpoint exists:</strong>
+   <code>bash
+   ls models/model.ckpt</code></p>
+</li>
+<li>
+<p><strong>Check firewall rules</strong> - May need to allow ports 8080 and 8501</p>
+</li>
+</ol>
+<h3 id="slow-predictions">Slow Predictions</h3>
+<ul>
+<li>Increase timeout: API has 30-second timeout</li>
+<li>Check CPU/GPU usage: Monitor resource utilization</li>
+<li>Check model size: Larger models take longer to load</li>
+</ul>
+<h3 id="container-image-too-large">Container Image Too Large</h3>
+<p>The Dockerfile uses multi-stage builds to minimize image size. Verify in logs.</p>
+<h2 id="performance-tips">Performance Tips</h2>
+<ol>
+<li><strong>API Response Time</strong>: ~100-500ms (depends on GPU/CPU)</li>
+<li><strong>Streamlit Caching</strong>: Frontend caches responses to avoid duplicate calls</li>
+<li><strong>Model Loading</strong>: Model loads once at startup (cached in memory)</li>
+<li><strong>Batch Predictions</strong>: Consider batch API endpoint for many predictions</li>
+</ol>
+<h2 id="development-workflow">Development Workflow</h2>
+<pre><code class="language-bash"># 1. Make changes to frontend
+vim src/customer_support/frontend.py
+
+# 2. Streamlit auto-reloads on save (in demo mode)
+
+# 3. Test predictions
+
+# 4. Make model changes
+vim src/customer_support/model.py
+
+# 5. Retrain and update checkpoint
+uv run invoke train
+
+# 6. Restart API backend
+# (Ctrl+C in Terminal 1, then rerun)
+
+# 7. FastAPI auto-reloads with --reload flag
+</code></pre>
+<h2 id="docker-compose-local-testing">Docker Compose (Local Testing)</h2>
+<pre><code class="language-yaml">version: '3'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: dockerfiles/api.dockerfile
+    ports:
+      - &quot;8080:8080&quot;
+    environment:
+      - MODEL_PATH=/app/models/model.ckpt
+    volumes:
+      - ./models:/app/models
+
+  frontend:
+    build:
+      context: .
+      dockerfile: dockerfiles/frontend.dockerfile
+    ports:
+      - &quot;8501:8501&quot;
+    environment:
+      - API_URL=http://api:8080
+    depends_on:
+      - api
+</code></pre>
+<p>Run with:</p>
+<pre><code class="language-bash">docker-compose up
+</code></pre>
+<h2 id="cicd-integration">CI/CD Integration</h2>
+<p>The <code>cloudbuild-frontend.yaml</code> automatically:
+1. Builds Docker image on git push
+2. Pushes to Artifact Registry
+3. Deploys to Cloud Run</p>
+<p>Trigger builds:</p>
+<pre><code class="language-bash">gcloud builds triggers create github \
+  --name=frontend-ci \
+  --repo-name=mlops-project \
+  --repo-owner=your-username \
+  --branch-pattern=&quot;^main$&quot; \
+  --build-config=cloudbuild-frontend.yaml
+</code></pre>
+<h2 id="cost-optimization">Cost Optimization</h2>
+<ul>
+<li><strong>Reduce Memory</strong>: Start with 1GB if model is small</li>
+<li><strong>Min Instances 0</strong>: Auto-scaling with cold starts (~30s)</li>
+<li><strong>Cloud Build Caching</strong>: Speeds up rebuilds</li>
+<li><strong>Monitor Logs</strong>: Identify inefficiencies</li>
+</ul>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li>Add batch prediction endpoint</li>
+<li>Implement analytics dashboard</li>
+<li>Add model versioning and A/B testing</li>
+<li>Set up monitoring and alerting</li>
+<li>Add authentication (OAuth, API keys)</li>
+</ul>
+<h2 id="related-documentation">Related Documentation</h2>
+<ul>
+<li><a href="../api/">API Service</a> - FastAPI backend</li>
+<li><a href="../model/">Model Architecture</a> - DistilBERT implementation</li>
+<li><a href="../cloud/">Cloud Deployment</a> - GCP infrastructure</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -589,6 +589,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#streamlit-web-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Streamlit Web Interface
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Streamlit Web Interface">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running-the-streamlit-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the Streamlit App
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#related-documentation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -936,6 +986,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#streamlit-web-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Streamlit Web Interface
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Streamlit Web Interface">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running-the-streamlit-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the Streamlit App
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#related-documentation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1122,6 +1222,35 @@ def classify_ticket(text: str, api_url: str = &quot;http://localhost:8080&quot;)
 # Usage
 result = classify_ticket(&quot;My laptop screen is broken&quot;)
 print(f&quot;Priority: {result['priority']} (confidence: {result['confidence']:.2%})&quot;)
+</code></pre>
+<h2 id="streamlit-web-interface">Streamlit Web Interface</h2>
+<p>A user-friendly web interface is available through Streamlit, allowing interactive ticket classification with a visual dashboard.</p>
+<h3 id="running-the-streamlit-app">Running the Streamlit App</h3>
+<pre><code class="language-bash"># Run with uv
+uv run streamlit run src/customer_support/streamlit_app.py
+
+# Or directly with streamlit
+streamlit run src/customer_support/streamlit_app.py
+</code></pre>
+<p>The app will open at <code>http://localhost:8501</code> and provides:</p>
+<ul>
+<li><strong>Interactive ticket input</strong> - Enter ticket text directly in the browser</li>
+<li><strong>Real-time classification</strong> - Instant priority predictions with confidence scores</li>
+<li><strong>Visual badges</strong> - Color-coded priority indicators (🟢 Low, 🟡 Medium, 🔴 High)</li>
+<li><strong>Sample tickets</strong> - Pre-loaded examples to test the model</li>
+<li><strong>Prediction history</strong> - Track all classifications in the current session</li>
+<li><strong>Model information</strong> - Display model details and documentation links</li>
+</ul>
+<h3 id="features">Features</h3>
+<ul>
+<li><strong>No API dependency</strong> - The Streamlit app loads the model directly from checkpoint</li>
+<li><strong>Session state</strong> - Maintains prediction history within a session</li>
+<li><strong>Custom branding</strong> - Styled to match project documentation</li>
+<li><strong>Responsive design</strong> - Works on desktop and mobile browsers</li>
+</ul>
+<h3 id="environment-variables_1">Environment Variables</h3>
+<p>The Streamlit app respects the same <code>MODEL_PATH</code> environment variable as the API:</p>
+<pre><code class="language-bash">MODEL_PATH=/path/to/checkpoint.ckpt uv run streamlit run src/customer_support/streamlit_app.py
 </code></pre>
 <h2 id="related-documentation">Related Documentation</h2>
 <ul>
