@@ -251,7 +251,7 @@ In total, we have implemented 71 tests across 6 domains (api, data, evaluate, mo
 >
 > Answer:
 
---- question 8 fill here ---
+The total code coverage of code is 57%, which includes all our source code. We are far from 100% coverage of our code and even if we were then it is the quality of the tests that matter as well. Even if all of the lines of code execute, there might still be a gap between expectations and actual program logic. Moreover, it should be pointed out that to have a guarantee for a program to work requires to run a program itself. Any other testing or analysis will only yield certain approximation (even if very precise), but there are still environmental elements that cannot be modelled directly (e.g. hardware bugs or interference).
 
 ### Question 9
 
