@@ -22,6 +22,7 @@ The following diagram illustrates the architecture of the project:
 - **[Training](training.md)**: Learn how to train models locally with Hydra configuration management, hyperparameter tuning, and experiment tracking.
 
 ### Deployment & Infrastructure
+- **[Frontend](frontend.md)**: Deploy the Streamlit web interface with integrated FastAPI backend support, local fallback inference, and Google Cloud Run deployment guide.
 - **[API](api.md)**: Deploy and use the FastAPI REST API for real-time ticket priority predictions in production.
 - **[Cloud](cloud.md)**: Leverage Google Cloud Platform for scalable training jobs, CI/CD pipelines, and managed infrastructure with Vertex AI.
 - **[DVC](dvc.md)**: Manage datasets and model artifacts using Data Version Control for reproducibility and collaboration.

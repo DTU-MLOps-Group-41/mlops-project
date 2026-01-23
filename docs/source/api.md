@@ -167,6 +167,44 @@ result = classify_ticket("My laptop screen is broken")
 print(f"Priority: {result['priority']} (confidence: {result['confidence']:.2%})")
 ```
 
+## Streamlit Web Interface
+
+A user-friendly web interface is available through Streamlit, allowing interactive ticket classification with a visual dashboard.
+
+### Running the Streamlit App
+
+```bash
+# Run with uv
+uv run streamlit run src/customer_support/streamlit_app.py
+
+# Or directly with streamlit
+streamlit run src/customer_support/streamlit_app.py
+```
+
+The app will open at `http://localhost:8501` and provides:
+
+- **Interactive ticket input** - Enter ticket text directly in the browser
+- **Real-time classification** - Instant priority predictions with confidence scores
+- **Visual badges** - Color-coded priority indicators (🟢 Low, 🟡 Medium, 🔴 High)
+- **Sample tickets** - Pre-loaded examples to test the model
+- **Prediction history** - Track all classifications in the current session
+- **Model information** - Display model details and documentation links
+
+### Features
+
+- **No API dependency** - The Streamlit app loads the model directly from checkpoint
+- **Session state** - Maintains prediction history within a session
+- **Custom branding** - Styled to match project documentation
+- **Responsive design** - Works on desktop and mobile browsers
+
+### Environment Variables
+
+The Streamlit app respects the same `MODEL_PATH` environment variable as the API:
+
+```bash
+MODEL_PATH=/path/to/checkpoint.ckpt uv run streamlit run src/customer_support/streamlit_app.py
+```
+
 ## Related Documentation
 
 - [Model](model.md) - Model architecture details

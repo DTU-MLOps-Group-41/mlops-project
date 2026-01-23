@@ -1,0 +1,45 @@
+steps:
+  # Build the Streamlit frontend image
+  - name: gcr.io/cloud-builders/docker
+    id: build-frontend
+    args:
+      - build
+      - -t
+      - ${{ env.REGION }}-docker.pkg.dev/$PROJECT_ID/mlops-registry/frontend:latest
+      - -t
+      - ${{ env.REGION }}-docker.pkg.dev/$PROJECT_ID/mlops-registry/frontend:$SHORT_SHA
+      - -f
+      - dockerfiles/frontend.dockerfile
+      - .
+
+  # Push to Artifact Registry
+  - name: gcr.io/cloud-builders/docker
+    id: push-frontend
+    args:
+      - push
+      - ${{ env.REGION }}-docker.pkg.dev/$PROJECT_ID/mlops-registry/frontend:latest
+
+  # Deploy to Cloud Run
+  - name: gcr.io/cloud-builders/gke-deploy
+    id: deploy-frontend
+    args:
+      - run
+      - --filename=.
+      - --image=${{ env.REGION }}-docker.pkg.dev/$PROJECT_ID/mlops-registry/frontend:$SHORT_SHA
+      - --location=${{ env.REGION }}
+      - --namespace=default
+
+substitutions:
+  _REGION: "europe-west1"
+
+options:
+  machineType: N1_HIGHCPU_8
+  logging: CLOUD_LOGGING_ONLY
+  substitutionOption: ALLOW_LOOSE
+
+# Build configuration
+images:
+  - ${{ env.REGION }}-docker.pkg.dev/$PROJECT_ID/mlops-registry/frontend:latest
+  - ${{ env.REGION }}-docker.pkg.dev/$PROJECT_ID/mlops-registry/frontend:$SHORT_SHA
+
+timeout: 1800s
