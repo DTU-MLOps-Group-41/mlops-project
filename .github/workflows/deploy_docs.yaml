@@ -1,0 +1,30 @@
+name: Deploy docs
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+    contents: write
+
+jobs:
+  deploy:
+    name: Deploy docs
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@61cb8a9741eeb8a550a1b8544337180c0fc8476b # v7
+      with:
+        enable-cache: true
+    - name: Install dependencies
+      # Only install docs dependencies, not the full dev group or project
+      run: uv sync --frozen --no-dev --group docs --no-install-project
+
+    - name: Deploy docs
+      run: uv run --no-sync mkdocs gh-deploy --force --config-file docs/mkdocs.yaml
