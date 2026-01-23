@@ -308,7 +308,7 @@ The tests are only executed after successful linting and are run in parallel for
 
 The source code for our testing action can be found here: <.github/workflows/tests.yaml>
 
-In addition, we also have miscellaneous actions that support our repo, that is pre-commit auto updater, which we left untouched from the cookiecutter template and PR auto-approving action, that will automatically approve PRs created by our dependency maintenance bot, such that all version bump merges are performed automatically. 
+In addition, we also have miscellaneous actions that support our repo, that is pre-commit auto updater, which we left untouched from the cookiecutter template and PR auto-approving action, that will automatically approve PRs created by our dependency maintenance bot, such that all version bump merges are performed automatically.
 
 We utilize cache both for Github actions and within Cloud Build setup (`--cache-from`).
 
@@ -563,7 +563,7 @@ curl -X POST https://g41-service-324300157876.europe-west1.run.app//predict \
 
 We did not manage to implement monitoring. We would like to have monitoring implemented such that over time we could detect data drift - when the distribution of input data changes from what our model was trained on, leading to performance degradation. Using a framework like Evidently, we could periodically compare incoming requests against our training data distribution and generate reports on feature drift and target drift.
 
-Additionally we could implement metrics monitoring (using e.g. Prometheus metrics) of such aspects as request counts, prediction latency, error rates, and the distribution of predicted classes. This would give us a perpetual insight to our application performance making the development and maintenance decision easier and possibly more accurate. 
+Additionally we could implement metrics monitoring (using e.g. Prometheus metrics) of such aspects as request counts, prediction latency, error rates, and the distribution of predicted classes. This would give us a perpetual insight to our application performance making the development and maintenance decision easier and possibly more accurate.
 
 ## Overall discussion of project
 
