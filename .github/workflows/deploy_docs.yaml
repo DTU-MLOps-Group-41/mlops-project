@@ -23,8 +23,8 @@ jobs:
       with:
         enable-cache: true
     - name: Install dependencies
-      # Only install docs dependencies, not the full dev group or project
-      run: uv sync --frozen --no-dev --group docs --no-install-project
+      # Only install docs dependencies, excludes all project dependencies
+      run: uv sync --frozen --only-group docs
 
     - name: Deploy docs
       run: uv run --no-sync mkdocs gh-deploy --force --config-file docs/mkdocs.yaml
