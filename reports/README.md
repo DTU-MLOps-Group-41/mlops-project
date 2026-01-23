@@ -676,7 +676,7 @@ We experienced some degree of uncertainty each time a new feature was implemente
 
 *Student s243036 was responsible of developing the initial versions of the data preprocessing, model, training, and evaluation scripts. The student was also in charge of configuring the Weights & Biases experiments/sweeps and performing code profiling. In addition, the student helped set up and manage the training of the models in the cloud.*
 
-*Student s242908 was in charge of initial setup of all the systems and repository including CI automation pipelines. The student was also responsible or training, deploying and preparing an API for the model in cloud.*
+*Student s242908 was in charge of initial setup of all the systems and repository including CI automation pipelines. The student was also responsible for training, deploying and preparing an API for the model in cloud.*
 
 *Student s256657 was in charge of creating dockerfiles and hyperparameters in the config files(.yaml) which were then integrated with hydra and later used for cloud deployment and model training. Furthermore he created the frontend which is a streamlit app that calls the FastAPI backend for predictions when available or falls back to running the DistilBERT model locally if the API is unavailable. Furthermore the student supported in the documentations of the project by also creating intial versions for the architecheral diagram of the MLops pipeline.*
 
