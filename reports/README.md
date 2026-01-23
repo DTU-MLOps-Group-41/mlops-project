@@ -362,8 +362,8 @@ As mentioned in the previous question, we made extensive use of **config files**
 > *As seen in the second image we are also tracking ... and ...*
 >
 > Answer:
-
-The image shows us a result of (incomplete) sweep run. During sweep we followed fine-tuning practice of focusing on the result accuracy, which we used as a parameter to maximize. This sweep helped us identify, that for our case model was performing better on bigger batch sizes with lesser learning rates, which is not surprising, since we are working with a pre-trained model.
+We performed a hyperparameter sweep using W&B. For this, we created a sweep.yaml config file containing different ranges of hyperparameters, such as batch size, weight decay, and learning rate, among others.
+The image shows the results of one incomplete sweep run. During the sweep, we followed the fine-tuning practice of focusing on validation accuracy, which we used as a parameter to maximize. This sweep helped us identify that, in our case, the model performed better with larger batch sizes and lower learning rates, which is not surprising since we are working with a pre-trained model. After performing the sweep, we obtained the best set of hyperparameters for our model by visually inspecting the graph in the bottom right of the figure, which presents the sets of hyperparameters for each run and their corresponding validation accuracy, or by filtering the results according to their validation accuracy. As a side note, we noticed that a Bayesian hyperparameter sweep without constraints on the number of runs can be computationally expensive, which is why some of our sweeps were incomplete.
 
 ![W&B sweep](figures/wandb_sweep.png)
 
@@ -586,12 +586,11 @@ Additionally we could implement metrics monitoring (using e.g. Prometheus metric
 >
 > Answer:
 
-!TODO!
-
 We used:
 - $1,59
+- $1.77
 
-In total ...
+In total $3.36
 
 The most expensive service was Vertex AI which we used to train our model with addition of 1 GPU.
 
