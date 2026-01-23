@@ -277,7 +277,7 @@ We made use of both branches and PRs in our project. In our group, each branch w
 >
 > Answer:
 
-We did make use of DVC, mostly as a convenient data storage with easy to use interface. Our data was mostly limited to a single source that we found and we did not have much use of data versioning. Our data was originally divided into 3, strictly overlapping input sets (small, medium, full), and we decided to keep all at the same time for easier handling. 
+We did make use of DVC, mostly as a convenient data storage with easy to use interface. Our data was mostly limited to a single source that we found and we did not have much use of data versioning. Our data was originally divided into 3, strictly overlapping input sets (small, medium, full), and we decided to keep all at the same time for easier handling.
 
 However, we expect that it shall be beneficial to use dvc where the data is fluctuating or new sources are made available, such that a certain degree of experiment reproducibility can be maintained.
 
@@ -603,7 +603,7 @@ We have also encountered some hardships with initial setup of each of the newly 
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
-*Student s243036 was responsible of developing the initial versions of the data preprocessing, model, training, and evaluation scripts. The student was also in charge of configuring the Weights & Biases experiments/sweeps and performing code profiling. In addition, the student helped set up and manage the training of the models in the cloud.* 
+*Student s243036 was responsible of developing the initial versions of the data preprocessing, model, training, and evaluation scripts. The student was also in charge of configuring the Weights & Biases experiments/sweeps and performing code profiling. In addition, the student helped set up and manage the training of the models in the cloud.*
 
 *Student s242908 was in charge of initial setup of all the systems and repository including CI automation pipelines. The student was also responsible or training, deploying and preparing an API for the model in cloud.*
 
