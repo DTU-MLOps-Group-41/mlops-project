@@ -546,7 +546,9 @@ curl -X POST https://g41-service-324300157876.europe-west1.run.app//predict \
 >
 > Answer:
 
---- question 25 fill here ---
+For unit/integration testing, we used pytest with FastAPI's TestClient to test our API endpoints. Our tests are located in tests/test_api.py and cover three endpoints: the root endpoint (/), health check endpoint (/health), and prediction endpoint (/predict). We used mock fixtures to simulate the model and tokenizer, allowing tests to run without loading actual model. Our tests verify status codes, response structure, and edge cases, e.g., checking that /predict returns 422 for empty or missing text fields, that confidence values are in the valid range [0, 1], and that the health endpoint correctly reports model loading status.
+
+For load testing, we did not implement this. However, if we were to do so, we would use the locust framework. We would create a locustfile.py defining user behavior with @task decorators to simulate requests to our endpoints. Running `locust --headless --users 10 --spawn-rate 1 --run-time 1m --host $ENDPOINT` would simulate concurrent users and provide useful metrics to identify performance bottlenecks.
 
 ### Question 26
 
