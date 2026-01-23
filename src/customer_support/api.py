@@ -1,6 +1,5 @@
 """FastAPI application for customer support ticket priority classification."""
 
-import glob
 import os
 from functools import lru_cache
 from pathlib import Path
@@ -29,10 +28,7 @@ logger.add(sys.stdout, level="WARNING")  # Add a new logger with WARNING level
 
 def _get_model() -> TicketClassificationModule:
     """Load model from cache if valid, otherwise download from W&B and cache."""
-
     model_path = Path("/mnt/models/model.ckpt")
-    # 'os.environ.get("MODEL_PATH", "models/model_full.ckpt")
-
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Model checkpoint not found at {model_path}")
 
@@ -40,57 +36,6 @@ def _get_model() -> TicketClassificationModule:
     model.eval()
     model.freeze()
     return model
-
-    # api = wandb.Api()  # type: ignore
-    # artifact = api.artifact(os.getenv("WANDB_ARTIFACT_PATH"), type="model")
-    # current_digest = artifact.digest
-
-    # if not _is_cache_valid(current_digest):
-    #     # 1. Use a local temporary directory for the download
-    #     # Cloud Run /tmp is writable and supports chmod/renames
-    #     temp_download_dir = Path("/tmp/model_download")
-    #     if temp_download_dir.exists():
-    #         shutil.rmtree(temp_download_dir)
-    #     temp_download_dir.mkdir(parents=True)
-
-    #     logger.debug(f"Downloading artifact to temporary storage: {temp_download_dir}")
-    #     artifact.download(root=str(temp_download_dir), skip_cache=True)
-
-    #     # 2. Copy files from /tmp to the GCS mount (/mnt/models)
-    #     logger.debug(f"Moving model to GCS cache: {MODEL_CACHE_DIR}")
-    #     MODEL_CACHE_DIR.mkdir(parents=True, exist_ok=True)
-
-    #     for item in temp_download_dir.iterdir():
-    #         if item.is_file():
-    #             shutil.move(item, MODEL_CACHE_DIR / item.name)
-
-    #     # 3. Write the digest to verify the cache later
-    #     CACHE_DIGEST_FILE.write_text(current_digest)
-
-    #     # Cleanup /tmp to save memory
-    #     shutil.rmtree(temp_download_dir)
-
-    # # Find checkpoint file in cache directory
-    # ckpt_files = glob.glob(f"{MODEL_CACHE_DIR}/*.ckpt")
-    # if not ckpt_files:
-    #     raise FileNotFoundError(f"No .ckpt file found in {MODEL_CACHE_DIR}")
-    # checkpoint_path = Path(ckpt_files[0])
-
-    # loaded_model = TicketClassificationModule.load_from_checkpoint(checkpoint_path)
-    # loaded_model.eval()
-    # loaded_model.freeze()
-    # return loaded_model
-
-
-def _is_cache_valid(current_digest: str) -> bool:
-    """Check if cached model exists and matches the current W&B artifact digest."""
-    if not MODEL_CACHE_DIR.exists() or not CACHE_DIGEST_FILE.exists():
-        return False
-    ckpt_files = glob.glob(f"{MODEL_CACHE_DIR}/*.ckpt")
-    if not ckpt_files:
-        return False
-    cached_digest = CACHE_DIGEST_FILE.read_text().strip()
-    return cached_digest == current_digest
 
 
 @asynccontextmanager
