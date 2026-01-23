@@ -348,14 +348,22 @@ local_model, tokenizer = load_local_model()
 # Main input section
 st.subheader("📝 Enter Ticket Details")
 
+# Initialize ticket text in session state
+if "ticket_text" not in st.session_state:
+    st.session_state.ticket_text = ""
+
 # Ticket input
 ticket_text = st.text_area(
     label="Ticket Body",
+    value=st.session_state.ticket_text,
     placeholder="Describe the customer support issue...",
     height=150,
     label_visibility="collapsed",
     help="Enter the customer's support ticket text for classification",
 )
+
+# Update session state with current text
+st.session_state.ticket_text = ticket_text
 
 # Example tickets table
 st.markdown("**Example Tickets:**")
@@ -382,13 +390,8 @@ for priority, example_text in examples.items():
         st.caption(example_text)
     with col3:
         if st.button("Use", key=f"example_{priority}", use_container_width=True):
-            st.session_state.example_ticket = example_text
+            st.session_state.ticket_text = example_text
             st.rerun()
-
-# Check if example was selected
-if "example_ticket" in st.session_state:
-    ticket_text = st.session_state.example_ticket
-    del st.session_state.example_ticket
 
 # Predict button
 col1, col2, col3 = st.columns([1, 1, 2])
