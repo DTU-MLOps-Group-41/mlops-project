@@ -26,9 +26,9 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --extra $DEVICE
 
 # 5. Pre-download HuggingFace model files to avoid rate limiting at runtime
-RUN python -c "from transformers import DistilBertTokenizer, DistilBertConfig; \
+RUN python -c "from transformers import DistilBertTokenizer, DistilBertForSequenceClassification; \
     DistilBertTokenizer.from_pretrained('distilbert-base-multilingual-cased'); \
-    DistilBertConfig.from_pretrained('distilbert-base-multilingual-cased')"
+    DistilBertForSequenceClassification.from_pretrained('distilbert-base-multilingual-cased')"
 
 # 6. Security: Run as non-root user
 RUN groupadd -r appuser && useradd -r -m -g appuser appuser
