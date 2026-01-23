@@ -200,6 +200,8 @@ At the end we ended up not using the default dev container, since uv handles all
 
 We added dvc configurations (via standard initialization process) and Google Cloud Platform directory to keep all it's configs there.
 
+Otherwise did our best to follow the cookiecutter template placing different project components into proper subdirectories, like `src/`, `dockerfiles/` or `configs/`...
+
 ### Question 6
 
 > **Did you implement any rules for code quality and format? What about typing and documentation? Additionally,**
@@ -262,7 +264,7 @@ In total, we have implemented 57 tests across 6 domains (api, data, evaluate, mo
 >
 > Answer:
 
-We made use of both branches and PRs in our project. In our group, each branch was dedicated to certain feature or project requirement or bug fix. To merge code a pull request must be submitted with all tests and checks passing and additionally 1 review is required from a person that was not actively involved in the development on the branch.
+We made use of both branches and pull requests in our project. In our group, each branch was dedicated to a certain feature or project requirement, or bug fix. To merge a pull request, all the scheduled checks must succeed (linting and unit testing), which ensures stable and uniform codebase on the main branch. Additionally, we require at least 1 review is from a person that was not actively involved in the development on the branch. In this way we managed to introduce a way of knowledge sharing as well as peer-review discipline by having a human in the loop on top of automated checks.
 
 ### Question 10
 
@@ -277,7 +279,9 @@ We made use of both branches and PRs in our project. In our group, each branch w
 >
 > Answer:
 
-We did make use of DVC, mostly as a convenient data storage with easy to use interface. Our data was mostly limited to a single source that we found and we did not have much use of data versioning. Our data was originally divided into 3, strictly overlapping input sets (small, medium, full), and we decided to keep all at the same time for easier handling.
+We did make use of DVC, mostly as a convenient data storage with easy to use interface. Our data was mostly limited to a single source that we found and we did not have much use of versioning. Our data was originally divided into 3, strictly overlapping input sets (small, medium, full), and we decided to keep all at the same time for easier handling.
+
+Additionally, we did not have much preprocessing iterations, which even more contributed to a relative "stability" of our data.
 
 However, we expect that it shall be beneficial to use dvc where the data is fluctuating or new sources are made available, such that a certain degree of experiment reproducibility can be maintained.
 
@@ -296,7 +300,17 @@ However, we expect that it shall be beneficial to use dvc where the data is fluc
 >
 > Answer:
 
---- question 11 fill here ---
+We have organized our continuous integration into 4 files. From which 2 are usually used during PR processing, that is linting and unit testing. In addition to that we have setup 3 triggers on Cloud Build that will build and push our docker images whenever our main branch is updated.
+
+For linting we utilize our pre-commit configuration for consistency between local and remote state. The checks include ruff check and format, mypy typing check, gitleaks for leaked secrets and standard pre-commit hooks (trailing whitespace, end of line fixer, yaml checker, large files warning, merge conflict checker).
+
+The tests are only executed after successful linting and are run in parallel for Linux, Mac/Os and Windows. In addition to just running the unit tests we also report test coverage across our sources, which is reported within PR and as a Github repository badge in our [README.md](../README.md). We are however, only testing a single Python version, since it is enforced by `uv`, our dependency manager.
+
+The source code for our testing action can be found here: <.github/workflows/tests.yaml>
+
+In addition, we also have miscellaneous actions that support our repo, that is pre-commit auto updater, which we left untouched from the cookiecutter template and PR auto-approving action, that will automatically approve PRs created by our dependency maintenance bot, such that all version bump merges are performed automatically. 
+
+We utilize cache both for Github actions and within Cloud Build setup (`--cache-from`).
 
 ## Running code and tracking experiments
 
@@ -330,7 +344,7 @@ We make heavy use of **Hydra and config files** to configure our experiments and
 >
 > Answer:
 
-As mentioned in the previous question, we made extensive use of **config files** to ensure that experiments are fully reproducible. Whenever an experiment is run, Hydra automatically creates a unique output directory containing the run's timestamp and stores the fully resolved configuration file, which includes all the hyperparameters and settings used for that experiment. All outputs from the run, including model checkpoints, logs and evaluation metrics, are also saved in this directory. We also fix the global random seed in the configuration to minimise randomness in data loading, model initialisation and training. To reproduce an experiment, simply rerun the same command: `uv run python src/customer_support/train.py experiment=experiment1`
+As mentioned in the previous question, we made extensive use of **config files** to ensure that experiments are fully reproducible. Whenever an experiment is run, Hydra automatically creates a unique output directory containing the run's timestamp and stores the fully resolved configuration file, which includes all the hyperparameters and settings used for that experiment. All outputs from the run, including model checkpoints, logs and evaluation metrics, are also saved in this directory. We also fix the global random seed in the configuration to minimize randomness in data loading, model initialization and training. To reproduce an experiment, simply rerun the same command: `uv run python src/customer_support/train.py experiment=experiment1`
 
 ### Question 14
 
@@ -364,7 +378,12 @@ The image shows us a result of (incomplete) sweep run. During sweep we followed 
 >
 > Answer:
 
---- question 15 fill here ---
+For our project we developed several images: two images for training and one for deployment. For example to run the training docker image on GPU (with CUDA 12.8) with baseline hyperparameters and data one can type: `docker run train:latest`. More advanced training setups are available by passing a hydra argument at the end (e.g. `experiment=best`). For the training docker files we additionally used an entry script that sets up training data with `dvc pull` (with no-scm flag enabled, since we do not clone the repository which is required for dvc) before executing training code.
+
+Link to docker files:
+- <dockerfiles/train_cu128.dockerfile>
+- <dockerfiles/train_cpu.dockerfile
+- <dockerfiles/api.dockerfile>
 
 ### Question 16
 
@@ -396,7 +415,23 @@ Debugging method was dependent on group member. The use of PyTorch Lightning to 
 >
 > Answer:
 
---- question 17 fill here ---
+We used the following GCP services:
+
+- Cloud Build: CI/CD service that automatically builds Docker images on pushes to main and orchestrates training job submission. It handles build pipelines defined in `cloudbuild.yaml` files.
+
+- Artifact Registry: Stores our Docker images for both training containers (train-cpu and train-cu128).
+
+- Vertex AI: Managed ML platform used for running training jobs with configurable machine types (CPU or GPU). Training is submitted via Cloud Build with configurations in `.gcp/config_xxx.yaml`.
+
+- Cloud Storage (GCS): Stores training data accessed via DVC (`gs://my_mlops_data_bucket3/`) and serves as model storage mounted to Cloud Run.
+
+- Cloud Run: Serverless container platform hosting our inference API. It mounts the model from GCS and handles automatic scaling.
+
+- Secret Manager: Securely stores sensitive credentials (`WANDB_API_KEY`) and injects them into Cloud Build and Cloud Run deployments.
+
+- IAM & Admin: Manages access control and permissions across services. We configured roles for the actions and automation we implemented.
+
+- Cloud Logging (Logs Explorer): Centralized logging service for monitoring and debugging. We used Logs Explorer to view logs from Cloud Run API requests and Vertex AI training jobs.
 
 ### Question 18
 
@@ -411,7 +446,7 @@ Debugging method was dependent on group member. The use of PyTorch Lightning to 
 >
 > Answer:
 
---- question 18 fill here ---
+The only time we used the Compute engine was during exercises. For the rest of the cases we strived to aim at the dedicated services that provide more streamlined and tailored experience, such as Vertex AI for training or Cloud Run for deployment.
 
 ### Question 19
 
@@ -429,8 +464,9 @@ Debugging method was dependent on group member. The use of PyTorch Lightning to 
 >
 > Answer:
 
-[Our registry](./figures/our_registry.png)
-TODO: Show registry after API is deployed
+![Our registry](./figures/our_registry.png)
+
+![Inside our registry](./figures/our_registry1.png)
 
 ### Question 21
 
@@ -439,7 +475,8 @@ TODO: Show registry after API is deployed
 >
 > Answer:
 
---- question 21 fill here ---
+![Our build history](./figures/our_cloudbuild.png)
+
 
 ### Question 22
 
@@ -471,7 +508,7 @@ We managed to train our model in the cloud using Vertex AI. We did this by turni
 >
 > Answer:
 
---- question 23 fill here ---
+We did manage to write an API for our model. We used FastAPI to do this. We did this by developing status checking and inference endpoints. We did not add much more functionality above the bare minimum (the main functionality is exclusively implemented under `predict` endpoint) since we simply ran out of time. However, with the setup prepared and the API structure ready we expect it to be fairly simple to extend the API with additional capabilities, like batch prediction on files input, or creating GUI for better user interaction, or present model evaluation metrics as figures graphs ans plots.
 
 ### Question 24
 
@@ -487,7 +524,14 @@ We managed to train our model in the cloud using Vertex AI. We did this by turni
 >
 > Answer:
 
---- question 24 fill here ---
+For deployment we wrapped our model into application using FastAPI. We first tried locally serving the model, which worked. Afterwards we deployed it in the cloud, using GCP Cloud Run triggered by pushes to main branch on our Github repository. A build config can be found [here (couldbuild_api.yaml)](.gcp/cloudbuild_api.yaml). This cloud build first builds docker container image, then pushes it to our registry, next there are 2 steps that handle pulling and saving our model from our Weights & Biases registry to our bucket which is later mounted to the container image that hosts our service via Cloud Run.
+To invoke the service a user would call:
+
+```
+curl -X POST https://g41-service-324300157876.europe-west1.run.app//predict \
+  -H "Content-Type: application/json" \
+  -d '{"text": "My computer crashed and I lost important data"}'
+```
 
 ### Question 25
 
@@ -517,7 +561,9 @@ We managed to train our model in the cloud using Vertex AI. We did this by turni
 >
 > Answer:
 
---- question 26 fill here ---
+We did not manage to implement monitoring. We would like to have monitoring implemented such that over time we could detect data drift - when the distribution of input data changes from what our model was trained on, leading to performance degradation. Using a framework like Evidently, we could periodically compare incoming requests against our training data distribution and generate reports on feature drift and target drift.
+
+Additionally we could implement metrics monitoring (using e.g. Prometheus metrics) of such aspects as request counts, prediction latency, error rates, and the distribution of predicted classes. This would give us a perpetual insight to our application performance making the development and maintenance decision easier and possibly more accurate. 
 
 ## Overall discussion of project
 
