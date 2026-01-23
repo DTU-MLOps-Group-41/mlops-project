@@ -632,6 +632,16 @@ We have used some extra github integrations, like RenovateBot with automatic PR+
 
 ![Setup overview](figures/our_overview.png)
 
+The starting point of the diagram is our local development setup, where we integrated Hydra for configuration management, Weights & Biases for experiment tracking, and the Transformers library to fetch our DistilBERT base model for customer support ticket classification. We use uv as our Python package manager to ensure reproducible environments.
+
+Whenever we commit code and push to GitHub, it automatically triggers our GitHub Actions CI/CD pipeline. This runs our unit tests with pytest, performs linting and quality checks using Ruff, and reports code coverage to Codecov. We also have pre-commit hooks enabled to catch issues before they reach the repository, and Renovate to keep our dependencies up to date.
+
+From there, the diagram splits into two main paths. For model training, we can trigger cloud training jobs on Vertex AI, which pulls the base model from Transformers, loads training data managed by DVC from Google Cloud Storage, and logs all experiments to Weights & Biases. The trained model checkpoints are stored both in W&B's model registry and in Cloud Storage for later retrieval.
+
+For deployment, pushing to the main branch triggers a GCP Cloud Build pipeline. This builds our Docker containers (one for training, one for our FastAPI serving application) and pushes them to Google Container Registry. The API container is then deployed to Cloud Run, which provides a serverless, auto-scaling endpoint for model inference. The deployed API fetches the trained model from Weights & Biases and mounts cached model checkpoints from Cloud Storage for efficient predictions.
+
+Finally, end-users can query our Cloud Run API to get ticket priority predictions. All API requests are automatically logged to Google Cloud Logging, providing observability into request patterns, error rates, and latency metrics. This complete pipeline ensures that from a single code push, we can automatically test, build, deploy, and serve our ML model while maintaining full experiment traceability and data versioning throughout the entire lifecycle.
+
 ### Question 30
 
 > **Discuss the overall struggles of the project. Where did you spend most time and what did you do to overcome these**
