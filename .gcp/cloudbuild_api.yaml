@@ -43,6 +43,7 @@ steps:
     # '--memory', '4Gi',
     # '--cpu', '2',
     '--cpu-boost',
+    '--allow-unauthenticated',
     '--add-volume=name=model-cache,type=cloud-storage,bucket=my_mlops_data_bucket3,readonly=true',
     '--add-volume-mount=volume=model-cache,mount-path=/mnt/models',
     '--update-secrets=WANDB_API_KEY=WANDB_API_KEY:latest',
