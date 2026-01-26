@@ -1,6 +1,7 @@
 """Model evaluation script for customer support ticket classification."""
 
 from pathlib import Path
+import sys
 
 import torch
 import typer
@@ -10,6 +11,15 @@ import lightning.pytorch as pl
 
 from customer_support.datamodule import TicketDataModule
 from customer_support.model import TicketClassificationModule
+
+# Configure logging
+logger.remove()  # Remove default handler
+logger.add(
+    sys.stdout,
+    format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}",
+    level="INFO",
+    colorize=True,
+)
 
 
 def evaluate(
