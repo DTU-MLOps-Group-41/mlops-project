@@ -1,5 +1,5 @@
 steps:
-- name: 'gcr.io/cloud-builders/docker'
+- name: 'gcr.io/cloud-builders/docker@sha256:a44c27d353305e518949db2d299d409743d2b4517bdbc6a6bbc9be0c80423902'
   env:
     - 'DOCKER_BUILDKIT=1'
   id: 'Build container image'
@@ -11,7 +11,7 @@ steps:
     '--cache-from', 'europe-west1-docker.pkg.dev/$PROJECT_ID/g41-registry/$_IMAGE_NAME:latest',
     '-f', '$_DOCKERFILE'
   ]
-- name: 'gcr.io/cloud-builders/docker'
+- name: 'gcr.io/cloud-builders/docker@sha256:a44c27d353305e518949db2d299d409743d2b4517bdbc6a6bbc9be0c80423902'
   id: 'Push container image'
   args: [
     'push',
