@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim@sha256:f7d05b77ef87dba5051a006c9c56b07245d6000be97271a575197e90f187f6a1
 
 # 1. Standardize the environment
 ENV UV_LINK_MODE=copy \
