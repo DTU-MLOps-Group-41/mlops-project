@@ -21,7 +21,7 @@ dependencies = [
     "datasets>=4.4.2",
     "dvc>=3.65.0",
     "dvc-gs>=3.0.2",
-    "fastapi==0.128.2",
+    "fastapi==0.128.3",
     "kagglehub>=0.4.0",
     "lightning>=2.2.0",
     "loguru>=0.7.3",
