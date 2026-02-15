@@ -1972,7 +1972,7 @@ wheels = [
 
 [[package]]
 name = "kagglehub"
-version = "0.4.3"
+version = "1.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "kagglesdk" },
@@ -1981,9 +1981,9 @@ dependencies = [
     { name = "requests" },
     { name = "tqdm" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c6/5e/813a5bf20b96fcdf311505b74df071b5c50388871099a8890413ef1cdcd8/kagglehub-0.4.3.tar.gz", hash = "sha256:7969ae7574f5524dfa0f4fdb362229e1187cd5ea0dc0ef6e7ea5ca23478877ee", size = 117316, upload-time = "2026-02-06T21:21:47.076Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/98/b2/a542a926e47f0f6947d9fa7117b3a730edbf2a76fffc71e19b8755a58f33/kagglehub-1.0.0.tar.gz", hash = "sha256:21dc25d0279e2071f8b97cd9e1393d003ea5e054ea48f1e8139a39e4771e9a8d", size = 117315, upload-time = "2026-02-11T19:45:36.227Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/63/82/87c9ea391564debad2cf9828fe3afd7777145f3650a65fe124893d8f3008/kagglehub-0.4.3-py3-none-any.whl", hash = "sha256:ff17b4b5c873898995ef1e02c90083f7f60dd82080aca20e98b47ac5362c7128", size = 70632, upload-time = "2026-02-06T21:21:45.553Z" },
+    { url = "https://files.pythonhosted.org/packages/18/78/08cec00ea05fd2469f9395da0306bb368c4ed275693be8d31473eafaf90c/kagglehub-1.0.0-py3-none-any.whl", hash = "sha256:9397f0c6af04cdefa6fa8734c31b42863e8741aad5832c6f3af52f1ecf8fe509", size = 70632, upload-time = "2026-02-11T19:45:34.626Z" },
 ]
 
 [[package]]
