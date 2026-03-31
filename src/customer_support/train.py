@@ -2,6 +2,7 @@
 
 from pathlib import Path
 from typing import Literal, Optional
+import sys
 
 import torch
 from loguru import logger
@@ -17,10 +18,25 @@ from customer_support.model import TicketClassificationModule
 import hydra
 from omegaconf import DictConfig, OmegaConf
 
+# Configure logging
+logger.remove()  # Remove default handler
+logger.add(
+    sys.stdout,
+    format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}",
+    level="INFO",
+    colorize=True,
+)
+logger.add(
+    "logs/train.log",
+    format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}",
+    level="INFO",
+    rotation="10 MB",
+    retention="1 week",
+)
+
 ACCELERATOR_TY = Literal["auto", "cpu", "gpu", "tpu"]
 
 
-# TODO: Fix logging
 @hydra.main(version_base=None, config_path="../../configs", config_name="config.yaml")
 def train(cfg: DictConfig) -> None:
     """Train the customer support ticket classifier using PyTorch Lightning."""
